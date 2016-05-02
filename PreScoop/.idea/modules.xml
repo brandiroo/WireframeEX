@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PreSchoop.iml" filepath="$PROJECT_DIR$/PreSchoop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PreScoop.iml" filepath="$PROJECT_DIR$/PreScoop.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
