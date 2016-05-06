@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PreScoop</string>
     <string name="action_settings">Settings</string>
+    <string name="enter_zip_code">Enter Zip Code</string>
 </resources>
