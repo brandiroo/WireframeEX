@@ -70,7 +70,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         TextView schoolNameTextView = holder.schoolNameTextView;
         schoolNameTextView.setText(preSchool.getName());
 
-        //ImageView schoolImageView = holder.schoolImageView;
         Picasso.with(context).load(preSchool.getImageUrl()).into(holder.schoolImageView);
 
 
@@ -79,7 +78,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-//        Log.i(TAG, "getItemCount: " + mSchools.size());
         return mSchools.size();
     }
 }
