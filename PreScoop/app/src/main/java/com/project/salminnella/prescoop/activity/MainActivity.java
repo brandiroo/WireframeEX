@@ -141,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.maps_menu_item) {
+            Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapActivity.class);
+            startActivity(intentToMaps);
         }
 
         return super.onOptionsItemSelected(item);
