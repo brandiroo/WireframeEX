@@ -22,9 +22,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Context context;
     // Store a member variable for the schools
     private List<PreSchool> mSchools;
+    private OnItemClickListener listener;
 
-    public ListAdapter(List<PreSchool> mSchools) {
+    public interface OnItemClickListener {
+        void onItemClick(PreSchool preschool);
+    }
+
+    // constructor
+    public ListAdapter(List<PreSchool> mSchools, OnItemClickListener listener) {
         this.mSchools = mSchools;
+        this.listener = listener;
     }
 
 
@@ -43,10 +50,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-
             schoolNameTextView = (TextView) itemView.findViewById(R.id.school_name_items);
             schoolImageView = (ImageView) itemView.findViewById(R.id.school_image_items);
         }
+        public void bind(final PreSchool preschool, final OnItemClickListener listener){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(preschool);
+                }
+            });
+        }
+
     }
 
     @Override
@@ -62,7 +77,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ListAdapter.ViewHolder holder, final int position) {
         // Get the data model based on position
         PreSchool preSchool = mSchools.get(position);
 
@@ -71,8 +86,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         schoolNameTextView.setText(preSchool.getName());
 
         Picasso.with(context).load(preSchool.getImageUrl()).into(holder.schoolImageView);
-
-
+        holder.bind(mSchools.get(position), listener);
     }
 
 

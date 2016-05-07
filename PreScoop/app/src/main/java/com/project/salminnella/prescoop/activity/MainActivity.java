@@ -1,5 +1,6 @@
 package com.project.salminnella.prescoop.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +24,8 @@ import com.project.salminnella.prescoop.model.PreSchool;
 
 import java.util.LinkedList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
-//    private RecyclerView mRecyclerView;
-//    private RecyclerView.Adapter mAdapter;
-//    private RecyclerView.LayoutManager mLayoutManager;
 
     LinkedList<PreSchool> mSchools;
 
@@ -34,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     PreSchool preschool;
     RecyclerView rvSchools;
     ListAdapter mAdapter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Lookup the recyclerview in activity layout
         rvSchools = (RecyclerView) findViewById(R.id.rvSchools);
-        mSchools = new LinkedList<PreSchool>();
-        mAdapter = new ListAdapter(mSchools);
+        mSchools = new LinkedList<>();
+        mAdapter = new ListAdapter(mSchools, this);
         rvSchools.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         result();
@@ -80,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         mFireBaseRoot = new Firebase("https://prescoop.firebaseio.com/");
         mFirebasePreschoolRef = mFireBaseRoot.child("Facility");
     }
+
 
     private void result(){
         Query queryRef = mFirebasePreschoolRef.orderByChild("zipCode");
@@ -114,7 +112,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    public void onItemClick(PreSchool preschool) {
+        Log.d(TAG, "onItemClick: please work");
+        Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
+        startActivity(intentToDetails);
+    }
 
 
 
@@ -142,4 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
