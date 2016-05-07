@@ -20,6 +20,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
+import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 
 import java.util.LinkedList;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.maps_menu_item) {
-            Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapActivity.class);
+            Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
             startActivity(intentToMaps);
         }
 
