@@ -8,10 +8,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.salminnella.prescoop.R;
@@ -25,6 +27,9 @@ import java.util.Map;
 public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCallback {
     private static final String TAG = "MapFragment";
     private GoogleMap mMap;
+    // Create a LatLngBounds that includes Australia.
+    private LatLngBounds sanFrancisco = new LatLngBounds(
+            new LatLng(37.657785, -122.521568), new LatLng(37.825296, -122.354369));
     HashMap<String, String> addressList;
 
     @Override
@@ -44,9 +49,7 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
 
     private void receiveIntentFromMain() {
         Intent intentFromMain = getIntent();
-
         addressList = (HashMap<String, String>) intentFromMain.getSerializableExtra(MainActivity.ADDRESS_LIST_KEY);
-        Log.i(TAG, "receiveIntentFromMain: " + addressList);
     }
 
 
@@ -81,20 +84,14 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
         for (Map.Entry<String,String> entry : addressList.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            // do stuff
-
             LatLng address = Utilities.getLocationFromAddress(this, value);
             if (address != null) {
                 mMap.addMarker(new MarkerOptions().position(address).title(key));
+            } else {
+                Log.i(TAG, "onMapReady - null location: " + entry);
             }
         }
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(address));
-
-
-        //mMap.addMarker(new MarkerOptions().position(currentLocation).title("You Are Here"));
-
-        //Marker schoolOne = mMap.addMarker(new MarkerOptions().position(new LatLng(37.782818, -122.454098)).title("Some School"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sanFrancisco.getCenter(), 11.8f));
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
