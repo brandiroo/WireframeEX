@@ -1,27 +1,29 @@
 package com.project.salminnella.prescoop.fragment;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.salminnella.prescoop.R;
+import com.project.salminnella.prescoop.activity.MainActivity;
+import com.project.salminnella.prescoop.utility.Utilities;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCallback {
-
+    private static final String TAG = "MapFragment";
     private GoogleMap mMap;
+    HashMap<String, String> addressList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +34,16 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map_all_schools);
         mapFragment.getMapAsync(this);
 
+        receiveIntentFromMain();
+
     }
 
+    private void receiveIntentFromMain() {
+        Intent intentFromMain = getIntent();
+
+        addressList = (HashMap<String, String>) intentFromMain.getSerializableExtra(MainActivity.ADDRESS_LIST_KEY);
+        Log.i(TAG, "receiveIntentFromMain: " + addressList);
+    }
 
 
 
@@ -64,10 +74,17 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        for (Map.Entry<String,String> entry : addressList.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            // do stuff
 
-        LatLng address = getLocationFromAddress(this, "3918 Fultons Street, San francisco, Ca, 94118");
-        mMap.addMarker(new MarkerOptions().position(address).title("Home"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(address));
+            LatLng address = Utilities.getLocationFromAddress(this, value);
+            if (address != null) {
+                mMap.addMarker(new MarkerOptions().position(address).title(key));
+            }
+        }
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(address));
 
 
         //mMap.addMarker(new MarkerOptions().position(currentLocation).title("You Are Here"));
@@ -76,31 +93,6 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
     }
 
-    public LatLng getLocationFromAddress(Context context, String strAddress)
-    {
-        Geocoder coder= new Geocoder(context);
-        List<Address> address;
-        LatLng p1 = null;
 
-        try
-        {
-            address = coder.getFromLocationName(strAddress, 5);
-            if(address==null)
-            {
-                return null;
-            }
-            Address location = address.get(0);
-            location.getLatitude();
-            location.getLongitude();
-
-            p1 = new LatLng(location.getLatitude(), location.getLongitude());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return p1;
-
-    }
 
 }

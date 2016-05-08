@@ -22,11 +22,14 @@ import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.utility.Utilities;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
+    public static final String ADDRESS_LIST_KEY = "addressList";
 
     LinkedList<PreSchool> mSchools;
 
@@ -143,12 +146,52 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.maps_menu_item) {
+            HashMap<String, String> addressList = buildAddressListHash();
             Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
+            intentToMaps.putExtra(ADDRESS_LIST_KEY, addressList);
             startActivity(intentToMaps);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+//    private ArrayList buildAddressList() {
+//        ArrayList<String> addressList = new ArrayList<>();
+//
+//        if (mSchools == null) {
+//            return addressList;
+////            return null;
+//        }
+//        for (int i = 0; i < mSchools.size(); i++) {
+//            String streetAdd = mSchools.get(i).getStreetAddress();
+//            String city = mSchools.get(i).getCity();
+//            String state = mSchools.get(i).getState();
+//            String zipcode = mSchools.get(i).getZipCode();
+//
+//            String stringAddress = Utilities.buildAddressString(streetAdd, city, state, zipcode);
+//            addressList.add(stringAddress);
+//        }
+//
+//        return addressList;
+//    }
 
+    private HashMap buildAddressListHash() {
+        HashMap<String, String> addressListHashMap = new HashMap<>();
+
+        if (mSchools == null) {
+            return addressListHashMap;
+//            return null;
+        }
+        for (int i = 0; i < mSchools.size(); i++) {
+            String streetAdd = mSchools.get(i).getStreetAddress();
+            String city = mSchools.get(i).getCity();
+            String state = mSchools.get(i).getState();
+            String zipcode = mSchools.get(i).getZipCode();
+
+            String stringAddress = Utilities.buildAddressString(streetAdd, city, state, zipcode);
+            addressListHashMap.put(mSchools.get(i).getName(), stringAddress);
+        }
+
+        return addressListHashMap;
+    }
 }
