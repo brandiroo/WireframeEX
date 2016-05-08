@@ -30,6 +30,8 @@ import java.util.LinkedList;
 public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
     public static final String ADDRESS_LIST_KEY = "addressList";
+    public static final String SCHOOL_TITLE_KEY = "schoolTitle";
+
 
     LinkedList<PreSchool> mSchools;
 
@@ -120,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     public void onItemClick(PreSchool preschool) {
         Log.d(TAG, "onItemClick: please work");
         Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
+        intentToDetails.putExtra(SCHOOL_TITLE_KEY, preschool.getName());
         startActivity(intentToDetails);
     }
 

@@ -12,9 +12,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.activity.MainActivity;
+import com.project.salminnella.prescoop.activity.SchoolDetails;
 import com.project.salminnella.prescoop.utility.Utilities;
 
 import java.util.HashMap;
@@ -35,6 +37,8 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
 
         receiveIntentFromMain();
+
+
 
     }
 
@@ -91,6 +95,16 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
 
         //Marker schoolOne = mMap.addMarker(new MarkerOptions().position(new LatLng(37.782818, -122.454098)).title("Some School"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Log.i(TAG, "onInfoWindowClick: " + marker.getTitle());
+                Intent intent = new Intent(SchoolsMapFragment.this, SchoolDetails.class);
+                intent.putExtra(MainActivity.SCHOOL_TITLE_KEY, marker.getTitle());
+                startActivity(intent);
+            }
+        });
     }
 
 
