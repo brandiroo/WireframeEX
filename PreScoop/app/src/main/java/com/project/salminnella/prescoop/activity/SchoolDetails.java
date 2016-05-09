@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,18 @@ import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
+import com.yelp.clientlib.connection.YelpAPI;
+import com.yelp.clientlib.connection.YelpAPIFactory;
+import com.yelp.clientlib.entities.Review;
+import com.yelp.clientlib.entities.SearchResponse;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SchoolDetails extends AppCompatActivity {
     private static final String TAG = "SchoolDetails";
@@ -40,7 +53,57 @@ public class SchoolDetails extends AppCompatActivity {
         initViews();
         initFirebase();
         queryFirebase();
+        //setFab();
 
+        YelpAPIFactory apiFactory = new YelpAPIFactory(
+                Constants.YELP_CONSUMER_KEY,
+                Constants.YELP_CONSUMER_SECRET,
+                Constants.YELP_TOKEN,
+                Constants.YELP_TOKEN_SECRET);
+
+        YelpAPI yelpAPI = apiFactory.createAPI();
+
+        Map<String, String> params = new HashMap<>();
+
+        // general params
+        params.put("term", "Little Bee Daycare & Preschool");
+        params.put("limit", "3");
+
+//        // locale params
+//        params.put("lang", "en");
+
+        Call<SearchResponse> call = yelpAPI.search("San Francisco", params);
+//
+//        Response<SearchResponse> response = null;
+//        try {
+//            response = call.execute();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        Callback<SearchResponse> callback = new Callback<SearchResponse>() {
+            @Override
+            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+                SearchResponse searchResponse = response.body();
+                String schoolName = response.body().businesses().get(0).name();
+                String ratingImgUrl = response.body().businesses().get(0).ratingImgUrl();
+                String snippetText = response.body().businesses().get(0).snippetText();
+                ArrayList<Review> reviews = response.body().businesses().get(0).reviews();
+                String mobileUrl = response.body().businesses().get(0).mobileUrl();
+                // Update UI text with the searchResponse.
+                Log.i(TAG, "search response " + schoolName);
+                Log.i(TAG, "rating image " + ratingImgUrl);
+                Log.i(TAG, "snippet " + snippetText);
+                Log.i(TAG, "reviews " + reviews);
+                Log.i(TAG, "mobile url " + mobileUrl);
+            }
+            @Override
+            public void onFailure(Call<SearchResponse> call, Throwable t) {
+                // HTTP error happened, do something to handle it.
+            }
+        };
+
+        call.enqueue(callback);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -54,6 +117,10 @@ public class SchoolDetails extends AppCompatActivity {
             });
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void setFab() {
+
     }
 
     private void initToolbar() {
