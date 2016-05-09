@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,11 +20,13 @@ import com.firebase.client.Query;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
+import com.project.salminnella.prescoop.utility.Utilities;
 
 public class SchoolDetails extends AppCompatActivity {
     private static final String TAG = "SchoolDetails";
-    String schoolKey;
-    TextView schoolName;
+    String mSchoolKey;
+    TextView mSchoolName;
+    TextView mSchoolAddress;
     Firebase mFireBaseRoot, mFirebasePreschoolRef;
     PreSchool mPreschool;
 
@@ -40,17 +41,18 @@ public class SchoolDetails extends AppCompatActivity {
         initFirebase();
         queryFirebase();
 
-        schoolName.setText(schoolKey);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -60,7 +62,9 @@ public class SchoolDetails extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle("Top Stories");
+        if (collapsingToolbarLayout != null) {
+            collapsingToolbarLayout.setTitle("Top Stories");
+        }
 
         loadBackdrop();
     }
@@ -71,7 +75,8 @@ public class SchoolDetails extends AppCompatActivity {
     }
 
     private void initViews() {
-        schoolName = (TextView) findViewById(R.id.school_name_text);
+        mSchoolName = (TextView) findViewById(R.id.school_name_text_details);
+        mSchoolAddress = (TextView) findViewById(R.id.school_address_text_details);
     }
 
     private void loadBackdrop() {
@@ -81,11 +86,11 @@ public class SchoolDetails extends AppCompatActivity {
 
     private void receiveIntent() {
         Intent receiveIntent = getIntent();
-        schoolKey = receiveIntent.getStringExtra(Constants.SCHOOL_TITLE_KEY);
+        mSchoolKey = receiveIntent.getStringExtra(Constants.SCHOOL_TITLE_KEY);
     }
 
     private void queryFirebase(){
-        Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME).equalTo(schoolKey);
+        Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME).equalTo(mSchoolKey);
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
@@ -117,7 +122,18 @@ public class SchoolDetails extends AppCompatActivity {
     }
 
     private void populateSchoolDetails() {
-        Log.i(TAG, "onChildAdded: " + mPreschool.getName());
-        Log.i(TAG, "onChildAdded: " + mPreschool.getPhoneNumber());
+        mSchoolName.setText(mPreschool.getName());
+        setSchoolAddressTextView();
     }
+
+
+
+    private void setSchoolAddressTextView() {
+        mSchoolAddress.setText(Utilities.buildAddressString(mPreschool.getStreetAddress(),
+                mPreschool.getCity(),
+                mPreschool.getState(),
+                mPreschool.getZipCode()));
+    }
+
+
 }

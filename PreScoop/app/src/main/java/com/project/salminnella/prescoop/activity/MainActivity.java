@@ -173,40 +173,18 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         return super.onOptionsItemSelected(item);
     }
 
-//    private ArrayList buildAddressList() {
-//        ArrayList<String> addressList = new ArrayList<>();
-//
-//        if (mSchoolsList == null) {
-//            return addressList;
-////            return null;
-//        }
-//        for (int i = 0; i < mSchoolsList.size(); i++) {
-//            String streetAdd = mSchoolsList.get(i).getStreetAddress();
-//            String city = mSchoolsList.get(i).getCity();
-//            String state = mSchoolsList.get(i).getState();
-//            String zipcode = mSchoolsList.get(i).getZipCode();
-//
-//            String stringAddress = Utilities.buildAddressString(streetAdd, city, state, zipcode);
-//            addressList.add(stringAddress);
-//        }
-//
-//        return addressList;
-//    }
-
     private HashMap buildAddressListHash() {
         HashMap<String, String> addressListHashMap = new HashMap<>();
 
         if (mSchoolsList == null) {
             return addressListHashMap;
-//            return null;
+            //TODO return something else
         }
         for (int i = 0; i < mSchoolsList.size(); i++) {
-            String streetAdd = mSchoolsList.get(i).getStreetAddress();
-            String city = mSchoolsList.get(i).getCity();
-            String state = mSchoolsList.get(i).getState();
-            String zipcode = mSchoolsList.get(i).getZipCode();
-
-            String stringAddress = Utilities.buildAddressString(streetAdd, city, state, zipcode);
+            String stringAddress = Utilities.buildAddressString(mSchoolsList.get(i).getStreetAddress(),
+                    mSchoolsList.get(i).getCity(),
+                    mSchoolsList.get(i).getState(),
+                    mSchoolsList.get(i).getZipCode());
             addressListHashMap.put(mSchoolsList.get(i).getName(), stringAddress);
         }
 

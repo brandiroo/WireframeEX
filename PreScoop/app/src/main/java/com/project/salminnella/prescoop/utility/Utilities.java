@@ -52,4 +52,6 @@ public class Utilities {
         String strAddress = streetAddress + ", " + city + ", " + state + " " + zipcode;
         return strAddress;
     }
+
+
 }
