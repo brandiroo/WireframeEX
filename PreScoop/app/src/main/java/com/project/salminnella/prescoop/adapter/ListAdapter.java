@@ -85,7 +85,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         TextView schoolNameTextView = holder.schoolNameTextView;
         schoolNameTextView.setText(preSchool.getName());
 
-        Picasso.with(context).load(preSchool.getImageUrl()).into(holder.schoolImageView);
+        if (preSchool.getImageUrl().matches("")) {
+            Picasso.with(context).load(R.drawable.no_image_available).into(holder.schoolImageView);
+        } else {
+            Picasso.with(context).load(preSchool.getImageUrl()).into(holder.schoolImageView);
+        }
         holder.bind(mSchools.get(position), listener);
     }
 

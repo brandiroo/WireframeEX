@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
 
 import java.util.HashMap;
@@ -33,16 +33,13 @@ import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
-    public static final String ADDRESS_LIST_KEY = "addressList";
-    public static final String SCHOOL_TITLE_KEY = "schoolTitle";
 
-
-    LinkedList<PreSchool> mSchools;
-
+    LinkedList<PreSchool> mSchoolsList;
     Firebase mFireBaseRoot, mFirebasePreschoolRef;
-    PreSchool preschool;
-    RecyclerView rvSchools;
-    ListAdapter mAdapter;
+    PreSchool mPreschool;
+    RecyclerView mRecyclerView;
+    ListAdapter mRecycleAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +49,25 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         initToolbar();
         setFAB();
         initFirebase();
+        if (mSchoolsList == null) {
+            queryFirebase();
+        }
+        createRecycler();
+        handleSearchFilterIntent(getIntent());
+    }
 
-        // Lookup the recyclerview in activity layout
-        rvSchools = (RecyclerView) findViewById(R.id.rvSchools);
-        mSchools = new LinkedList<>();
-        mAdapter = new ListAdapter(mSchools, this);
-        rvSchools.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-        result();
-
-        rvSchools.setAdapter(mAdapter);
-
-        handleIntent(getIntent());
+    private void createRecycler() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        mRecycleAdapter = new ListAdapter(mSchoolsList, this);
+        mRecyclerView.setAdapter(mRecycleAdapter);
     }
 
     @Override protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
+        handleSearchFilterIntent(intent);
     }
 
-    private void handleIntent(Intent intent) {
+    private void handleSearchFilterIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(MainActivity.this,"Searching for "+query,Toast.LENGTH_SHORT).show();
@@ -97,19 +94,20 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     }
 
     private void initFirebase(){
-        mFireBaseRoot = new Firebase("https://prescoop.firebaseio.com/");
-        mFirebasePreschoolRef = mFireBaseRoot.child("Facility");
+        mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
+        mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
     }
 
 
-    private void result(){
-        Query queryRef = mFirebasePreschoolRef.orderByChild("zipCode");
+    private void queryFirebase(){
+        mSchoolsList = new LinkedList<>();
+        Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                preschool = snapshot.getValue(PreSchool.class);
-                mSchools.add(preschool);
-                mAdapter.notifyDataSetChanged();
+                mPreschool = snapshot.getValue(PreSchool.class);
+                mSchoolsList.add(mPreschool);
+                mRecycleAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -137,16 +135,10 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     @Override
     public void onItemClick(PreSchool preschool) {
-        Log.d(TAG, "onItemClick: please work");
         Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
-        intentToDetails.putExtra(SCHOOL_TITLE_KEY, preschool.getName());
+        intentToDetails.putExtra(Constants.SCHOOL_TITLE_KEY, preschool.getName());
         startActivity(intentToDetails);
     }
-
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         } else if (id == R.id.maps_menu_item) {
             HashMap<String, String> addressList = buildAddressListHash();
             Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
-            intentToMaps.putExtra(ADDRESS_LIST_KEY, addressList);
+            intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, addressList);
             startActivity(intentToMaps);
         }
 
@@ -184,15 +176,15 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 //    private ArrayList buildAddressList() {
 //        ArrayList<String> addressList = new ArrayList<>();
 //
-//        if (mSchools == null) {
+//        if (mSchoolsList == null) {
 //            return addressList;
 ////            return null;
 //        }
-//        for (int i = 0; i < mSchools.size(); i++) {
-//            String streetAdd = mSchools.get(i).getStreetAddress();
-//            String city = mSchools.get(i).getCity();
-//            String state = mSchools.get(i).getState();
-//            String zipcode = mSchools.get(i).getZipCode();
+//        for (int i = 0; i < mSchoolsList.size(); i++) {
+//            String streetAdd = mSchoolsList.get(i).getStreetAddress();
+//            String city = mSchoolsList.get(i).getCity();
+//            String state = mSchoolsList.get(i).getState();
+//            String zipcode = mSchoolsList.get(i).getZipCode();
 //
 //            String stringAddress = Utilities.buildAddressString(streetAdd, city, state, zipcode);
 //            addressList.add(stringAddress);
@@ -204,18 +196,18 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private HashMap buildAddressListHash() {
         HashMap<String, String> addressListHashMap = new HashMap<>();
 
-        if (mSchools == null) {
+        if (mSchoolsList == null) {
             return addressListHashMap;
 //            return null;
         }
-        for (int i = 0; i < mSchools.size(); i++) {
-            String streetAdd = mSchools.get(i).getStreetAddress();
-            String city = mSchools.get(i).getCity();
-            String state = mSchools.get(i).getState();
-            String zipcode = mSchools.get(i).getZipCode();
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            String streetAdd = mSchoolsList.get(i).getStreetAddress();
+            String city = mSchoolsList.get(i).getCity();
+            String state = mSchoolsList.get(i).getState();
+            String zipcode = mSchoolsList.get(i).getZipCode();
 
             String stringAddress = Utilities.buildAddressString(streetAdd, city, state, zipcode);
-            addressListHashMap.put(mSchools.get(i).getName(), stringAddress);
+            addressListHashMap.put(mSchoolsList.get(i).getName(), stringAddress);
         }
 
         return addressListHashMap;
