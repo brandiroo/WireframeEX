@@ -53,59 +53,11 @@ public class SchoolDetails extends AppCompatActivity {
         initViews();
         initFirebase();
         queryFirebase();
-        //setFab();
+        setFab();
 
-        YelpAPIFactory apiFactory = new YelpAPIFactory(
-                Constants.YELP_CONSUMER_KEY,
-                Constants.YELP_CONSUMER_SECRET,
-                Constants.YELP_TOKEN,
-                Constants.YELP_TOKEN_SECRET);
+    }
 
-        YelpAPI yelpAPI = apiFactory.createAPI();
-
-        Map<String, String> params = new HashMap<>();
-
-        // general params
-        params.put("term", "Little Bee Daycare & Preschool");
-        params.put("limit", "3");
-
-//        // locale params
-//        params.put("lang", "en");
-
-        Call<SearchResponse> call = yelpAPI.search("San Francisco", params);
-//
-//        Response<SearchResponse> response = null;
-//        try {
-//            response = call.execute();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        Callback<SearchResponse> callback = new Callback<SearchResponse>() {
-            @Override
-            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
-                SearchResponse searchResponse = response.body();
-                String schoolName = response.body().businesses().get(0).name();
-                String ratingImgUrl = response.body().businesses().get(0).ratingImgUrl();
-                String snippetText = response.body().businesses().get(0).snippetText();
-                ArrayList<Review> reviews = response.body().businesses().get(0).reviews();
-                String mobileUrl = response.body().businesses().get(0).mobileUrl();
-                // Update UI text with the searchResponse.
-                Log.i(TAG, "search response " + schoolName);
-                Log.i(TAG, "rating image " + ratingImgUrl);
-                Log.i(TAG, "snippet " + snippetText);
-                Log.i(TAG, "reviews " + reviews);
-                Log.i(TAG, "mobile url " + mobileUrl);
-            }
-            @Override
-            public void onFailure(Call<SearchResponse> call, Throwable t) {
-                // HTTP error happened, do something to handle it.
-            }
-        };
-
-        call.enqueue(callback);
-
-
+    private void setFab() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
@@ -116,11 +68,6 @@ public class SchoolDetails extends AppCompatActivity {
                 }
             });
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void setFab() {
-
     }
 
     private void initToolbar() {
@@ -163,6 +110,7 @@ public class SchoolDetails extends AppCompatActivity {
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
                 mPreschool = snapshot.getValue(PreSchool.class);
                 populateSchoolDetails();
+                handleYelpResponse();
             }
 
             @Override
@@ -202,5 +150,76 @@ public class SchoolDetails extends AppCompatActivity {
                 mPreschool.getZipCode()));
     }
 
+    private void handleYelpResponse() {
+        YelpAPIFactory apiFactory = new YelpAPIFactory(
+                Constants.YELP_CONSUMER_KEY,
+                Constants.YELP_CONSUMER_SECRET,
+                Constants.YELP_TOKEN,
+                Constants.YELP_TOKEN_SECRET);
 
+        YelpAPI yelpAPI = apiFactory.createAPI();
+
+        Map<String, String> params = new HashMap<>();
+
+        // general params
+        params.put("term", "mPreschool.getName()");
+//        params.put("term", "\"1st Place 2 Start\"");
+        params.put("limit", Constants.YELP_RESPONSE_LIMIT);
+        params.put("category_filter", "preschools");
+        params.put("sort", "0");
+
+        Call<SearchResponse> call = yelpAPI.search("San Francisco", params);
+//
+//        Response<SearchResponse> response = null;
+//        try {
+//            response = call.execute();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        Callback<SearchResponse> callback = new Callback<SearchResponse>() {
+            @Override
+            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+                SearchResponse searchResponse = response.body();
+                if (searchResponse.total() == 0) {
+                    Log.i(TAG, "onResponse: nothing found from yelp");
+                } else {
+                    //TODO if response is more then one, need to figure out which
+                    // one to display
+                    filterYelpResponse(searchResponse);
+                    String schoolName = response.body().businesses().get(0).name();
+                    String ratingImgUrl = response.body().businesses().get(0).ratingImgUrl();
+                    String snippetText = response.body().businesses().get(0).snippetText();
+                    ArrayList<Review> reviews = response.body().businesses().get(0).reviews();
+                    String mobileUrl = response.body().businesses().get(0).mobileUrl();
+                    // Update UI text with the searchResponse.
+//                    Log.i(TAG, "response total: " + searchResponse.total());
+//                    Log.i(TAG, "search response " + schoolName);
+//                    Log.i(TAG, "rating image " + ratingImgUrl);
+//                    Log.i(TAG, "snippet " + snippetText);
+//                    Log.i(TAG, "reviews " + reviews);
+//                    Log.i(TAG, "mobile url " + mobileUrl);
+                }
+            }
+            @Override
+            public void onFailure(Call<SearchResponse> call, Throwable t) {
+                // HTTP error happened, do something to handle it.
+                Log.i(TAG, "on Yelp Failure: ");
+            }
+        };
+
+        call.enqueue(callback);
+    }
+
+    private void filterYelpResponse(SearchResponse response) {
+        Log.i(TAG, "filterYelpResponse: searching for " + mPreschool.getName());
+        Log.i(TAG, "filterYelpResponse: response total " + response.total());
+        int limit = response.total();
+        if (Integer.parseInt(Constants.YELP_RESPONSE_LIMIT) < response.total()) {
+            limit = Integer.parseInt(Constants.YELP_RESPONSE_LIMIT);
+        }
+        for (int i = 0; i < limit; i++) {
+            Log.i(TAG, "filterYelpResponse: name " + response.businesses().get(i).name());
+        }
+    }
 }
