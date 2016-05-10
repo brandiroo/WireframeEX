@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +21,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.project.salminnella.prescoop.R;
+import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
+import com.project.salminnella.prescoop.fragment.TabLayoutFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
@@ -42,6 +46,7 @@ public class SchoolDetails extends AppCompatActivity {
     TextView mSchoolAddress;
     Firebase mFireBaseRoot, mFirebasePreschoolRef;
     PreSchool mPreschool;
+    TabLayoutFragment tabbedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +55,30 @@ public class SchoolDetails extends AppCompatActivity {
 
         initToolbar();
         receiveIntent();
+
+
+
+
         initViews();
         initFirebase();
         queryFirebase();
         setFab();
+
+        //TODO passing the mPreschool object created from firebase search to the pageview then to the
+        // tab fragment -- its saying its null right now, may just need to move the position
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(),
+                SchoolDetails.this, mPreschool));
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        //if (tabLayout != null) {
+        tabLayout.setupWithViewPager(viewPager);
+        //}
+
+//        tabbedFragment = new TabLayoutFragment();
+//        tabbedFragment.sendToTabLayout(mPreschool);
 
     }
 
