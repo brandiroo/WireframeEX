@@ -15,14 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
-import com.project.salminnella.prescoop.fragment.TabLayoutFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
@@ -41,12 +35,9 @@ import retrofit2.Response;
 
 public class SchoolDetails extends AppCompatActivity {
     private static final String TAG = "SchoolDetails";
-    String mSchoolKey;
     TextView mSchoolName;
     TextView mSchoolAddress;
-    Firebase mFireBaseRoot, mFirebasePreschoolRef;
-    PreSchool mPreschool;
-    TabLayoutFragment tabbedFragment;
+    PreSchool mPreschoolMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,30 +46,11 @@ public class SchoolDetails extends AppCompatActivity {
 
         initToolbar();
         receiveIntent();
-
-
-
-
         initViews();
-        initFirebase();
-        queryFirebase();
         setFab();
-
-        //TODO passing the mPreschool object created from firebase search to the pageview then to the
-        // tab fragment -- its saying its null right now, may just need to move the position
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(),
-                SchoolDetails.this, mPreschool));
-
-        // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        //if (tabLayout != null) {
-        tabLayout.setupWithViewPager(viewPager);
-        //}
-
-//        tabbedFragment = new TabLayoutFragment();
-//        tabbedFragment.sendToTabLayout(mPreschool);
+        populateSchoolDetails();
+        callYelpProvider();
+        initTabLayout();
 
     }
 
@@ -108,10 +80,6 @@ public class SchoolDetails extends AppCompatActivity {
         loadBackdrop();
     }
 
-    private void initFirebase(){
-        mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
-        mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
-    }
 
     private void initViews() {
         mSchoolName = (TextView) findViewById(R.id.school_name_text_details);
@@ -125,57 +93,26 @@ public class SchoolDetails extends AppCompatActivity {
 
     private void receiveIntent() {
         Intent receiveIntent = getIntent();
-        mSchoolKey = receiveIntent.getStringExtra(Constants.SCHOOL_TITLE_KEY);
+        mPreschoolMain = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
+
     }
 
-    private void queryFirebase(){
-        Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME).equalTo(mSchoolKey);
-        queryRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                mPreschool = snapshot.getValue(PreSchool.class);
-                populateSchoolDetails();
-                handleYelpResponse();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-
-        });
-    }
 
     private void populateSchoolDetails() {
-        mSchoolName.setText(mPreschool.getName());
+        mSchoolName.setText(mPreschoolMain.getName());
         setSchoolAddressTextView();
     }
 
 
 
     private void setSchoolAddressTextView() {
-        mSchoolAddress.setText(Utilities.buildAddressString(mPreschool.getStreetAddress(),
-                mPreschool.getCity(),
-                mPreschool.getState(),
-                mPreschool.getZipCode()));
+        mSchoolAddress.setText(Utilities.buildAddressString(mPreschoolMain.getStreetAddress(),
+                mPreschoolMain.getCity(),
+                mPreschoolMain.getState(),
+                mPreschoolMain.getZipCode()));
     }
 
-    private void handleYelpResponse() {
+    private void callYelpProvider() {
         YelpAPIFactory apiFactory = new YelpAPIFactory(
                 Constants.YELP_CONSUMER_KEY,
                 Constants.YELP_CONSUMER_SECRET,
@@ -187,8 +124,7 @@ public class SchoolDetails extends AppCompatActivity {
         Map<String, String> params = new HashMap<>();
 
         // general params
-        params.put("term", "mPreschool.getName()");
-//        params.put("term", "\"1st Place 2 Start\"");
+        params.put("term", mPreschoolMain.getName());
         params.put("limit", Constants.YELP_RESPONSE_LIMIT);
         params.put("category_filter", "preschools");
         params.put("sort", "0");
@@ -237,7 +173,7 @@ public class SchoolDetails extends AppCompatActivity {
     }
 
     private void filterYelpResponse(SearchResponse response) {
-        Log.i(TAG, "filterYelpResponse: searching for " + mPreschool.getName());
+        Log.i(TAG, "filterYelpResponse: searching for " + mPreschoolMain.getName());
         Log.i(TAG, "filterYelpResponse: response total " + response.total());
         int limit = response.total();
         if (Integer.parseInt(Constants.YELP_RESPONSE_LIMIT) < response.total()) {
@@ -246,5 +182,19 @@ public class SchoolDetails extends AppCompatActivity {
         for (int i = 0; i < limit; i++) {
             Log.i(TAG, "filterYelpResponse: name " + response.businesses().get(i).name());
         }
+    }
+
+
+    private void initTabLayout() {
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(),
+                SchoolDetails.this, mPreschoolMain));
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        //if (tabLayout != null) {
+        tabLayout.setupWithViewPager(viewPager);
+        //}
     }
 }

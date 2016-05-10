@@ -7,32 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
-import com.project.salminnella.prescoop.utility.Constants;
 
 /**
  * Created by anthony on 5/9/16.
  */
 public class TabLayoutFragment extends Fragment {
+    private static final String TAG = "TabFragment";
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private int mPage;
     TextView num_visits;
-    Firebase mFireBaseRoot, mFirebasePreschoolRef;
     static PreSchool preschool;
+    View viewAllVisits;
 
-    public static TabLayoutFragment newInstance(int page, PreSchool preSchool) {
+    public static TabLayoutFragment newInstance(int page, PreSchool schoolData) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
         TabLayoutFragment fragment = new TabLayoutFragment();
         fragment.setArguments(args);
-        preschool = preSchool;
+        preschool = schoolData;
         return fragment;
     }
 
@@ -40,20 +35,16 @@ public class TabLayoutFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-
-        initFirebase();
-        queryFirebase();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (mPage == 1) {
-            View view = inflater.inflate(R.layout.fragment_all_visits, container, false);
-            num_visits = (TextView) view.findViewById(R.id.all_visits_frag_text);
+            viewAllVisits = inflater.inflate(R.layout.fragment_all_visits, container, false);
+            num_visits = (TextView) viewAllVisits.findViewById(R.id.all_visits_frag_text);
             num_visits.setText(preschool.getName());
-//            num_visits.setText("All Visits" + mPage);
-            return view;
+            return viewAllVisits;
         } else if (mPage == 2) {
             View view = inflater.inflate(R.layout.fragment_citations, container, false);
             TextView textView = (TextView) view.findViewById(R.id.citations_frag_text);
@@ -82,47 +73,5 @@ public class TabLayoutFragment extends Fragment {
         }
 
         return null;
-    }
-
-    private void initFirebase(){
-        mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
-        mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
-    }
-    
-    public void sendToTabLayout(PreSchool preschool) {
-        num_visits.setText(preschool.getNumVisits());
-    }
-
-    private void queryFirebase(){
-        Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);//.equalTo(mSchoolKey);
-        queryRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-//                mPreschool = snapshot.getValue(PreSchool.class);
-//                populateSchoolDetails();
-//                handleYelpResponse();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-
-        });
     }
 }
