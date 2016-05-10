@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     @Override
     public void onItemClick(PreSchool preschool) {
         Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
-        intentToDetails.putExtra(Constants.SCHOOL_TITLE_KEY, preschool.getName());
+        intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
         startActivity(intentToDetails);
     }
 

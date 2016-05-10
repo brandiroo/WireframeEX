@@ -98,7 +98,7 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
             public void onInfoWindowClick(Marker marker) {
                 Log.i(TAG, "onInfoWindowClick: " + marker.getTitle());
                 Intent intent = new Intent(SchoolsMapFragment.this, SchoolDetails.class);
-                intent.putExtra(Constants.SCHOOL_TITLE_KEY, marker.getTitle());
+                intent.putExtra(Constants.SCHOOL_OBJECT_KEY, marker.getTitle());
                 startActivity(intent);
             }
         });
