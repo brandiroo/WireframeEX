@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,17 +28,21 @@ import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
+import com.project.salminnella.prescoop.utility.NameComparator;
+import com.project.salminnella.prescoop.utility.PriceComparator;
+import com.project.salminnella.prescoop.utility.RatingComparator;
 import com.project.salminnella.prescoop.utility.Utilities;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
 
-    LinkedList<PreSchool> mSchoolsList;
+    ArrayList<PreSchool> mSchoolsList;
     Firebase mFireBaseRoot, mFirebasePreschoolRef;
     PreSchool mPreschool;
     RecyclerView mRecyclerView;
@@ -69,21 +74,24 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
-                    case R.id.bottomBarItemOne:
+                    case R.id.abc_sort_bottom_bar:
                         Toast.makeText(MainActivity.this, "Sort alphabetically", Toast.LENGTH_SHORT).show();
+                        sortByName();
                         break;
-                    case R.id.favorite_item:
+                    case R.id.rating_sort_bottom_bar:
                         Toast.makeText(MainActivity.this, "Sort By Rating", Toast.LENGTH_SHORT).show();
+                        sortByRating();
                         break;
-                    case R.id.location_item:
-                        Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
+                    case R.id.price_sort_bottom_bar:
+                        //Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
+                        sortByPrice();
                         break;
                 }
             }
 
             @Override
             public void onMenuTabReSelected(@IdRes int menuItemId) {
-                if (menuItemId == R.id.bottomBarItemOne) {
+                if (menuItemId == R.id.abc_sort_bottom_bar) {
                     // The user reselected item number one, scroll your content to top.
                 }
             }
@@ -151,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
 
     private void queryFirebase(){
-        mSchoolsList = new LinkedList<>();
+        mSchoolsList = new ArrayList<>();
         Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -240,5 +248,33 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         }
 
         return addressListHashMap;
+    }
+
+    private void sortByPrice() {
+        Toast.makeText(MainActivity.this, "sort by price toasted", Toast.LENGTH_SHORT).show();
+        Collections.sort(mSchoolsList, new PriceComparator());
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            Log.i(TAG, "sortByPrice: " + mSchoolsList.get(i).getName() + "price: " + mSchoolsList.get(i).getPrice());
+        }
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    private void sortByRating() {
+        Collections.sort(mSchoolsList, new RatingComparator());
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            Log.i(TAG, "sortByrating: " + mSchoolsList.get(i).getName() + "rating: " + mSchoolsList.get(i).getRating());
+        }
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+
+
+    }
+
+    private void sortByName() {
+        Collections.sort(mSchoolsList, new NameComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+
     }
 }
