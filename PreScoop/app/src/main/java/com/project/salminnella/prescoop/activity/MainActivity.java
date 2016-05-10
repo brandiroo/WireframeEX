@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,8 @@ import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     PreSchool mPreschool;
     RecyclerView mRecyclerView;
     ListAdapter mRecycleAdapter;
+    private BottomBar mBottomBar;
 
 
     @Override
@@ -54,7 +58,54 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         }
         createRecycler();
         handleSearchFilterIntent(getIntent());
+        mBottomBar = BottomBar.attach(this, savedInstanceState);
+        buildBottomBar();
+
+
     }
+
+    private void buildBottomBar() {
+        mBottomBar.setItemsFromMenu(R.menu.menu_bottom_bar_main, new OnMenuTabClickListener() {
+            @Override
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId) {
+                    case R.id.bottomBarItemOne:
+                        Toast.makeText(MainActivity.this, "Sort alphabetically", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.favorite_item:
+                        Toast.makeText(MainActivity.this, "Sort By Rating", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.location_item:
+                        Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+                if (menuItemId == R.id.bottomBarItemOne) {
+                    // The user reselected item number one, scroll your content to top.
+                }
+            }
+        });
+
+        // Setting colors for different tabs when there's more than three of them.
+        // You can set colors for tabs in three different ways as shown below.
+//        mBottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
+//        mBottomBar.mapColorForTab(1, 0xFF5D4037);
+//        mBottomBar.mapColorForTab(2, "#7B1FA2");
+//        mBottomBar.mapColorForTab(3, "#FF5252");
+//        mBottomBar.mapColorForTab(4, "#FF9800");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Necessary to restore the BottomBar's state, otherwise we would
+        // lose the current tab on orientation change.
+        mBottomBar.onSaveInstanceState(outState);
+    }
+
 
     private void createRecycler() {
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
