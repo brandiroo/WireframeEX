@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import com.project.salminnella.prescoop.fragment.TabLayoutFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
@@ -21,7 +20,6 @@ public class TabLayoutAdapter extends FragmentPagerAdapter {
 
     public TabLayoutAdapter(FragmentManager fm, Context context, PreSchool preschool) {
         super(fm);
-        Log.i(TAG, "TAB ADAPTER CONSTRUCTOR");
         this.context = context;
         this.preSchool = preschool;
     }
@@ -33,7 +31,6 @@ public class TabLayoutAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.i(TAG, "TAB FRAGMENT CREATING NEW INSTANCE");
 
         return TabLayoutFragment.newInstance(position + 1, preSchool);
     }
