@@ -267,14 +267,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         }
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
-
-
     }
 
     private void sortByName() {
         Collections.sort(mSchoolsList, new NameComparator());
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
-
     }
 }

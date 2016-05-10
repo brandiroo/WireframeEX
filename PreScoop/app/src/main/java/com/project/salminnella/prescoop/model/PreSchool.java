@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by anthony on 5/5/16.
  */
-public class PreSchool implements Serializable, Comparable<PreSchool> {
+public class PreSchool implements Serializable {
 
     private String name;
     private String streetAddress;
@@ -431,11 +431,5 @@ public class PreSchool implements Serializable, Comparable<PreSchool> {
 
     public void setReportUrl(String reportUrl) {
         this.reportUrl = reportUrl;
-    }
-
-
-    @Override
-    public int compareTo(PreSchool another) {
-        return 0;
     }
 }
