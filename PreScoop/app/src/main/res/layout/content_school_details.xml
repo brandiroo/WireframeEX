@@ -63,29 +63,7 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
 
-            <LinearLayout
-                style="@style/Widget.CardContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Info"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="cheese's ipsum blah blah blah blah cheese's ipsum blah blah blah blah" />
-
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -117,6 +95,41 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_margin="16dp">
+            <RelativeLayout
+                android:id="@+id/yelp_icon_rel_layout_details"
+                style="@style/Widget.CardContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/yelp_icon_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/yelp_icon"/>
+                <TextView
+                    android:id="@+id/yelp_title_text_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/yelp_icon_image"
+                    android:layout_marginTop="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+                <ImageView
+                    android:id="@+id/yelp_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/yelp_icon_image"
+                    android:layout_below="@id/yelp_title_text_details"/>
 
+                <ListView
+                    android:id="@+id/yelp_response_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/yelp_icon_image"></ListView>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 </RelativeLayout>

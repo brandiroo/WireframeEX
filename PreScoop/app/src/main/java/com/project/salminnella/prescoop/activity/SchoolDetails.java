@@ -12,17 +12,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
+import com.project.salminnella.prescoop.adapter.YelpAdapter;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
+import com.squareup.picasso.Picasso;
 import com.yelp.clientlib.connection.YelpAPI;
 import com.yelp.clientlib.connection.YelpAPIFactory;
-import com.yelp.clientlib.entities.Review;
+import com.yelp.clientlib.entities.Business;
 import com.yelp.clientlib.entities.SearchResponse;
 
 import java.util.ArrayList;
@@ -38,14 +41,18 @@ public class SchoolDetails extends AppCompatActivity {
     TextView mSchoolName;
     TextView mSchoolAddress;
     PreSchool mPreschoolMain;
+    TextView mYelpTitleText;
+    ImageView mYelpRating;
+    ListView mYelpListView;
+    YelpAdapter mYelpAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_details);
 
-        initToolbar();
         receiveIntent();
+        initToolbar();
         initViews();
         setFab();
         populateSchoolDetails();
@@ -74,7 +81,7 @@ public class SchoolDetails extends AppCompatActivity {
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitle("Top Stories");
+            collapsingToolbarLayout.setTitle(mPreschoolMain.getName());
         }
 
         loadBackdrop();
@@ -84,6 +91,9 @@ public class SchoolDetails extends AppCompatActivity {
     private void initViews() {
         mSchoolName = (TextView) findViewById(R.id.school_name_text_details);
         mSchoolAddress = (TextView) findViewById(R.id.school_address_text_details);
+        mYelpTitleText = (TextView) findViewById(R.id.yelp_title_text_details);
+        mYelpRating = (ImageView) findViewById(R.id.yelp_rating);
+        mYelpListView = (ListView) findViewById(R.id.yelp_response_list);
     }
 
     private void loadBackdrop() {
@@ -125,7 +135,7 @@ public class SchoolDetails extends AppCompatActivity {
 
         // general params
         params.put("term", mPreschoolMain.getName());
-        params.put("limit", Constants.YELP_RESPONSE_LIMIT);
+        params.put("limit", Constants.YELP_RESPONSE_LIMIT_STRING);
         params.put("category_filter", "preschools");
         params.put("sort", "0");
 
@@ -142,24 +152,20 @@ public class SchoolDetails extends AppCompatActivity {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                 SearchResponse searchResponse = response.body();
+                Log.i(TAG, "onResponse: " + searchResponse);
                 if (searchResponse.total() == 0) {
                     Log.i(TAG, "onResponse: nothing found from yelp");
                 } else {
-                    //TODO if response is more then one, need to figure out which
-                    // one to display
-                    filterYelpResponse(searchResponse);
-                    String schoolName = response.body().businesses().get(0).name();
-                    String ratingImgUrl = response.body().businesses().get(0).ratingImgUrl();
-                    String snippetText = response.body().businesses().get(0).snippetText();
-                    ArrayList<Review> reviews = response.body().businesses().get(0).reviews();
-                    String mobileUrl = response.body().businesses().get(0).mobileUrl();
                     // Update UI text with the searchResponse.
-//                    Log.i(TAG, "response total: " + searchResponse.total());
-//                    Log.i(TAG, "search response " + schoolName);
-//                    Log.i(TAG, "rating image " + ratingImgUrl);
-//                    Log.i(TAG, "snippet " + snippetText);
-//                    Log.i(TAG, "reviews " + reviews);
-//                    Log.i(TAG, "mobile url " + mobileUrl);
+                    Business schoolMatch = filterYelpResponse(searchResponse);
+                    if (schoolMatch != null) {
+                        mYelpTitleText.setText(schoolMatch.name());
+                        Picasso.with(SchoolDetails.this).load(schoolMatch.ratingImgUrlLarge()).into(mYelpRating);
+                    } else {
+                        ArrayList<Business> businesses = searchResponse.businesses();
+                        mYelpAdapter = new YelpAdapter(SchoolDetails.this, businesses);
+                        mYelpListView.setAdapter(mYelpAdapter);
+                    }
                 }
             }
             @Override
@@ -172,16 +178,26 @@ public class SchoolDetails extends AppCompatActivity {
         call.enqueue(callback);
     }
 
-    private void filterYelpResponse(SearchResponse response) {
+    private Business filterYelpResponse(SearchResponse response) {
         Log.i(TAG, "filterYelpResponse: searching for " + mPreschoolMain.getName());
         Log.i(TAG, "filterYelpResponse: response total " + response.total());
         int limit = response.total();
-        if (Integer.parseInt(Constants.YELP_RESPONSE_LIMIT) < response.total()) {
-            limit = Integer.parseInt(Constants.YELP_RESPONSE_LIMIT);
+        if (Constants.YELP_RESPONSE_LIMIT_INT < response.total()) {
+            limit = Constants.YELP_RESPONSE_LIMIT_INT;
         }
         for (int i = 0; i < limit; i++) {
             Log.i(TAG, "filterYelpResponse: name " + response.businesses().get(i).name());
+//            if (mPreschoolMain.getName().equals(response.businesses().get(i).name())) {
+//                Log.i(TAG, "filterYelpResponse: found a match");
+//            }
+            int strContains = response.businesses().get(i).name().indexOf(mPreschoolMain.getName());
+            if (strContains != -1) {
+                Log.i(TAG, response.businesses().get(i).name() + " contains " + mPreschoolMain.getName());
+                return response.businesses().get(i);
+            }
         }
+
+        return null;
     }
 
 
