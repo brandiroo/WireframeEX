@@ -1,15 +1,17 @@
 package com.project.salminnella.prescoop.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -19,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
 import com.project.salminnella.prescoop.adapter.YelpAdapter;
+import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
@@ -38,13 +41,15 @@ import retrofit2.Response;
 
 public class SchoolDetails extends AppCompatActivity {
     private static final String TAG = "SchoolDetails";
-    TextView mSchoolName;
-    TextView mSchoolAddress;
-    PreSchool mPreschoolMain;
-    TextView mYelpTitleText;
-    ImageView mYelpRating;
-    ListView mYelpListView;
-    YelpAdapter mYelpAdapter;
+    private TextView mSchoolName;
+    private TextView mSchoolAddress;
+    private PreSchool mPreschoolMain;
+    private TextView mYelpTitleText;
+    private ImageView mYelpRating;
+    private ListView mYelpListView;
+    private YelpAdapter mYelpAdapter;
+    private boolean saveSchool;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +72,7 @@ public class SchoolDetails extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    saveSchool = true;
                 }
             });
         }
@@ -213,4 +217,62 @@ public class SchoolDetails extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         //}
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.maps_menu_item) {
+        }
+        //if (id == R.id.bookmark_item_menu) {
+//        if (bookmarkId == null) {
+//        bookmarkId = String.valueOf(idNum);
+//        item.setIcon(R.drawable.bookmark_selected);
+//        } else {
+//        bookmarkId = null;
+//        item.setIcon(R.drawable.bookmark);
+//        }
+//        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isBookmarkAlreadySaved() {
+        Cursor bookmarkCursor = databaseHelper.findSavedSchool(mPreschoolMain.getName());
+        return bookmarkCursor.getCount() != 0;
+    }
+
+    /**
+     * When user is leaving the activity, checks if they had wanted the article saved to bookmarks
+     * This will insert a record to the database if the user does want it bookmarked,
+     * and it isn't already there
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (saveSchool && !isBookmarkAlreadySaved()) {
+            databaseHelper.insertSavedSchool(mPreschoolMain);
+        } else if (isBookmarkAlreadySaved()) {
+            databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
+        }
+    }
 }
+
+
+
+
+
+
