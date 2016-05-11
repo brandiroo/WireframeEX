@@ -142,14 +142,36 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
             if (first >= '0' && first <= '9') {
                 searchByZipCode(query);
             } else if (Character.isLetter(first)) {
-                // search neighborhood
+                searchByNeighborhood(query);
             } else {
-                // search price range
+                searchByPriceRange(query);
             }
         }
     }
 
     private void searchByZipCode(String query) {
+        ArrayList<PreSchool> filteredList = new ArrayList<>();
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            if (mSchoolsList.get(i).getZipCode().equals(query)) {
+                filteredList.add(mSchoolsList.get(i));
+            }
+        }
+        mRecycleAdapter.swap(filteredList);
+    }
+
+    private void searchByNeighborhood(String query) {
+        ArrayList<PreSchool> filteredList = new ArrayList<>();
+        String queryLowerCase = query.toLowerCase();
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            String regionLowerCase = mSchoolsList.get(i).getRegion().toLowerCase();
+            if (regionLowerCase.contains(queryLowerCase)) {
+                filteredList.add(mSchoolsList.get(i));
+            }
+        }
+        mRecycleAdapter.swap(filteredList);
+    }
+
+    private void searchByPriceRange(String query) {
         ArrayList<PreSchool> filteredList = new ArrayList<>();
         for (int i = 0; i < mSchoolsList.size(); i++) {
             if (mSchoolsList.get(i).getZipCode().equals(query)) {
