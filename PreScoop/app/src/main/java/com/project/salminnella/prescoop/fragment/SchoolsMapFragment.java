@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.activity.SchoolDetails;
 import com.project.salminnella.prescoop.utility.Constants;
-import com.project.salminnella.prescoop.utility.Utilities;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +30,7 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
     private LatLngBounds sanFrancisco = new LatLngBounds(
             new LatLng(37.657785, -122.521568), new LatLng(37.825296, -122.354369));
     HashMap<String, String> addressList;
+    HashMap<String, LatLng> markersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,8 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
 
     private void receiveIntentFromMain() {
         Intent intentFromMain = getIntent();
-        addressList = (HashMap<String, String>) intentFromMain.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
+//        addressList = (HashMap<String, String>) intentFromMain.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
+        markersList = (HashMap<String, LatLng>) intentFromMain.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
     }
 
 
@@ -81,16 +82,22 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        for (Map.Entry<String,String> entry : addressList.entrySet()) {
+//        for (Map.Entry<String,String> entry : addressList.entrySet()) {
+//            String key = entry.getKey();
+//            String value = entry.getValue();
+//            LatLng address = Utilities.getLocationFromAddress(this, value);
+//            if (address != null) {
+//                mMap.addMarker(new MarkerOptions().position(address).title(key));
+//            } else {
+//                Log.i(TAG, "onMapReady - null location: " + entry);
+//            }
+//        }
+        for (Map.Entry<String, LatLng> entry : markersList.entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue();
-            LatLng address = Utilities.getLocationFromAddress(this, value);
-            if (address != null) {
-                mMap.addMarker(new MarkerOptions().position(address).title(key));
-            } else {
-                Log.i(TAG, "onMapReady - null location: " + entry);
-            }
+            LatLng latLng = entry.getValue();
+            mMap.addMarker(new MarkerOptions().position(latLng).title(key));
         }
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sanFrancisco.getCenter(), 11.8f));
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {

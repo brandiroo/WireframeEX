@@ -12,6 +12,7 @@ import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,5 +98,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return mSchools.size();
+    }
+
+    public void swap(ArrayList<PreSchool> schools){
+        mSchools.clear();
+        mSchools.addAll(schools);
+        notifyDataSetChanged();
     }
 }

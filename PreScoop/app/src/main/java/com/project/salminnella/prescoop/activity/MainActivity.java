@@ -23,6 +23,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.google.android.gms.maps.model.LatLng;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
@@ -129,11 +130,36 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private void handleSearchFilterIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+            filterSchoolsList(query);
             Toast.makeText(MainActivity.this,"Searching for "+query,Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void initToolbar() {
+    private void filterSchoolsList(String query) {
+        // will need a null check
+        if (!query.equals("")) {
+            char first = query.charAt(0);
+            if (first >= '0' && first <= '9') {
+                searchByZipCode(query);
+            } else if (Character.isLetter(first)) {
+                // search neighborhood
+            } else {
+                // search price range
+            }
+        }
+    }
+
+    private void searchByZipCode(String query) {
+        ArrayList<PreSchool> filteredList = new ArrayList<>();
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            if (mSchoolsList.get(i).getZipCode().equals(query)) {
+                filteredList.add(mSchoolsList.get(i));
+            }
+        }
+        mRecycleAdapter.swap(filteredList);
+    }
+
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
@@ -220,12 +246,10 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.maps_menu_item) {
-            HashMap<String, String> addressList = buildAddressListHash();
+        if (id == R.id.maps_menu_item) {
+            HashMap<String, LatLng> markersHashMap = buildMapMarkers();
             Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
-            intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, addressList);
+            intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, markersHashMap);
             startActivity(intentToMaps);
         }
 
@@ -248,6 +272,21 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         }
 
         return addressListHashMap;
+    }
+
+    private HashMap buildMapMarkers() {
+        HashMap<String, LatLng> mapMarkersHashMap = new HashMap<>();
+        LatLng coordinates;
+        if (mSchoolsList == null) {
+            return mapMarkersHashMap;
+            //TODO return something else
+        }
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            coordinates = new LatLng(mSchoolsList.get(i).getLatitude(), mSchoolsList.get(i).getLongitude());
+            mapMarkersHashMap.put(mSchoolsList.get(i).getName(), coordinates);
+        }
+
+        return mapMarkersHashMap;
     }
 
     private void sortByPrice() {

@@ -1,10 +1,14 @@
 package com.project.salminnella.prescoop.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
  * Created by anthony on 5/5/16.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PreSchool implements Serializable {
 
     private String name;
@@ -56,6 +60,11 @@ public class PreSchool implements Serializable {
     private String reportDates;
     private String reportUrl;
 
+    private double latitude, longitude;
+
+    private String licenseStatus;
+    private String licenseDate;
+
     public PreSchool() {
     }
 
@@ -66,7 +75,15 @@ public class PreSchool implements Serializable {
         this.zipCode = zipcode;
     }
 
-    public PreSchool(String name, String streetAddress, String city, String state, String zipCode, String region, String phoneNumber, long facilityNumber, int capacity, int price, String type, String websiteUrl, String imageUrl, int rating, int numVisits, String visitDates, int citationTypeA, int citationTypeB, int inspectionNum, String inpectionDates, int inspectionTypeA, int inspectionTypeB, int complaintTotal, int totalComplaintAllegSub, int totalComplaintAllegIncon, int totalComplaintTypeACitation, int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVists, String otherVisitDates, int visitTypeACitation, int visitTypeBCitation, int totalReports, String reportDates, String reportUrl) {
+    public PreSchool(String name, String streetAddress, String city, String state, String zipCode, String region,
+                     String phoneNumber, long facilityNumber, int capacity, int price, String type, String websiteUrl,
+                     String imageUrl, int rating, int numVisits, String visitDates, int citationTypeA, int citationTypeB,
+                     int inspectionNum, String inpectionDates, int inspectionTypeA, int inspectionTypeB, int complaintTotal,
+                     int totalComplaintAllegSub, int totalComplaintAllegIncon, int totalComplaintTypeACitation,
+                     int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVists,
+                     String otherVisitDates, int visitTypeACitation, int visitTypeBCitation, int totalReports,
+                     String reportDates, String reportUrl, double pLongitude, double pLatitude, String licenseDate,
+                     String licenseStatus) {
         this.name = name;
         this.streetAddress = streetAddress;
         this.city = city;
@@ -103,6 +120,10 @@ public class PreSchool implements Serializable {
         this.totalReports = totalReports;
         this.reportDates = reportDates;
         this.reportUrl = reportUrl;
+        this.latitude = pLatitude;
+        this.longitude = pLongitude;
+        this.licenseDate = licenseDate;
+        this.licenseStatus = licenseStatus;
     }
 
     public String getName() {
@@ -431,5 +452,37 @@ public class PreSchool implements Serializable {
 
     public void setReportUrl(String reportUrl) {
         this.reportUrl = reportUrl;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLicenseStatus() {
+        return licenseStatus;
+    }
+
+    public void setLicenseStatus(String licenseStatus) {
+        this.licenseStatus = licenseStatus;
+    }
+
+    public String getLicenseDate() {
+        return licenseDate;
+    }
+
+    public void setLicenseDate(String licenseDate) {
+        this.licenseDate = licenseDate;
     }
 }
