@@ -39,7 +39,7 @@ public class PreSchool implements Serializable {
     private int citationTypeB;
 
     private int inspectionNum;
-    private String inpectionDates;
+    private String inspectionDates;
     private int inspectionTypeA;
     private int inspectionTypeB;
 
@@ -51,7 +51,7 @@ public class PreSchool implements Serializable {
     private int totalComplaintVisits;
     private String complaintDetails;
 
-    private int otherVists;
+    private int otherVisits;
     private String otherVisitDates;
     private int visitTypeACitation;
     private int visitTypeBCitation;
@@ -75,21 +75,20 @@ public class PreSchool implements Serializable {
         this.zipCode = zipcode;
     }
 
-    public PreSchool(String name, String streetAddress, String city, String state, String zipCode, String region,
-                     String phoneNumber, long facilityNumber, int capacity, int price, String type, String websiteUrl,
-                     String imageUrl, int rating, int numVisits, String visitDates, int citationTypeA, int citationTypeB,
-                     int inspectionNum, String inpectionDates, int inspectionTypeA, int inspectionTypeB, int complaintTotal,
+    public PreSchool(SchoolLocation schoolLocation, String phoneNumber, long facilityNumber, int capacity, int price, String type, String websiteUrl,
+                     String imageUrl, int rating, AllVisits allVisits, int citationTypeA, int citationTypeB,
+                     int inspectionNum, String inspectionDates, int inspectionTypeA, int inspectionTypeB, int complaintTotal,
                      int totalComplaintAllegSub, int totalComplaintAllegIncon, int totalComplaintTypeACitation,
-                     int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVists,
+                     int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVisits,
                      String otherVisitDates, int visitTypeACitation, int visitTypeBCitation, int totalReports,
                      String reportDates, String reportUrl, double pLongitude, double pLatitude, String licenseDate,
                      String licenseStatus) {
-        this.name = name;
-        this.streetAddress = streetAddress;
-        this.city = city;
-        this.state = state;
-        this.zipCode = zipCode;
-        this.region = region;
+        this.name = schoolLocation.getName();
+        this.streetAddress = schoolLocation.getStreetAddress();
+        this.city = schoolLocation.getCity();
+        this.state = schoolLocation.getState();
+        this.zipCode = schoolLocation.getZipCode();
+        this.region = schoolLocation.getRegion();
         this.phoneNumber = phoneNumber;
         this.facilityNumber = facilityNumber;
         this.capacity = capacity;
@@ -98,12 +97,12 @@ public class PreSchool implements Serializable {
         this.websiteUrl = websiteUrl;
         this.imageUrl = imageUrl;
         this.rating = rating;
-        this.numVisits = numVisits;
-        this.visitDates = visitDates;
+        this.numVisits = allVisits.getNumVisits();
+        this.visitDates = allVisits.getVisitDates();
         this.citationTypeA = citationTypeA;
         this.citationTypeB = citationTypeB;
         this.inspectionNum = inspectionNum;
-        this.inpectionDates = inpectionDates;
+        this.inspectionDates = inspectionDates;
         this.inspectionTypeA = inspectionTypeA;
         this.inspectionTypeB = inspectionTypeB;
         this.complaintTotal = complaintTotal;
@@ -113,7 +112,7 @@ public class PreSchool implements Serializable {
         this.totalComplaintTypeBCitation = totalComplaintTypeBCitation;
         this.totalComplaintVisits = totalComplaintVisits;
         this.complaintDetails = complaintDetails;
-        this.otherVists = otherVists;
+        this.otherVisits = otherVisits;
         this.otherVisitDates = otherVisitDates;
         this.visitTypeACitation = visitTypeACitation;
         this.visitTypeBCitation = visitTypeBCitation;
@@ -318,12 +317,12 @@ public class PreSchool implements Serializable {
         this.inspectionNum = inspectionNum;
     }
 
-    public String getInpectionDates() {
-        return inpectionDates;
+    public String getInspectionDates() {
+        return inspectionDates;
     }
 
-    public void setInpectionDates(String inpectionDates) {
-        this.inpectionDates = inpectionDates;
+    public void setInspectionDates(String inspectionDates) {
+        this.inspectionDates = inspectionDates;
     }
 
     public int getInspectionTypeA() {
@@ -398,12 +397,12 @@ public class PreSchool implements Serializable {
         this.complaintDetails = complaintDetails;
     }
 
-    public int getOtherVists() {
-        return otherVists;
+    public int getOtherVisits() {
+        return otherVisits;
     }
 
-    public void setOtherVists(int otherVists) {
-        this.otherVists = otherVists;
+    public void setOtherVisits(int otherVisits) {
+        this.otherVisits = otherVisits;
     }
 
     public String getOtherVisitDates() {

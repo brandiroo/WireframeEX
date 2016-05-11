@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,6 @@ import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.NameComparator;
 import com.project.salminnella.prescoop.utility.PriceComparator;
 import com.project.salminnella.prescoop.utility.RatingComparator;
-import com.project.salminnella.prescoop.utility.Utilities;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -42,13 +42,21 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
-
-    ArrayList<PreSchool> mSchoolsList;
-    Firebase mFireBaseRoot, mFirebasePreschoolRef;
-    PreSchool mPreschool;
-    RecyclerView mRecyclerView;
-    ListAdapter mRecycleAdapter;
+    //TODO check support library for refresh
+    //TODO markers for maps can be turned into an object class
+    //TODO use firebase UI for recycler view instead of the onchild overrides
+    //TODO permissions for location services on maps
+    //TODO database helper for saved schools
+    private ArrayList<PreSchool> mSchoolsList;
+    private Firebase mFireBaseRoot, mFirebasePreschoolRef;
+    private PreSchool mPreschool;
+    private RecyclerView mRecyclerView;
+    private ListAdapter mRecycleAdapter;
     private BottomBar mBottomBar;
+    private SwipeRefreshLayout swipeContainer;
+    private ArrayList<PreSchool> backupList;
+    //private boolean refresh = false;
+
 
 
     @Override
@@ -57,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         setContentView(R.layout.activity_main);
 
         initToolbar();
+        initSwipeRefresh();
         setFAB();
         initFirebase();
         if (mSchoolsList == null) {
@@ -67,7 +76,30 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         buildBottomBar();
 
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(MainActivity.this, "pulled to refresh was fired", Toast.LENGTH_SHORT).show();
+                //TODO potential bug - refresh is never reset to false
+                //refresh = true;
+                for (int i = 0; i < backupList.size(); i++) {
+                    Log.i(TAG, "onRefresh: " + backupList.get(i).getName());
+                }
+                //queryFirebase();
+                mRecycleAdapter.swap(backupList);
+                swipeContainer.setRefreshing(false);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
+    }
+
+    private void initSwipeRefresh() {
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
     }
 
     private void buildBottomBar() {
@@ -136,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     }
 
     private void filterSchoolsList(String query) {
-        // will need a null check
         if (!query.equals("")) {
             char first = query.charAt(0);
             if (first >= '0' && first <= '9') {
@@ -173,8 +204,27 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     private void searchByPriceRange(String query) {
         ArrayList<PreSchool> filteredList = new ArrayList<>();
+        //back up the schools list
+//        backupList = new ArrayList<>();
+//        backupList.addAll(mSchoolsList);
+//        for (int i = 0; i < backupList.size(); i++) {
+//            Log.i(TAG, "searchByPriceRange: " + backupList.get(i).getName());
+//        }
+        int min = 0;
+        int max = 0;
+        if (query.equals("$")) {
+            min = 0;
+            max = 1000;
+        } else if (query.equals("$$")) {
+            min = 1001;
+            max = 2000;
+        } else if (query.equals("$$$")) {
+            min = 2001;
+            max = 5000;
+        }
+
         for (int i = 0; i < mSchoolsList.size(); i++) {
-            if (mSchoolsList.get(i).getZipCode().equals(query)) {
+            if (mSchoolsList.get(i).getPrice() >= min && mSchoolsList.get(i).getPrice() <= max) {
                 filteredList.add(mSchoolsList.get(i));
             }
         }
@@ -208,13 +258,15 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     private void queryFirebase(){
         mSchoolsList = new ArrayList<>();
+        backupList = new ArrayList<>();
         Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
                 mPreschool = snapshot.getValue(PreSchool.class);
                 mSchoolsList.add(mPreschool);
-                mRecycleAdapter.notifyDataSetChanged();
+                backupList.add(mPreschool);
+                    mRecycleAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -236,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-
         });
     }
 
@@ -278,23 +329,23 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         return super.onOptionsItemSelected(item);
     }
 
-    private HashMap buildAddressListHash() {
-        HashMap<String, String> addressListHashMap = new HashMap<>();
-
-        if (mSchoolsList == null) {
-            return addressListHashMap;
-            //TODO return something else
-        }
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            String stringAddress = Utilities.buildAddressString(mSchoolsList.get(i).getStreetAddress(),
-                    mSchoolsList.get(i).getCity(),
-                    mSchoolsList.get(i).getState(),
-                    mSchoolsList.get(i).getZipCode());
-            addressListHashMap.put(mSchoolsList.get(i).getName(), stringAddress);
-        }
-
-        return addressListHashMap;
-    }
+//    private HashMap buildAddressListHash() {
+//        HashMap<String, String> addressListHashMap = new HashMap<>();
+//
+//        if (mSchoolsList == null) {
+//            return addressListHashMap;
+//            //TODO return something else
+//        }
+//        for (int i = 0; i < mSchoolsList.size(); i++) {
+//            String stringAddress = Utilities.buildAddressString(mSchoolsList.get(i).getStreetAddress(),
+//                    mSchoolsList.get(i).getCity(),
+//                    mSchoolsList.get(i).getState(),
+//                    mSchoolsList.get(i).getZipCode());
+//            addressListHashMap.put(mSchoolsList.get(i).getName(), stringAddress);
+//        }
+//
+//        return addressListHashMap;
+//    }
 
     private HashMap buildMapMarkers() {
         HashMap<String, LatLng> mapMarkersHashMap = new HashMap<>();
