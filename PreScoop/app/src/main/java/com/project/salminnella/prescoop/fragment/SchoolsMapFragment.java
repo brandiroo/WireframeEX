@@ -18,19 +18,20 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.activity.SchoolDetails;
+import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCallback {
     private static final String TAG = "MapFragment";
     private GoogleMap mMap;
-    // Create a LatLngBounds that includes Australia.
     private LatLngBounds sanFrancisco = new LatLngBounds(
             new LatLng(37.657785, -122.521568), new LatLng(37.825296, -122.354369));
-    HashMap<String, String> addressList;
     HashMap<String, LatLng> markersList;
+    private ArrayList<PreSchool> mSchoolsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
         Intent intentFromMain = getIntent();
 //        addressList = (HashMap<String, String>) intentFromMain.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
         markersList = (HashMap<String, LatLng>) intentFromMain.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
+        mSchoolsList = (ArrayList<PreSchool>) intentFromMain.getSerializableExtra(Constants.SCHOOLS_LIST_KEY);
     }
 
 
@@ -105,12 +107,22 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
             public void onInfoWindowClick(Marker marker) {
                 Log.i(TAG, "onInfoWindowClick: " + marker.getTitle());
                 Intent intent = new Intent(SchoolsMapFragment.this, SchoolDetails.class);
-                intent.putExtra(Constants.SCHOOL_OBJECT_KEY, marker.getTitle());
+                PreSchool schoolDetails = selectSchoolForIntent(marker.getTitle());
+                intent.putExtra(Constants.SCHOOL_OBJECT_KEY, schoolDetails);
                 startActivity(intent);
             }
         });
     }
 
-
-
+    private PreSchool selectSchoolForIntent(String title) {
+        PreSchool schoolForIntent = null;
+        for(int i = 0; i < mSchoolsList.size(); i++) {
+            if (title.equals(mSchoolsList.get(i).getName())) {
+                schoolForIntent = mSchoolsList.get(i);
+                break;
+            }
+        }
+        Log.i(TAG, "selectSchoolForIntent: " + schoolForIntent.getName());
+        return schoolForIntent;
+    }
 }

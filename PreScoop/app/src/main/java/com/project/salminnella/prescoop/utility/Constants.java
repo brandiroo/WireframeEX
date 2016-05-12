@@ -10,6 +10,8 @@ public class Constants {
     public static final String FIREBASE_ROOT_URL = "https://prescoop.firebaseio.com/";
     public static final String FIREBASE_ROOT_CHILD = "Facility";
     public static final String ORDER_BY_NAME = "name";
+    public static final String SCHOOLS_LIST_KEY = "schoolsList";
+
 
     //YelpAPIProvider yelpProvider;
     public static final String YELP_CONSUMER_KEY = "qjt368tSTOpOje3NIbdfyg";

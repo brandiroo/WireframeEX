@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
@@ -23,6 +25,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
@@ -56,9 +59,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private SwipeRefreshLayout swipeContainer;
     private ArrayList<PreSchool> backupList;
     DatabaseHelper dbHelper;
+    private ProgressBar progressBar;
     //private boolean refresh = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         setContentView(R.layout.activity_main);
 
         dbHelper = DatabaseHelper.getInstance(MainActivity.this);
+        initViews();
+        progressBar.setVisibility(View.VISIBLE);
+
         initToolbar();
         initSwipeRefresh();
         initFirebase();
@@ -74,19 +79,22 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         }
         createRecycler();
         handleSearchFilterIntent(getIntent());
-        mBottomBar = BottomBar.attach(this, savedInstanceState);
-        buildBottomBar();
+        buildBottomBar(savedInstanceState);
+        setSwipeRefreshListener();
+        //removeProgressBar();
+    }
 
+    private void removeProgressBar() {
+        if (mSchoolsList.size() > 0) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void setSwipeRefreshListener() {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Toast.makeText(MainActivity.this, "pulled to refresh was fired", Toast.LENGTH_SHORT).show();
-                //TODO potential bug - refresh is never reset to false
-                //refresh = true;
-                for (int i = 0; i < backupList.size(); i++) {
-                    Log.i(TAG, "onRefresh: " + backupList.get(i).getName());
-                }
-                //queryFirebase();
                 mRecycleAdapter.swap(backupList);
                 swipeContainer.setRefreshing(false);
             }
@@ -96,36 +104,23 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+    }
 
+    private void initViews() {
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
     }
 
     private void initSwipeRefresh() {
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
     }
 
-    private void buildBottomBar() {
+    private void buildBottomBar(Bundle savedInstanceState) {
+        mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.setItemsFromMenu(R.menu.menu_bottom_bar_main, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
-                switch (menuItemId) {
-                    case R.id.abc_sort_bottom_bar:
-                        Toast.makeText(MainActivity.this, "Sort alphabetically", Toast.LENGTH_SHORT).show();
-                        sortByName();
-                        break;
-                    case R.id.rating_sort_bottom_bar:
-                        Toast.makeText(MainActivity.this, "Sort By Rating", Toast.LENGTH_SHORT).show();
-                        sortByRating();
-                        break;
-                    case R.id.price_sort_bottom_bar:
-                        //Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
-                        sortByPrice();
-                        break;
-                    case R.id.bookmarks_bottom_bar:
-                        Toast.makeText(MainActivity.this, "bookmarks selected", Toast.LENGTH_SHORT).show();
-                        Cursor cursor = dbHelper.findAllSavedSchools();
-                        //need a cursor adapter to work with recycler view - hope i have enough time to figure it out.
-                        break;
-                }
+                switchBottomBarTab(menuItemId);
             }
 
             @Override
@@ -142,7 +137,28 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         mBottomBar.mapColorForTab(1, 0xFF5D4037);
         mBottomBar.mapColorForTab(2, "#7B1FA2");
         mBottomBar.mapColorForTab(3, "#FF5252");
-//        mBottomBar.mapColorForTab(4, "#FF9800");
+    }
+
+    private void switchBottomBarTab(int menuItemId) {
+        switch (menuItemId) {
+            case R.id.abc_sort_bottom_bar:
+                Toast.makeText(MainActivity.this, "Sort alphabetically", Toast.LENGTH_SHORT).show();
+                sortByName();
+                break;
+            case R.id.rating_sort_bottom_bar:
+                Toast.makeText(MainActivity.this, "Sort By Rating", Toast.LENGTH_SHORT).show();
+                sortByRating();
+                break;
+            case R.id.price_sort_bottom_bar:
+                //Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
+                sortByPrice();
+                break;
+            case R.id.bookmarks_bottom_bar:
+                Toast.makeText(MainActivity.this, "bookmarks selected", Toast.LENGTH_SHORT).show();
+                Cursor cursor = dbHelper.findAllSavedSchools();
+                //need a cursor adapter to work with recycler view - hope i have enough time to figure it out.
+                break;
+        }
     }
 
     @Override
@@ -155,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     // region RecyclerView
     private void createRecycler() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mRecycleAdapter = new ListAdapter(mSchoolsList, this);
         mRecyclerView.setAdapter(mRecycleAdapter);
@@ -283,13 +298,19 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         mSchoolsList = new ArrayList<>();
         backupList = new ArrayList<>();
         Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                removeProgressBar();
+            }
+            public void onCancelled(FirebaseError firebaseError) { }
+        });
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
                 mPreschool = snapshot.getValue(PreSchool.class);
                 mSchoolsList.add(mPreschool);
                 backupList.add(mPreschool);
-                    mRecycleAdapter.notifyDataSetChanged();
+                mRecycleAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -341,6 +362,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
             HashMap<String, LatLng> markersHashMap = buildMapMarkers();
             Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
             intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, markersHashMap);
+            intentToMaps.putExtra(Constants.SCHOOLS_LIST_KEY, mSchoolsList);
+
             startActivity(intentToMaps);
         }
 
