@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/all_visits_frag_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="all visits"/>
+    <LinearLayout
+        android:id="@+id/citations_label_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="15dp">
+        <TextView
+            android:id="@+id/num_visits_label_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/number_of_visits"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/visit_dates_label_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/visit_dates"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+    </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/citations_text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignTop="@+id/citations_label_layout"
+        android:layout_toEndOf="@+id/citations_label_layout"
+        android:layout_marginStart="38dp">
+
+        <TextView
+            android:id="@+id/num_visits_text_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginLeft="30dp"/>
+        <TextView
+            android:id="@+id/visit_dates_text_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginLeft="30dp"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -58,7 +58,6 @@ public class SchoolDetails extends AppCompatActivity {
         setContentView(R.layout.activity_school_details);
 
         databaseHelper = DatabaseHelper.getInstance(SchoolDetails.this);
-
         receiveIntent();
         initToolbar();
         initViews();

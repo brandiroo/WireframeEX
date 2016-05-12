@@ -228,4 +228,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{schoolName});
     }
 
+    public Cursor findAllSavedSchools() {
+        Cursor cursor = dbRead.query(PRESCHOOL_TABLE_NAME, COLUMNS,
+                COL_FAVORITE + " = 1",
+                null,
+                null,
+                null,
+                null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+
+        return cursor;
+    }
+
 }
