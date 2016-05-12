@@ -30,8 +30,10 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private LatLngBounds sanFrancisco = new LatLngBounds(
             new LatLng(37.657785, -122.521568), new LatLng(37.825296, -122.354369));
-    HashMap<String, LatLng> markersList;
+    HashMap<String, LatLng> mMarkersList;
+    PreSchool mPreschool;
     private ArrayList<PreSchool> mSchoolsList;
+    LatLng mLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,10 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
     }
 
     private void receiveIntentFromMain() {
-        Intent intentFromMain = getIntent();
-//        addressList = (HashMap<String, String>) intentFromMain.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
-        markersList = (HashMap<String, LatLng>) intentFromMain.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
-        mSchoolsList = (ArrayList<PreSchool>) intentFromMain.getSerializableExtra(Constants.SCHOOLS_LIST_KEY);
+        Intent receiveIntent = getIntent();
+        mMarkersList = (HashMap<String, LatLng>) receiveIntent.getSerializableExtra(Constants.ADDRESS_LIST_KEY);
+        mSchoolsList = (ArrayList<PreSchool>) receiveIntent.getSerializableExtra(Constants.SCHOOLS_LIST_KEY);
+        mPreschool = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_MARKER_KEY);
     }
 
 
@@ -94,11 +96,17 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
 //                Log.i(TAG, "onMapReady - null location: " + entry);
 //            }
 //        }
-        for (Map.Entry<String, LatLng> entry : markersList.entrySet()) {
-            String key = entry.getKey();
-            LatLng latLng = entry.getValue();
-            mMap.addMarker(new MarkerOptions().position(latLng).title(key));
+        if (mSchoolsList == null) {
+            mLatLng = new LatLng(mPreschool.getLatitude(), mPreschool.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(mLatLng).title(mPreschool.getName()));
+        } else {
+            for (Map.Entry<String, LatLng> entry : mMarkersList.entrySet()) {
+                String key = entry.getKey();
+                mLatLng = entry.getValue();
+                mMap.addMarker(new MarkerOptions().position(mLatLng).title(key));
+            }
         }
+
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sanFrancisco.getCenter(), 11.8f));
 
@@ -106,23 +114,30 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Log.i(TAG, "onInfoWindowClick: " + marker.getTitle());
-                Intent intent = new Intent(SchoolsMapFragment.this, SchoolDetails.class);
-                PreSchool schoolDetails = selectSchoolForIntent(marker.getTitle());
-                intent.putExtra(Constants.SCHOOL_OBJECT_KEY, schoolDetails);
-                startActivity(intent);
+                Intent intentToSchoolDetails = new Intent(SchoolsMapFragment.this, SchoolDetails.class);
+                if (mSchoolsList != null) {
+                    PreSchool filteredPreschool = selectSchoolForIntent(marker.getTitle());
+                    intentToSchoolDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, filteredPreschool);
+                } else {
+                    intentToSchoolDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschool);
+                }
+
+                startActivity(intentToSchoolDetails);
             }
         });
     }
 
     private PreSchool selectSchoolForIntent(String title) {
         PreSchool schoolForIntent = null;
-        for(int i = 0; i < mSchoolsList.size(); i++) {
-            if (title.equals(mSchoolsList.get(i).getName())) {
-                schoolForIntent = mSchoolsList.get(i);
-                break;
+        if (mSchoolsList != null) {
+            for(int i = 0; i < mSchoolsList.size(); i++) {
+                if (title.equals(mSchoolsList.get(i).getName())) {
+                    schoolForIntent = mSchoolsList.get(i);
+                    break;
+                }
             }
         }
-        Log.i(TAG, "selectSchoolForIntent: " + schoolForIntent.getName());
+
         return schoolForIntent;
     }
 }
