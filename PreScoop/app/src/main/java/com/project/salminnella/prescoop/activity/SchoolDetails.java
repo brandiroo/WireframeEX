@@ -50,39 +50,53 @@ public class SchoolDetails extends AppCompatActivity {
     private YelpAdapter mYelpAdapter;
     private boolean saveSchool;
     private DatabaseHelper databaseHelper;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_details);
 
+        databaseHelper = DatabaseHelper.getInstance(SchoolDetails.this);
+
         receiveIntent();
         initToolbar();
         initViews();
         setFab();
+        adjustFabIcon();
         populateSchoolDetails();
         callYelpProvider();
         initTabLayout();
 
+
     }
 
     private void setFab() {
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.i(TAG, "onClick: fab - saveSchool = " + saveSchool);
                     if (saveSchool) {
-                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_attach_money_black_24dp));
+                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark));
                         saveSchool = false;
                     } else {
-                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_grade_black_24dp));
+                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_selected));
                         saveSchool = true;
 
                     }
-
+                    Log.i(TAG, "onClick: fab - saveSchool after click = " + saveSchool);
                 }
             });
+        }
+    }
+
+    private void adjustFabIcon() {
+        Log.i(TAG, "adjustFabIcon: before if - saveSchool = " + saveSchool);
+        if (isBookmarkAlreadySaved()) {
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_selected));
+            saveSchool = true;
         }
     }
 
@@ -191,14 +205,15 @@ public class SchoolDetails extends AppCompatActivity {
     }
 
     private Business filterYelpResponse(SearchResponse response) {
-        Log.i(TAG, "filterYelpResponse: searching for " + mPreschoolMain.getName());
-        Log.i(TAG, "filterYelpResponse: response total " + response.total());
+//        Log.i(TAG, "filterYelpResponse: searching for " + mPreschoolMain.getName());
+//        Log.i(TAG, "filterYelpResponse: response total " + response.total());
         int limit = response.total();
         if (Constants.YELP_RESPONSE_LIMIT_INT < response.total()) {
             limit = Constants.YELP_RESPONSE_LIMIT_INT;
         }
         for (int i = 0; i < limit; i++) {
-            Log.i(TAG, "filterYelpResponse: name " + response.businesses().get(i).name());
+//            Log.i(TAG, "filterYelpResponse: name " + response.businesses().get(i).name());
+
 //            if (mPreschoolMain.getName().equals(response.businesses().get(i).name())) {
 //                Log.i(TAG, "filterYelpResponse: found a match");
 //            }
@@ -245,18 +260,11 @@ public class SchoolDetails extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.maps_menu_item) {
         }
-        //if (id == R.id.bookmark_item_menu) {
-//        if (bookmarkId == null) {
-//        bookmarkId = String.valueOf(idNum);
-//        item.setIcon(R.drawable.bookmark_selected);
-//        } else {
-//        bookmarkId = null;
-//        item.setIcon(R.drawable.bookmark);
-//        }
-//        }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     private boolean isBookmarkAlreadySaved() {
         Cursor bookmarkCursor = databaseHelper.findSavedSchool(mPreschoolMain.getName());
@@ -271,11 +279,13 @@ public class SchoolDetails extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        if (saveSchool && !isBookmarkAlreadySaved()) {
-//            databaseHelper.insertSavedSchool(mPreschoolMain);
-//        } else if (isBookmarkAlreadySaved()) {
-//            databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
-//        }
+        if (saveSchool) {
+            if (!isBookmarkAlreadySaved()) {
+                databaseHelper.insertSavedSchool(mPreschoolMain);
+            }
+        } else if (isBookmarkAlreadySaved()) {
+                databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
+        }
     }
 }
 

@@ -94,7 +94,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         holder.bind(mSchools.get(position), listener);
     }
 
-
     @Override
     public int getItemCount() {
         return mSchools.size();
@@ -103,18 +102,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public void swap(ArrayList<PreSchool> schools){
         mSchools.clear();
         mSchools.addAll(schools);
-        notifyDataSetChanged();
-    }
-
-    // Clean all elements of the recycler
-    public void clear() {
-        mSchools.clear();
-        notifyDataSetChanged();
-    }
-
-    // Add a list of items
-    public void addAll(List<PreSchool> list) {
-        mSchools.addAll(list);
         notifyDataSetChanged();
     }
 }

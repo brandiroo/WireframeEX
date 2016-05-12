@@ -176,7 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_RANGE, school.getRange());
         values.put(COL_SCHOOL_DESCRIPTION, school.getSchoolDescription());
         values.put(COL_RATING, school.getRating());
-        values.put(COL_FAVORITE, school.getFavorite());
+        values.put(COL_FAVORITE, "1");
         values.put(COL_NUM_VISITS, school.getNumVisits());
         values.put(COL_VISIT_DATES, school.getVisitDates());
         values.put(COL_CITATION_TYPE_A, school.getCitationTypeA());
@@ -208,12 +208,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor findSavedSchool(String schoolName) {
-        Cursor cursor = dbRead.query(PRESCHOOL_TABLE_NAME, COLUMNS, null, null, null, null, null);
+        Cursor cursor = dbRead.query(PRESCHOOL_TABLE_NAME, COLUMNS,
+                COL_NAME + " = ? AND " + COL_FAVORITE + " = 1",
+                new String[]{schoolName},
+                null,
+                null,
+                null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
 
         return cursor;
     }
 
     public void deleteSavedSchool(String schoolName) {
-
+        dbWrite.delete(PRESCHOOL_TABLE_NAME,
+                COL_NAME + " = ? AND " + COL_FAVORITE + " = 1",
+                new String[]{schoolName});
     }
+
 }
