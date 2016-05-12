@@ -17,11 +17,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
 import com.project.salminnella.prescoop.adapter.YelpAdapter;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
+import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
+import com.project.salminnella.prescoop.fragment.TabLayoutFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
@@ -39,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SchoolDetails extends AppCompatActivity {
+public class SchoolDetails extends AppCompatActivity implements TabLayoutFragment.XmlClickable {
     private static final String TAG = "SchoolDetails";
     private TextView mSchoolName;
     private TextView mSchoolAddress;
@@ -47,6 +50,7 @@ public class SchoolDetails extends AppCompatActivity {
     private TextView mYelpTitleText;
     private ImageView mYelpRating;
     private ListView mYelpListView;
+    private ViewPager viewPager;
     private YelpAdapter mYelpAdapter;
     private boolean saveSchool;
     private DatabaseHelper databaseHelper;
@@ -66,7 +70,6 @@ public class SchoolDetails extends AppCompatActivity {
         populateSchoolDetails();
         callYelpProvider();
         initTabLayout();
-
 
     }
 
@@ -121,6 +124,8 @@ public class SchoolDetails extends AppCompatActivity {
         mYelpTitleText = (TextView) findViewById(R.id.yelp_title_text_details);
         mYelpRating = (ImageView) findViewById(R.id.yelp_rating);
         mYelpListView = (ListView) findViewById(R.id.yelp_response_list);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+
     }
 
     private void loadBackdrop() {
@@ -236,8 +241,7 @@ public class SchoolDetails extends AppCompatActivity {
 
 
     private void initTabLayout() {
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        // Set PagerAdapter so that it can display items
         viewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(),
                 SchoolDetails.this, mPreschoolMain));
 
@@ -251,7 +255,7 @@ public class SchoolDetails extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_school_details, menu);
+        getMenuInflater().inflate(R.menu.menu_school_details_activity, menu);
 
 
         return true;
@@ -265,7 +269,16 @@ public class SchoolDetails extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.maps_menu_item) {
+        if (id == R.id.maps_menu_item_details) {
+//            HashMap<String, LatLng> mapMarkerHashMap = new HashMap<>();
+//            LatLng coordinates;
+//            coordinates = new LatLng(mPreschoolMain.getLatitude(), mPreschoolMain.getLongitude());
+//            mapMarkerHashMap.put(mPreschoolMain.getName(), coordinates);
+
+
+            Intent intentToMaps = new Intent(SchoolDetails.this, SchoolsMapFragment.class);
+            intentToMaps.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschoolMain);
+            startActivity(intentToMaps);
         }
 
         return super.onOptionsItemSelected(item);
@@ -293,6 +306,14 @@ public class SchoolDetails extends AppCompatActivity {
         } else if (isBookmarkAlreadySaved()) {
                 databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
         }
+    }
+
+    @Override
+    public void clickMethod(View view, String url) {
+        Toast.makeText(SchoolDetails.this, "clicked the text view - name = " + url, Toast.LENGTH_SHORT).show();
+        Intent intentWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
+        intentWebView.putExtra(Constants.WEB_URL_KEY, url);
+        startActivity(intentWebView);
     }
 }
 

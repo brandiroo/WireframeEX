@@ -63,50 +63,44 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignTop="@+id/complaints_label_layout"
-        android:layout_toEndOf="@+id/complaints_label_layout"
-        android:layout_marginStart="15dp">
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp">
 
         <TextView
             android:id="@+id/total_complaint_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:layout_marginLeft="30dp"
             android:text="1"/>
         <TextView
             android:id="@+id/total_alleg_sub_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:layout_marginLeft="30dp"
             android:text="1"/>
         <TextView
             android:id="@+id/total_alleg_incon_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:layout_marginLeft="30dp"
             android:text="1"/>
         <TextView
             android:id="@+id/total_type_a_citation_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:layout_marginLeft="30dp"
             android:text="1"/>
         <TextView
             android:id="@+id/total_type_b_citation_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:layout_marginLeft="30dp"
             android:text="1"/>
         <TextView
             android:id="@+id/total_complaint_visits_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:layout_marginLeft="30dp"
             android:text="1"/>
     </LinearLayout>
 

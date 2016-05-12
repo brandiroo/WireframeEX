@@ -11,6 +11,8 @@ public class Constants {
     public static final String FIREBASE_ROOT_CHILD = "Facility";
     public static final String ORDER_BY_NAME = "name";
     public static final String SCHOOLS_LIST_KEY = "schoolsList";
+    public static final String SCHOOL_MARKER_KEY = "schoolMarker";
+    public static final String WEB_URL_KEY = "webUrl";
 
 
     //YelpAPIProvider yelpProvider;

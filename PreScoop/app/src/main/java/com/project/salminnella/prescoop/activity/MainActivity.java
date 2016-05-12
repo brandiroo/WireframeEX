@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     //TODO use firebase UI for recycler view instead of the onchild overrides
     //TODO permissions for location services on maps
     //TODO database helper for saved schools
+    //TODO rename SchoolDetails with Activity at the end
+    //TODO move the sort and search methods to Utilities
     private ArrayList<PreSchool> mSchoolsList;
     private Firebase mFireBaseRoot, mFirebasePreschoolRef;
     private PreSchool mPreschool;
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         dbHelper = DatabaseHelper.getInstance(MainActivity.this);
         initViews();
         progressBar.setVisibility(View.VISIBLE);
-
         initToolbar();
         initSwipeRefresh();
         initFirebase();
@@ -81,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
         setSwipeRefreshListener();
-        //removeProgressBar();
     }
 
     private void removeProgressBar() {
@@ -357,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.maps_menu_item) {
             HashMap<String, LatLng> markersHashMap = buildMapMarkers();
             Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
@@ -370,25 +369,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         return super.onOptionsItemSelected(item);
     }
 
-//    private HashMap buildAddressListHash() {
-//        HashMap<String, String> addressListHashMap = new HashMap<>();
-//
-//        if (mSchoolsList == null) {
-//            return addressListHashMap;
-//            //TODO return something else
-//        }
-//        for (int i = 0; i < mSchoolsList.size(); i++) {
-//            String stringAddress = Utilities.buildAddressString(mSchoolsList.get(i).getStreetAddress(),
-//                    mSchoolsList.get(i).getCity(),
-//                    mSchoolsList.get(i).getState(),
-//                    mSchoolsList.get(i).getZipCode());
-//            addressListHashMap.put(mSchoolsList.get(i).getName(), stringAddress);
-//        }
-//
-//        return addressListHashMap;
-//    }
-
-    private HashMap buildMapMarkers() {
+    private HashMap<String, LatLng> buildMapMarkers() {
         HashMap<String, LatLng> mapMarkersHashMap = new HashMap<>();
         LatLng coordinates;
         if (mSchoolsList == null) {
@@ -402,6 +383,4 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
         return mapMarkersHashMap;
     }
-
-
 }

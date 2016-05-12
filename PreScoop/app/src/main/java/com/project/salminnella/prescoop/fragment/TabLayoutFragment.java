@@ -1,5 +1,7 @@
 package com.project.salminnella.prescoop.fragment;
 
+import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +21,14 @@ public class TabLayoutFragment extends Fragment {
 
     private int mPage;
     static PreSchool preschool;
+    XmlClickable textClickListener;
+
+    public interface XmlClickable {
+        void clickMethod(View view, String url);
+    }
+
+
+
 
     public static TabLayoutFragment newInstance(int page, PreSchool schoolData) {
         Bundle args = new Bundle();
@@ -27,6 +37,16 @@ public class TabLayoutFragment extends Fragment {
         fragment.setArguments(args);
         preschool = schoolData;
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            textClickListener = (XmlClickable) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() + " must implement textClickListener");
+        }
     }
 
     @Override
@@ -94,11 +114,21 @@ public class TabLayoutFragment extends Fragment {
             return view;
 
         } else if (mPage == 6) {
-            View view = inflater.inflate(R.layout.fragment_reports, container, false);
-            TextView textView = (TextView) view.findViewById(R.id.reports_frag_text);
-            textView.setText("reports" + mPage);
+            final View reports = inflater.inflate(R.layout.fragment_reports, container, false);
 
-            return view;
+            TextView totalReports = (TextView) reports.findViewById(R.id.total_reports_text_frag);
+            TextView totalReportsDate = (TextView) reports.findViewById(R.id.reports_date_text_frag);
+
+            totalReports.setText(String.valueOf(preschool.getTotalReports()));
+            totalReportsDate.setText(preschool.getReportDates());
+            totalReportsDate.setPaintFlags(totalReportsDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            totalReportsDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    textClickListener.clickMethod(reports, preschool.getReportUrl());
+                }
+            });
+            return reports;
         }
 
         return null;

@@ -12,7 +12,7 @@ import java.util.List;
  * Created by anthony on 5/7/16.
  * Holds methods that are used through out the application
  */
-public class Utilities {
+public final class Utilities {
 
     /**
      * takes an address String, and returns a Latitude / Longitude that the Maps fragment
