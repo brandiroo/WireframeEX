@@ -6,4 +6,12 @@
     <string name="collapsing_toolbar_image">school image for collapsing toolbar</string>
     <string name="title_activity_schools_map">Map</string>
     <string name="search_hint">zip, neighborhood, $, $$, $$$</string>
+    <string name="number_of_visits">Number of Visits</string>
+    <string name="visit_dates">Visit Dates</string>
+    <string name="tot_complaint_invest_comp">Total Complaint Investigations Completed:</string>
+    <string name="total_alleg_sub">- Total Allegations Substantiated:</string>
+    <string name="total_alleg_incon">- Total Allegations Inconclusive:</string>
+    <string name="total_type_a_citations">Total Type A Citations:</string>
+    <string name="total_type_b_citations">Total Type B Citations:</string>
+    <string name="total_complaint_visits">- Total Complaint Visits:</string>
 </resources>

@@ -3,10 +3,10 @@ package com.project.salminnella.prescoop.activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
@@ -27,6 +26,7 @@ import com.firebase.client.Query;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
+import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private BottomBar mBottomBar;
     private SwipeRefreshLayout swipeContainer;
     private ArrayList<PreSchool> backupList;
+    DatabaseHelper dbHelper;
     //private boolean refresh = false;
 
 
@@ -64,9 +65,9 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbHelper = DatabaseHelper.getInstance(MainActivity.this);
         initToolbar();
         initSwipeRefresh();
-        setFAB();
         initFirebase();
         if (mSchoolsList == null) {
             queryFirebase();
@@ -119,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
                         //Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
                         sortByPrice();
                         break;
+                    case R.id.bookmarks_bottom_bar:
+                        Toast.makeText(MainActivity.this, "bookmarks selected", Toast.LENGTH_SHORT).show();
+                        Cursor cursor = dbHelper.findAllSavedSchools();
+                        //need a cursor adapter to work with recycler view - hope i have enough time to figure it out.
+                        break;
                 }
             }
 
@@ -132,10 +138,10 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
         // Setting colors for different tabs when there's more than three of them.
         // You can set colors for tabs in three different ways as shown below.
-//        mBottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
-//        mBottomBar.mapColorForTab(1, 0xFF5D4037);
-//        mBottomBar.mapColorForTab(2, "#7B1FA2");
-//        mBottomBar.mapColorForTab(3, "#FF5252");
+        mBottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
+        mBottomBar.mapColorForTab(1, 0xFF5D4037);
+        mBottomBar.mapColorForTab(2, "#7B1FA2");
+        mBottomBar.mapColorForTab(3, "#FF5252");
 //        mBottomBar.mapColorForTab(4, "#FF9800");
     }
 
@@ -147,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         mBottomBar.onSaveInstanceState(outState);
     }
 
-
+    // region RecyclerView
     private void createRecycler() {
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -155,6 +161,15 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         mRecyclerView.setAdapter(mRecycleAdapter);
     }
 
+    @Override
+    public void onItemClick(PreSchool preschool) {
+        Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
+        intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
+        startActivity(intentToDetails);
+    }
+    // endregion RecyclerView
+
+    // region FilterSearch
     @Override protected void onNewIntent(Intent intent) {
         handleSearchFilterIntent(intent);
     }
@@ -204,12 +219,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     private void searchByPriceRange(String query) {
         ArrayList<PreSchool> filteredList = new ArrayList<>();
-        //back up the schools list
-//        backupList = new ArrayList<>();
-//        backupList.addAll(mSchoolsList);
-//        for (int i = 0; i < backupList.size(); i++) {
-//            Log.i(TAG, "searchByPriceRange: " + backupList.get(i).getName());
-//        }
         int min = 0;
         int max = 0;
         if (query.equals("$")) {
@@ -230,24 +239,38 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         }
         mRecycleAdapter.swap(filteredList);
     }
+    // endregion FilterSearch
+
+    // region SortMethods
+    private void sortByPrice() {
+        Toast.makeText(MainActivity.this, "sort by price toasted", Toast.LENGTH_SHORT).show();
+        Collections.sort(mSchoolsList, new PriceComparator());
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            Log.i(TAG, "sortByPrice: " + mSchoolsList.get(i).getName() + "price: " + mSchoolsList.get(i).getPrice());
+        }
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    private void sortByRating() {
+        Collections.sort(mSchoolsList, new RatingComparator());
+        for (int i = 0; i < mSchoolsList.size(); i++) {
+            Log.i(TAG, "sortByrating: " + mSchoolsList.get(i).getName() + "rating: " + mSchoolsList.get(i).getRating());
+        }
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    private void sortByName() {
+        Collections.sort(mSchoolsList, new NameComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+    // endregion SortMethods
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-    }
-
-
-    private void setFAB() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-        }
     }
 
     private void initFirebase(){
@@ -291,12 +314,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         });
     }
 
-    @Override
-    public void onItemClick(PreSchool preschool) {
-        Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
-        intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
-        startActivity(intentToDetails);
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -362,28 +380,5 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         return mapMarkersHashMap;
     }
 
-    private void sortByPrice() {
-        Toast.makeText(MainActivity.this, "sort by price toasted", Toast.LENGTH_SHORT).show();
-        Collections.sort(mSchoolsList, new PriceComparator());
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            Log.i(TAG, "sortByPrice: " + mSchoolsList.get(i).getName() + "price: " + mSchoolsList.get(i).getPrice());
-        }
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-    }
 
-    private void sortByRating() {
-        Collections.sort(mSchoolsList, new RatingComparator());
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            Log.i(TAG, "sortByrating: " + mSchoolsList.get(i).getName() + "rating: " + mSchoolsList.get(i).getRating());
-        }
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-    }
-
-    private void sortByName() {
-        Collections.sort(mSchoolsList, new NameComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-    }
 }

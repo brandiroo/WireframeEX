@@ -13,4 +13,8 @@
         android:id="@+id/price_sort_bottom_bar"
         android:icon="@drawable/ic_attach_money_black_24dp"
         android:title="Sort By Price" />
+    <item
+        android:id="@+id/bookmarks_bottom_bar"
+        android:icon="@drawable/ic_bookmark"
+        android:title="Saved Schools" />
 </menu>
