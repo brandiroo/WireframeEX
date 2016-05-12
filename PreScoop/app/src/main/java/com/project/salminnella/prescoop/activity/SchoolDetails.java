@@ -272,7 +272,7 @@ public class SchoolDetails extends AppCompatActivity {
     }
 
     /**
-     * When user is leaving the activity, checks if they had wanted the article saved to bookmarks
+     * When user is leaving the activity, checks if they had wanted the school saved in the datbase
      * This will insert a record to the database if the user does want it bookmarked,
      * and it isn't already there
      */
