@@ -2,6 +2,7 @@ package com.project.salminnella.prescoop.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
 import com.project.salminnella.prescoop.adapter.YelpAdapter;
@@ -107,6 +107,8 @@ public class SchoolDetails extends AppCompatActivity {
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         if (collapsingToolbarLayout != null) {
             collapsingToolbarLayout.setTitle(mPreschoolMain.getName());
+
+            collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
         }
 
         loadBackdrop();
@@ -123,7 +125,13 @@ public class SchoolDetails extends AppCompatActivity {
 
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        Glide.with(this).load(R.drawable.argonne_playground).centerCrop().into(imageView);
+        if (mPreschoolMain.getImageUrl().matches("")) {
+            Picasso.with(SchoolDetails.this).load(R.drawable.no_image_available).into(imageView);
+        } else {
+            Picasso.with(SchoolDetails.this).load(mPreschoolMain.getImageUrl()).into(imageView);
+
+        }
+
     }
 
     private void receiveIntent() {
