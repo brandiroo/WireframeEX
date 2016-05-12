@@ -67,12 +67,20 @@ public class SchoolDetails extends AppCompatActivity {
     }
 
     private void setFab() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    saveSchool = true;
+                    if (saveSchool) {
+                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_attach_money_black_24dp));
+                        saveSchool = false;
+                    } else {
+                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_grade_black_24dp));
+                        saveSchool = true;
+
+                    }
+
                 }
             });
         }
@@ -221,7 +229,7 @@ public class SchoolDetails extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_school_details, menu);
 
 
         return true;
@@ -263,11 +271,11 @@ public class SchoolDetails extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (saveSchool && !isBookmarkAlreadySaved()) {
-            databaseHelper.insertSavedSchool(mPreschoolMain);
-        } else if (isBookmarkAlreadySaved()) {
-            databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
-        }
+//        if (saveSchool && !isBookmarkAlreadySaved()) {
+//            databaseHelper.insertSavedSchool(mPreschoolMain);
+//        } else if (isBookmarkAlreadySaved()) {
+//            databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
+//        }
     }
 }
 
