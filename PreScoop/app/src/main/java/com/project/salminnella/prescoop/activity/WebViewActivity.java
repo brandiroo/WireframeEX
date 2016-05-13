@@ -100,10 +100,6 @@ public class WebViewActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.maps_menu_item_web) {
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

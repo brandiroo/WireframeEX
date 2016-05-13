@@ -120,7 +120,7 @@ public class TabLayoutFragment extends Fragment {
             totalReportsDate.setText(preschool.getReportDates());
             if (preschool.getReportUrl().contains("http")) {
                 totalReportsDate.setPaintFlags(totalReportsDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
+                totalReportsDate.setTextColor(getResources().getColor(R.color.htmlLink));
                 totalReportsDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -67,13 +67,9 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private RecyclerView mRecyclerView;
     private ListAdapter mRecycleAdapter;
     private BottomBar mBottomBar;
-    private SwipeRefreshLayout swipeContainer;
-//    private SwipeRefreshLayout swipeContainerBookmarks;
     private ArrayList<PreSchool> backupList;
-    DatabaseHelper dbHelper;
     private ProgressBar progressBar;
-
-    private DatabaseHelper searchHelper;
+    private DatabaseHelper dbHelper;
     private DBCursorAdapter cursorAdapter;
     private Cursor cursor;
     private ListView cursorListView;
@@ -85,9 +81,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
         dbHelper = DatabaseHelper.getInstance(MainActivity.this);
         initViews();
-        progressBar.setVisibility(View.VISIBLE);
         initToolbar();
-        initSwipeRefresh();
+        showProgressBar();
         initFirebase();
         if (mSchoolsList == null) {
             queryFirebase();
@@ -95,51 +90,26 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         createRecycler();
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
-//        setSwipeRefreshListener();
-
+        setCursorListItemListener();
     }
 
-    private void removeProgressBar() {
-        if (mSchoolsList.size() > 0) {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+    private void setCursorListItemListener() {
+        cursorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
+                intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschool);
+                startActivity(intentToDetails);
+            }
+        });
     }
 
-//    private void setSwipeRefreshListener() {
-//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                Toast.makeText(MainActivity.this, "pulled to refresh was fired", Toast.LENGTH_SHORT).show();
-//                mRecycleAdapter.swap(backupList);
-//                swipeContainer.setRefreshing(false);
-//            }
-//        });
-
-//        swipeContainerBookmarks.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                cursorListView.setVisibility(View.INVISIBLE);
-//                mRecyclerView.setVisibility(View.VISIBLE);
-//                swipeContainerBookmarks.setRefreshing(false);
-//
-//            }
-//        });
-        // Configure the refreshing colors
-//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
-//    }
 
     private void initViews() {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
         cursorListView = (ListView) findViewById(R.id.cursor_list_view);
-    }
-
-    private void initSwipeRefresh() {
-//        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-//        swipeContainerBookmarks = (SwipeRefreshLayout) findViewById(R.id.swipeContainerBookmarks);
     }
 
     private void buildBottomBar(Bundle savedInstanceState) {
@@ -307,6 +277,16 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     }
     // endregion SortMethods
 
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void removeProgressBar() {
+        if (mSchoolsList.size() > 0) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -380,9 +360,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-//        if (id == R.id.maps_menu_item) {
-//        }
 
         switch (id) {
             case R.id.maps_menu_item_main:

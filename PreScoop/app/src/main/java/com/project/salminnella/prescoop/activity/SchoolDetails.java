@@ -163,14 +163,6 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
             Picasso.with(SchoolDetails.this).load(R.drawable.no_image_available).into(imageView);
         } else {
             Picasso.with(SchoolDetails.this).load(mPreschoolMain.getImageUrl()).into(imageView);
-
-//            Picasso.with(mContext)
-//                    .load(url)
-//                    .centerCrop()
-//                    .resize(yourImageView.getMeasuredWidth(),yourImageView.getMeasuredHeight())
-//                    .error(R.drawable.error)
-//                    .placeholder(R.drawable.blank_img)
-//                    .into(yourImageView);
         }
 
     }
@@ -271,18 +263,11 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
     }
 
     private Business filterYelpResponse(SearchResponse response) {
-//        Log.i(TAG, "filterYelpResponse: searching for " + mPreschoolMain.getName());
-//        Log.i(TAG, "filterYelpResponse: response total " + response.total());
         int limit = response.total();
         if (Constants.YELP_RESPONSE_LIMIT_INT < response.total()) {
             limit = Constants.YELP_RESPONSE_LIMIT_INT;
         }
         for (int i = 0; i < limit; i++) {
-//            Log.i(TAG, "filterYelpResponse: name " + response.businesses().get(i).name());
-
-//            if (mPreschoolMain.getName().equals(response.businesses().get(i).name())) {
-//                Log.i(TAG, "filterYelpResponse: found a match");
-//            }
             int strContains = response.businesses().get(i).name().indexOf(mPreschoolMain.getName());
             if (strContains != -1) {
                 Log.i(TAG, response.businesses().get(i).name() + " contains " + mPreschoolMain.getName());

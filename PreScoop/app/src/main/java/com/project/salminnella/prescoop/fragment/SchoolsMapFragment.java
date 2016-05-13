@@ -76,27 +76,10 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMyLocationEnabled(true);
 
-        //LatLng currentLocation = new LatLng(mLatitude, mLongitude);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-//        for (Map.Entry<String,String> entry : addressList.entrySet()) {
-//            String key = entry.getKey();
-//            String value = entry.getValue();
-//            LatLng address = Utilities.getLocationFromAddress(this, value);
-//            if (address != null) {
-//                mMap.addMarker(new MarkerOptions().position(address).title(key));
-//            } else {
-//                Log.i(TAG, "onMapReady - null location: " + entry);
-//            }
-//        }
+
         if (mSchoolsList == null) {
             mLatLng = new LatLng(mPreschool.getLatitude(), mPreschool.getLongitude());
             mMap.addMarker(new MarkerOptions().position(mLatLng).title(mPreschool.getName()));
