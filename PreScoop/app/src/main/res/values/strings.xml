@@ -18,4 +18,6 @@
     <string name="report_date_label">Date</string>
     <string name="report_title_label">Title</string>
     <string name="title_activity_web_view">WebViewActivity</string>
+    <string name="empty_yelp_response_title">No Matches Found, But Heres Some Related Preschools</string>
+    <string name="empty_yelp_response">Sorry, there were no matches from Yelp for reviews</string>
 </resources>

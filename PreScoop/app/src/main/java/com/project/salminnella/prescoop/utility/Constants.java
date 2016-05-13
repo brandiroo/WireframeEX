@@ -3,7 +3,7 @@ package com.project.salminnella.prescoop.utility;
 /**
  * Created by anthony on 5/9/16.
  */
-public class Constants {
+public final class Constants {
 
     public static final String ADDRESS_LIST_KEY = "addressList";
     public static final String SCHOOL_OBJECT_KEY = "schoolTitle";
@@ -13,6 +13,7 @@ public class Constants {
     public static final String SCHOOLS_LIST_KEY = "schoolsList";
     public static final String SCHOOL_MARKER_KEY = "schoolMarker";
     public static final String WEB_URL_KEY = "webUrl";
+    public static final String ARG_PAGE = "ARG_PAGE";
 
 
     //YelpAPIProvider yelpProvider;

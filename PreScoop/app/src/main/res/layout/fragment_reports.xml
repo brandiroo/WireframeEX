@@ -7,7 +7,8 @@
         android:id="@+id/total_reports_layout_frag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp">
 
         <TextView
             android:id="@+id/total_reports_label_frag"
@@ -42,23 +43,6 @@
             android:textStyle="bold"
             android:text="@string/report_date_label"
             android:layout_marginLeft="30dp"/>
-        <TextView
-            android:id="@+id/reports_title_label_frag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="@string/report_title_label"
-            android:layout_marginLeft="40dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/total_reports_text_layout_frag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/total_reports_label_layout_frag">
 
         <TextView
             android:id="@+id/reports_date_text_frag"
@@ -69,12 +53,34 @@
             android:clickable="true"
             android:onClick="clickMethod"
             android:layout_marginLeft="30dp"/>
-        <TextView
-            android:id="@+id/reports_title_text_frag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginLeft="30dp"/>
+        <!--will be adding this to the layout later on-->
+        <!--<TextView-->
+            <!--android:id="@+id/reports_title_label_frag"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="16sp"-->
+            <!--android:textStyle="bold"-->
+            <!--android:text="@string/report_title_label"-->
+            <!--android:layout_marginLeft="40dp"/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/total_reports_text_layout_frag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/total_reports_label_layout_frag">
+
+
+
+        <!-- will be adding this field later on -->
+        <!--<TextView-->
+            <!--android:id="@+id/reports_title_text_frag"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="16sp"-->
+            <!--android:layout_marginLeft="30dp"/>-->
 
     </LinearLayout>
 

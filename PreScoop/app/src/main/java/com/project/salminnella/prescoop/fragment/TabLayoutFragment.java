@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.utility.Constants;
 
 /**
  * Created by anthony on 5/9/16.
  */
 public class TabLayoutFragment extends Fragment {
     private static final String TAG = "TabFragment";
-    public static final String ARG_PAGE = "ARG_PAGE";
 
     private int mPage;
     static PreSchool preschool;
@@ -27,12 +27,9 @@ public class TabLayoutFragment extends Fragment {
         void clickMethod(View view, String url);
     }
 
-
-
-
     public static TabLayoutFragment newInstance(int page, PreSchool schoolData) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt(Constants.ARG_PAGE, page);
         TabLayoutFragment fragment = new TabLayoutFragment();
         fragment.setArguments(args);
         preschool = schoolData;
@@ -52,7 +49,7 @@ public class TabLayoutFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
+        mPage = getArguments().getInt(Constants.ARG_PAGE);
     }
 
     @Override
@@ -121,13 +118,16 @@ public class TabLayoutFragment extends Fragment {
 
             totalReports.setText(String.valueOf(preschool.getTotalReports()));
             totalReportsDate.setText(preschool.getReportDates());
-            totalReportsDate.setPaintFlags(totalReportsDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            totalReportsDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    textClickListener.clickMethod(reports, preschool.getReportUrl());
-                }
-            });
+            if (preschool.getReportUrl().contains("http")) {
+                totalReportsDate.setPaintFlags(totalReportsDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                totalReportsDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        textClickListener.clickMethod(reports, preschool.getReportUrl());
+                    }
+                });
+            }
             return reports;
         }
 

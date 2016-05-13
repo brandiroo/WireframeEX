@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
@@ -193,6 +192,8 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
                 Log.i(TAG, "onResponse: " + searchResponse);
                 if (searchResponse.total() == 0) {
                     Log.i(TAG, "onResponse: nothing found from yelp");
+                    mYelpTitleText.setText(R.string.empty_yelp_response);
+
                 } else {
                     // Update UI text with the searchResponse.
                     Business schoolMatch = filterYelpResponse(searchResponse);
@@ -200,6 +201,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
                         mYelpTitleText.setText(schoolMatch.name());
                         Picasso.with(SchoolDetails.this).load(schoolMatch.ratingImgUrlLarge()).into(mYelpRating);
                     } else {
+                        mYelpTitleText.setText(R.string.empty_yelp_response_title);
                         ArrayList<Business> businesses = searchResponse.businesses();
                         mYelpAdapter = new YelpAdapter(SchoolDetails.this, businesses);
                         mYelpListView.setAdapter(mYelpAdapter);
@@ -247,9 +249,9 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        //if (tabLayout != null) {
-        tabLayout.setupWithViewPager(viewPager);
-        //}
+        if (tabLayout != null) {
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
 
     @Override
@@ -257,25 +259,14 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_school_details_activity, menu);
 
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.maps_menu_item_details) {
-//            HashMap<String, LatLng> mapMarkerHashMap = new HashMap<>();
-//            LatLng coordinates;
-//            coordinates = new LatLng(mPreschoolMain.getLatitude(), mPreschoolMain.getLongitude());
-//            mapMarkerHashMap.put(mPreschoolMain.getName(), coordinates);
-
-
             Intent intentToMaps = new Intent(SchoolDetails.this, SchoolsMapFragment.class);
             intentToMaps.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschoolMain);
             startActivity(intentToMaps);
@@ -310,7 +301,6 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
 
     @Override
     public void clickMethod(View view, String url) {
-        Toast.makeText(SchoolDetails.this, "clicked the text view - name = " + url, Toast.LENGTH_SHORT).show();
         Intent intentWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
         intentWebView.putExtra(Constants.WEB_URL_KEY, url);
         startActivity(intentWebView);
