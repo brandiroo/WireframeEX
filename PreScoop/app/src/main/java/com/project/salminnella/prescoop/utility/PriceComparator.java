@@ -10,8 +10,7 @@ import java.util.Comparator;
 public class PriceComparator implements Comparator<PreSchool> {
     @Override
     public int compare(PreSchool schoolOne, PreSchool schoolTwo) {
-        // descending order (ascending order would be:
-        // o1.getGrade()-o2.getGrade())
+
         return schoolOne.getPrice() - schoolTwo.getPrice();
     }
 }

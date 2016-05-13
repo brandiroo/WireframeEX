@@ -210,13 +210,6 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         params.put("sort", "0");
 
         Call<SearchResponse> call = yelpAPI.search("San Francisco", params);
-//
-//        Response<SearchResponse> response = null;
-//        try {
-//            response = call.execute();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         Callback<SearchResponse> callback = new Callback<SearchResponse>() {
             @Override
@@ -319,11 +312,6 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         return bookmarkCursor.getCount() != 0;
     }
 
-    /**
-     * When user is leaving the activity, checks if they had wanted the school saved in the datbase
-     * This will insert a record to the database if the user does want it bookmarked,
-     * and it isn't already there
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

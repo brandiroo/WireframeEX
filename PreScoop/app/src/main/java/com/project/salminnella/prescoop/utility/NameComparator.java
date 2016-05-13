@@ -10,8 +10,7 @@ import java.util.Comparator;
 public class NameComparator implements Comparator<PreSchool> {
     @Override
     public int compare(PreSchool schoolOne, PreSchool schoolTwo) {
-        // descending order (ascending order would be:
-        // o1.getGrade()-o2.getGrade())
+
         String nameOne = schoolOne.getName();
         String nameTwo = schoolTwo.getName();
         return nameOne.compareTo(nameTwo);
