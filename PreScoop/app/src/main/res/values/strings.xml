@@ -25,4 +25,6 @@
     <string name="status">Status:</string>
     <string name="license_date">License Date:</string>
     <string name="facility_type">Facility Type:</string>
+    <string name="type_a_citation">Type A Citation</string>
+    <string name="type_b_citation">Type B Citation</string>
 </resources>

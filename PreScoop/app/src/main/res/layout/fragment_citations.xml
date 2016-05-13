@@ -14,14 +14,14 @@
             android:id="@+id/citation_type_a_label_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/number_of_visits"
+            android:text="@string/type_a_citation"
             android:textStyle="bold"
             android:textSize="16sp"/>
         <TextView
             android:id="@+id/citation_type_b_label_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/visit_dates"
+            android:text="@string/type_b_citation"
             android:textStyle="bold"
             android:textSize="16sp"/>
     </LinearLayout>

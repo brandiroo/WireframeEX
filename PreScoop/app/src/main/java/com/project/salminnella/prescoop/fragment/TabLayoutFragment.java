@@ -58,8 +58,8 @@ public class TabLayoutFragment extends Fragment {
         if (mPage == 1) {
             View viewAllVisits = inflater.inflate(R.layout.fragment_all_visits, container, false);
 
-            TextView num_visits = (TextView) viewAllVisits.findViewById(R.id.num_visits_text_frag);
-            num_visits.setText(String.valueOf(preschool.getNumVisits()));
+            TextView numVisits = (TextView) viewAllVisits.findViewById(R.id.num_visits_text_frag);
+            numVisits.setText(String.valueOf(preschool.getNumVisits()));
             TextView visitDates = (TextView) viewAllVisits.findViewById(R.id.visit_dates_text_frag);
             visitDates.setText(preschool.getVisitDates());
 

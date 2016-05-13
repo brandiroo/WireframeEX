@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.salminnella.prescoop.R;
+import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
@@ -59,10 +61,15 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private ListAdapter mRecycleAdapter;
     private BottomBar mBottomBar;
     private SwipeRefreshLayout swipeContainer;
+//    private SwipeRefreshLayout swipeContainerBookmarks;
     private ArrayList<PreSchool> backupList;
     DatabaseHelper dbHelper;
     private ProgressBar progressBar;
-    //private boolean refresh = false;
+
+    private DatabaseHelper searchHelper;
+    private DBCursorAdapter cursorAdapter;
+    private Cursor cursor;
+    private ListView cursorListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         createRecycler();
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
-        setSwipeRefreshListener();
+//        setSwipeRefreshListener();
     }
 
     private void removeProgressBar() {
@@ -90,29 +97,41 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         }
     }
 
-    private void setSwipeRefreshListener() {
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Toast.makeText(MainActivity.this, "pulled to refresh was fired", Toast.LENGTH_SHORT).show();
-                mRecycleAdapter.swap(backupList);
-                swipeContainer.setRefreshing(false);
-            }
-        });
+//    private void setSwipeRefreshListener() {
+//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                Toast.makeText(MainActivity.this, "pulled to refresh was fired", Toast.LENGTH_SHORT).show();
+//                mRecycleAdapter.swap(backupList);
+//                swipeContainer.setRefreshing(false);
+//            }
+//        });
+
+//        swipeContainerBookmarks.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                cursorListView.setVisibility(View.INVISIBLE);
+//                mRecyclerView.setVisibility(View.VISIBLE);
+//                swipeContainerBookmarks.setRefreshing(false);
+//
+//            }
+//        });
         // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-    }
+//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light,
+//                android.R.color.holo_red_light);
+//    }
 
     private void initViews() {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
+        cursorListView = (ListView) findViewById(R.id.cursor_list_view);
     }
 
     private void initSwipeRefresh() {
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+//        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+//        swipeContainerBookmarks = (SwipeRefreshLayout) findViewById(R.id.swipeContainerBookmarks);
     }
 
     private void buildBottomBar(Bundle savedInstanceState) {
@@ -142,21 +161,19 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private void switchBottomBarTab(int menuItemId) {
         switch (menuItemId) {
             case R.id.abc_sort_bottom_bar:
-                Toast.makeText(MainActivity.this, "Sort alphabetically", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Sorted alphabetically", Toast.LENGTH_SHORT).show();
                 sortByName();
                 break;
             case R.id.rating_sort_bottom_bar:
-                Toast.makeText(MainActivity.this, "Sort By Rating", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Sorted By Rating", Toast.LENGTH_SHORT).show();
                 sortByRating();
                 break;
             case R.id.price_sort_bottom_bar:
-                //Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
                 sortByPrice();
                 break;
-            case R.id.bookmarks_bottom_bar:
-                Toast.makeText(MainActivity.this, "bookmarks selected", Toast.LENGTH_SHORT).show();
-                Cursor cursor = dbHelper.findAllSavedSchools();
-                //need a cursor adapter to work with recycler view - hope i have enough time to figure it out.
+            case R.id.refresh_bottom_bar:
+                mRecycleAdapter.swap(backupList);
                 break;
         }
     }
@@ -258,7 +275,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     // region SortMethods
     private void sortByPrice() {
-        Toast.makeText(MainActivity.this, "sort by price toasted", Toast.LENGTH_SHORT).show();
         Collections.sort(mSchoolsList, new PriceComparator());
         for (int i = 0; i < mSchoolsList.size(); i++) {
             Log.i(TAG, "sortByPrice: " + mSchoolsList.get(i).getName() + "price: " + mSchoolsList.get(i).getPrice());
@@ -344,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
@@ -357,16 +373,44 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.maps_menu_item) {
-            HashMap<String, LatLng> markersHashMap = buildMapMarkers();
-            Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
-            intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, markersHashMap);
-            intentToMaps.putExtra(Constants.SCHOOLS_LIST_KEY, mSchoolsList);
+//        if (id == R.id.maps_menu_item) {
+//        }
 
-            startActivity(intentToMaps);
+        switch (id) {
+            case R.id.maps_menu_item_main:
+                buildIntentToMap();
+                break;
+            case R.id.saved_schools_menu_main:
+                findSavedSchools();
+                break;
+            case R.id.all_schools_menu_main:
+                cursorListView.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                Toast.makeText(MainActivity.this, "all", Toast.LENGTH_SHORT).show();
+                break;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void buildIntentToMap() {
+        HashMap<String, LatLng> markersHashMap = buildMapMarkers();
+        Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
+        intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, markersHashMap);
+        intentToMaps.putExtra(Constants.SCHOOLS_LIST_KEY, mSchoolsList);
+        startActivity(intentToMaps);
+    }
+
+    private void findSavedSchools() {
+        cursor = dbHelper.findAllSavedSchools();
+        if (cursor.getCount() > 0) {
+            cursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, 0);
+            cursorListView.setAdapter(cursorAdapter);
+            cursorListView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            //cursor.close();
+        } else {
+            Toast.makeText(MainActivity.this, "No Saved Schools Yet", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private HashMap<String, LatLng> buildMapMarkers() {
