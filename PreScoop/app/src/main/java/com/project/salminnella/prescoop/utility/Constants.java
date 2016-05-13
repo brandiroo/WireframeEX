@@ -18,6 +18,7 @@ public final class Constants {
     public static final int WEB_REQUEST_CODE = 49;
 
 
+
     //YelpAPIProvider yelpProvider;
     public static final String YELP_CONSUMER_KEY = "qjt368tSTOpOje3NIbdfyg";
     public static final String YELP_CONSUMER_SECRET = "XSD1VcfmQLSH5ZM_a3mzvRDr49E";

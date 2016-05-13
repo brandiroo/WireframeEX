@@ -1,7 +1,11 @@
 package com.project.salminnella.prescoop.activity;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +28,9 @@ public class WebViewActivity extends AppCompatActivity {
     ProgressBar progressBar;
     PreSchool mPreschoolHolder;
 
+    private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
+    private static final int PERMISSION_REQUEST_CODE = 12345;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +41,8 @@ public class WebViewActivity extends AppCompatActivity {
 
         initToolbar();
         receiveIntent();
-        loadWebview();
+        //loadWebview();
+        checkPerms();
     }
 
     private void initToolbar() {
@@ -79,6 +87,71 @@ public class WebViewActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    private void checkPerms() {
+        if (permissionExists()){
+            loadWebview();
+        } else {
+            requestUserForPermission();
+        }
+    }
+
+    /**
+     * Returns true if the permission is granted. False otherwise.
+     *
+     * NOTE: If we detect that this phone is an older OS then Android M, we assume
+     * the permission is true because they are granted at INSTALL time.
+     *
+     * @return
+     */
+    @TargetApi(23)
+    private boolean permissionExists(){
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion < Build.VERSION_CODES.M){
+
+            // Permissions are already granted during INSTALL TIME for older OS version
+            return true;
+        }
+
+        int granted = checkSelfPermission(LOCATION_PERMISSION);
+        if (granted == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        return false;
+    }
+
+    @TargetApi(23)
+    private void requestUserForPermission(){
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion < Build.VERSION_CODES.M){
+            // This OS version is lower then Android M, therefore we have old permission model and should not ask for permission
+            return;
+        }
+
+        // request the location!
+        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode){
+            case PERMISSION_REQUEST_CODE:
+                if (permissions.length < 0){
+                    return; // no permissions were returned, nothing to process here
+                }
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // contacts permission was granted! Lets now grab contacts or show them!
+                    loadWebview();
+                } else {
+                    // contacts permission was denied, lets warn the user that we need this permission!
+                    Toast.makeText(getApplicationContext(), "You need to grant location permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
