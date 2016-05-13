@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCallback {
     private static final String TAG = "MapFragment";
+
     private GoogleMap mMap;
     private LatLngBounds sanFrancisco = new LatLngBounds(
             new LatLng(37.657785, -122.521568), new LatLng(37.825296, -122.354369));
@@ -39,16 +40,18 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_schools_map);
+
+        receiveIntentFromMain();
+        loadMap();
+    }
+
+    private void loadMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_all_schools);
         mapFragment.getMapAsync(this);
-
-        receiveIntentFromMain();
-
-
-
     }
+
 
     private void receiveIntentFromMain() {
         Intent receiveIntent = getIntent();
@@ -56,8 +59,6 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
         mSchoolsList = (ArrayList<PreSchool>) receiveIntent.getSerializableExtra(Constants.SCHOOLS_LIST_KEY);
         mPreschool = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_MARKER_KEY);
     }
-
-
 
     /**
      * Manipulates the map once available.

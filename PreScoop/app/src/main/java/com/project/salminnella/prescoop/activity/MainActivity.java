@@ -1,9 +1,13 @@
 package com.project.salminnella.prescoop.activity;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
@@ -47,6 +51,9 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
+
+    private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
+    private static final int PERMISSION_REQUEST_CODE = 12345;
     //TODO check support library for refresh
     //TODO markers for maps can be turned into an object class
     //TODO use firebase UI for recycler view instead of the onchild overrides
@@ -89,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
 //        setSwipeRefreshListener();
+
     }
 
     private void removeProgressBar() {
@@ -378,7 +386,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
         switch (id) {
             case R.id.maps_menu_item_main:
-                buildIntentToMap();
+                checkPerms();
+                //buildIntentToMap();
                 break;
             case R.id.saved_schools_menu_main:
                 findSavedSchools();
@@ -427,4 +436,71 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
         return mapMarkersHashMap;
     }
+
+    private void checkPerms() {
+        if (permissionExists()){
+            buildIntentToMap();
+        } else {
+            requestUserForPermission();
+        }
+    }
+
+    /**
+     * Returns true if the permission is granted. False otherwise.
+     *
+     * NOTE: If we detect that this phone is an older OS then Android M, we assume
+     * the permission is true because they are granted at INSTALL time.
+     *
+     * @return
+     */
+    @TargetApi(23)
+    private boolean permissionExists(){
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion < Build.VERSION_CODES.M){
+
+            // Permissions are already granted during INSTALL TIME for older OS version
+            return true;
+        }
+
+        int granted = checkSelfPermission(LOCATION_PERMISSION);
+        if (granted == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        return false;
+    }
+
+    @TargetApi(23)
+    private void requestUserForPermission(){
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion < Build.VERSION_CODES.M){
+            // This OS version is lower then Android M, therefore we have old permission model and should not ask for permission
+            return;
+        }
+
+        // request the location!
+        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode){
+            case PERMISSION_REQUEST_CODE:
+                if (permissions.length < 0){
+                    return; // no permissions were returned, nothing to process here
+                }
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // contacts permission was granted! Lets now grab contacts or show them!
+                    buildIntentToMap();
+                } else {
+                    // contacts permission was denied, lets warn the user that we need this permission!
+                    Toast.makeText(getApplicationContext(), "You need to grant location permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
 }
