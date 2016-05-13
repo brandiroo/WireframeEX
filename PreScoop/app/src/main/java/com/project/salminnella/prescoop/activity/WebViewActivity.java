@@ -7,22 +7,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.project.salminnella.prescoop.R;
+import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 
 public class WebViewActivity extends AppCompatActivity {
 
     private WebView mWebview;
     String url;
+    ProgressBar progressBar;
+    PreSchool mPreschoolHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
+
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_web_viewer);
+        progressBar.setVisibility(View.VISIBLE);
 
         initToolbar();
         receiveIntent();
@@ -33,15 +41,30 @@ public class WebViewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentToDetailsActivity = new Intent(WebViewActivity.this, SchoolDetails.class);
+                    intentToDetailsActivity.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolHolder);
+                    setResult(RESULT_OK, intentToDetailsActivity);
+                    finish();
+                }
+            });
+        }
     }
 
     private void receiveIntent() {
         Intent receiveIntent = getIntent();
         url = receiveIntent.getStringExtra(Constants.WEB_URL_KEY);
+        mPreschoolHolder = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
+
     }
 
     private void loadWebview() {
-        mWebview  = new WebView(this);
+        mWebview  = (WebView) findViewById(R.id.web_viewer);
+//        mWebview  = new WebView(this);
         mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
 
         final Activity activity = this;
@@ -52,7 +75,8 @@ public class WebViewActivity extends AppCompatActivity {
         });
 
         mWebview.loadUrl(url);
-        setContentView(mWebview );
+//        setContentView(mWebview);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
@@ -79,4 +103,12 @@ public class WebViewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intentToDetailsActivity = new Intent(WebViewActivity.this, SchoolDetails.class);
+        intentToDetailsActivity.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolHolder);
+        setResult(RESULT_OK, intentToDetailsActivity);
+        finish();
+    }
 }

@@ -39,11 +39,13 @@ public class YelpAdapter extends ArrayAdapter<Business> {
 
         Business business = mData.get(position);
         yelpTitle.setText(business.name());
-        yelpNumReviews.setText(String.valueOf(business.reviewCount()));
+        String reviewText = String.valueOf(business.reviewCount()) + " Reviews";
+        yelpNumReviews.setText(reviewText);
         yelpReviewSnippet.setText(business.snippetText());
         Picasso.with(context).load(business.ratingImgUrl()).into(yelpRating);
         Picasso.with(context).load(business.imageUrl()).into(yelpImage);
 
         return rowItem;
     }
+
 }

@@ -20,4 +20,9 @@
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="empty_yelp_response_title">No Matches Found, But Heres Some Related Preschools</string>
     <string name="empty_yelp_response">Sorry, there were no matches from Yelp for reviews</string>
+    <string name="facility_number">Facility Number:</string>
+    <string name="facility_capacity">Facility Capacity:</string>
+    <string name="status">Status:</string>
+    <string name="license_date">License Date:</string>
+    <string name="facility_type">Facility Type:</string>
 </resources>

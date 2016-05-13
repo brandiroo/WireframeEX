@@ -12,4 +12,15 @@
     tools:context="com.project.salminnella.prescoop.activity.WebViewActivity"
     tools:showIn="@layout/activity_web_view">
 
+    <ProgressBar
+        android:id="@+id/progress_bar_web_viewer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
+
+    <WebView
+        android:id="@+id/web_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></WebView>
+
 </RelativeLayout>

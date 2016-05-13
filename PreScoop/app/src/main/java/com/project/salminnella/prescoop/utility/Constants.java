@@ -14,6 +14,8 @@ public final class Constants {
     public static final String SCHOOL_MARKER_KEY = "schoolMarker";
     public static final String WEB_URL_KEY = "webUrl";
     public static final String ARG_PAGE = "ARG_PAGE";
+    public static final String YELP_CLICKED_ITEM_KEY = "yelpUrl";
+    public static final int WEB_REQUEST_CODE = 49;
 
 
     //YelpAPIProvider yelpProvider;

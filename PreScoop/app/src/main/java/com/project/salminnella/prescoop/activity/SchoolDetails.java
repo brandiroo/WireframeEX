@@ -3,6 +3,7 @@ package com.project.salminnella.prescoop.activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,13 +49,21 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
     private TextView mSchoolAddress;
     private PreSchool mPreschoolMain;
     private TextView mYelpTitleText;
+    private TextView mYelpNumReviews;
     private ImageView mYelpRating;
     private ListView mYelpListView;
     private ViewPager viewPager;
     private YelpAdapter mYelpAdapter;
     private boolean saveSchool;
     private DatabaseHelper databaseHelper;
+    private Business schoolMatch;
     FloatingActionButton fab;
+    private TextView mPhoneNumber;
+    private TextView mFacilityNumber;
+    private TextView mFacilityCapacity;
+    private TextView mFacilityType;
+    private TextView mLicenseStatus;
+    private TextView mLicenseDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +80,21 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         callYelpProvider();
         initTabLayout();
 
+        setYelpListClickListener();
+
+    }
+
+    private void setYelpListClickListener() {
+        mYelpListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Business clickedYelpBusiness = (Business) mYelpListView.getItemAtPosition(position);
+                Intent intentToWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
+                intentToWebView.putExtra(Constants.WEB_URL_KEY, clickedYelpBusiness.mobileUrl());
+                intentToWebView.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolMain);
+                startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
+            }
+        });
     }
 
     private void setFab() {
@@ -85,7 +110,6 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
                     } else {
                         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_selected));
                         saveSchool = true;
-
                     }
                     Log.i(TAG, "onClick: fab - saveSchool after click = " + saveSchool);
                 }
@@ -123,8 +147,14 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         mYelpTitleText = (TextView) findViewById(R.id.yelp_title_text_details);
         mYelpRating = (ImageView) findViewById(R.id.yelp_rating);
         mYelpListView = (ListView) findViewById(R.id.yelp_response_list);
+        mYelpNumReviews = (TextView) findViewById(R.id.yelp_num_reviews);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-
+        mPhoneNumber = (TextView) findViewById(R.id.school_phone_text_details);
+        mFacilityNumber = (TextView) findViewById(R.id.facility_num_text_details);
+        mFacilityCapacity = (TextView) findViewById(R.id.facility_capacity_text_details);
+        mFacilityType = (TextView) findViewById(R.id.facility_type_text_details);
+        mLicenseStatus = (TextView) findViewById(R.id.license_status_text_details);
+        mLicenseDate = (TextView) findViewById(R.id.license_date_text_details);
     }
 
     private void loadBackdrop() {
@@ -134,6 +164,13 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         } else {
             Picasso.with(SchoolDetails.this).load(mPreschoolMain.getImageUrl()).into(imageView);
 
+//            Picasso.with(mContext)
+//                    .load(url)
+//                    .centerCrop()
+//                    .resize(yourImageView.getMeasuredWidth(),yourImageView.getMeasuredHeight())
+//                    .error(R.drawable.error)
+//                    .placeholder(R.drawable.blank_img)
+//                    .into(yourImageView);
         }
 
     }
@@ -148,9 +185,13 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
     private void populateSchoolDetails() {
         mSchoolName.setText(mPreschoolMain.getName());
         setSchoolAddressTextView();
+        mPhoneNumber.setText(mPreschoolMain.getPhoneNumber());
+        mFacilityNumber.setText(String.valueOf(mPreschoolMain.getFacilityNumber()));
+        mFacilityCapacity.setText(String.valueOf(mPreschoolMain.getCapacity()));
+        mFacilityType.setText(mPreschoolMain.getType());
+        mLicenseStatus.setText(mPreschoolMain.getLicenseStatus());
+        mLicenseDate.setText(mPreschoolMain.getLicenseDate());
     }
-
-
 
     private void setSchoolAddressTextView() {
         mSchoolAddress.setText(Utilities.buildAddressString(mPreschoolMain.getStreetAddress(),
@@ -189,17 +230,28 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                 SearchResponse searchResponse = response.body();
-                Log.i(TAG, "onResponse: " + searchResponse);
                 if (searchResponse.total() == 0) {
-                    Log.i(TAG, "onResponse: nothing found from yelp");
                     mYelpTitleText.setText(R.string.empty_yelp_response);
-
                 } else {
                     // Update UI text with the searchResponse.
-                    Business schoolMatch = filterYelpResponse(searchResponse);
+
+                    schoolMatch = filterYelpResponse(searchResponse);
                     if (schoolMatch != null) {
                         mYelpTitleText.setText(schoolMatch.name());
                         Picasso.with(SchoolDetails.this).load(schoolMatch.ratingImgUrlLarge()).into(mYelpRating);
+                        String reviewText = String.valueOf(schoolMatch.reviewCount()) + " Reviews";
+                        mYelpNumReviews.setText(reviewText);
+                        mYelpTitleText.setPaintFlags(mYelpTitleText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        mYelpTitleText.setTextColor(Color.parseColor("#000099"));
+                        mYelpTitleText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intentToWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
+                                intentToWebView.putExtra(Constants.WEB_URL_KEY, schoolMatch.mobileUrl());
+                                intentToWebView.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschoolMain);
+                                startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
+                            }
+                        });
                     } else {
                         mYelpTitleText.setText(R.string.empty_yelp_response_title);
                         ArrayList<Business> businesses = searchResponse.businesses();
@@ -304,6 +356,16 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         Intent intentWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
         intentWebView.putExtra(Constants.WEB_URL_KEY, url);
         startActivity(intentWebView);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                mPreschoolMain = (PreSchool) data.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
+            }
+        }
     }
 }
 

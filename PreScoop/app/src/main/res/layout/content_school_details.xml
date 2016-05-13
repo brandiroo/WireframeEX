@@ -18,11 +18,14 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_margin="16dp">
             <RelativeLayout
+                android:id="@+id/school_details_relative_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp">
 
                 <TextView
                     android:id="@+id/school_name_text_details"
@@ -36,38 +39,108 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/school_name_text_details"/>
 
+                <TextView
+                    android:id="@+id/school_phone_text_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/school_address_text_details"/>
+
             </RelativeLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:layout_margin="16dp">
-
-            <LinearLayout
-                style="@style/Widget.CardContent"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp">
+                <LinearLayout
+                    android:id="@+id/labels_linear_layout"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:text="Info"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/license_status_label_details"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status"
+                        android:textStyle="bold"/>
 
-                <TextView
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/license_date_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/license_date"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/facility_num_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/facility_number"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/facility_capacity_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/facility_capacity"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/facility_type_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/facility_type"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/text_linear_layout"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="cheese's ipsum blah blah blah blah cheese's ipsum blah blah blah blah" />
+                    android:orientation="vertical"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true">
+                    <TextView
+                        android:id="@+id/license_status_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/license_date_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
 
+                    <TextView
+                        android:id="@+id/facility_num_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"/>
+
+                    <TextView
+                        android:id="@+id/facility_capacity_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp" />
+
+                    <TextView
+                        android:id="@+id/facility_type_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp" />
+                </LinearLayout>
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
 
 
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="300dp"
             android:layout_margin="1dp">
 
             <LinearLayout
@@ -97,7 +170,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp">
             <RelativeLayout
                 android:id="@+id/yelp_icon_rel_layout_details"
@@ -114,21 +187,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/yelp_icon_image"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="14dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
                 <ImageView
                     android:id="@+id/yelp_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/yelp_icon_image"
-                    android:layout_below="@id/yelp_title_text_details"/>
-
-                <ListView
-                    android:id="@+id/yelp_response_list"
-                    android:layout_width="match_parent"
+                    android:layout_below="@id/yelp_title_text_details"
+                    android:layout_marginTop="5dp"/>
+                <TextView
+                    android:id="@+id/yelp_num_reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_toEndOf="@id/yelp_rating"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/yelp_icon_image"></ListView>
-
+                    android:layout_below="@id/yelp_title_text_details"
+                    android:layout_marginLeft="8dp"
+                    android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"
+                    android:layout_below="@id/yelp_rating">
+                    <ListView
+                        android:id="@+id/yelp_response_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_below="@id/yelp_icon_image"></ListView>
+                </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
