@@ -1,4 +1,4 @@
-Research Plan<br>
+# Research Plan<br>
 <a target="blank" href=https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing>Google Docs - Research Plan Document</a>
 
 Summary of user research including personas
