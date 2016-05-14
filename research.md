@@ -1,11 +1,11 @@
-A research plan that follows the format in the research plan worksheet
-https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing
+Research Plan<br>
+<a href=https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing>Google Docs - Research Plan Document</a>
 
 Summaries of your user research including personas using the format in the personas worksheet and research highlights
 
 Your user stories – who are your users, what do they want, and why?
 
-Screenshots of your competitive analysis spreadsheet
+Screenshots of your competitive analysis spreadsheet<br>
 https://docs.google.com/spreadsheets/d/1aZrJd5ExxoLYNeqR8eRYOrmz9xsdQMrlARZViJ0FwL0/edit?usp=sharing
 
 A problem statement that follows the format in the problem statement worksheet
