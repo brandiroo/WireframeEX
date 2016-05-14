@@ -1,4 +1,4 @@
-# PreScoop-Final
+# PreScoop-Final Project
 Discovery app for finding preschools in your local area.
 
 
