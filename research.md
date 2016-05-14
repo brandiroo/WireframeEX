@@ -1,5 +1,5 @@
 Research Plan<br>
-<a href=https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing>Google Docs - Research Plan Document</a>
+<a target="new" href=https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing>Google Docs - Research Plan Document</a>
 
 Summaries of your user research including personas using the format in the personas worksheet and research highlights
 
