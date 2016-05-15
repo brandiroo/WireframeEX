@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.salminnella.prescoop.R;
-import com.project.salminnella.prescoop.activity.SchoolDetails;
+import com.project.salminnella.prescoop.activity.SchoolDetailsActivity;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 
@@ -98,7 +98,7 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Log.i(TAG, "onInfoWindowClick: " + marker.getTitle());
-                Intent intentToSchoolDetails = new Intent(SchoolsMapFragment.this, SchoolDetails.class);
+                Intent intentToSchoolDetails = new Intent(SchoolsMapFragment.this, SchoolDetailsActivity.class);
                 if (mSchoolsList != null) {
                     PreSchool filteredPreschool = selectSchoolForIntent(marker.getTitle());
                     intentToSchoolDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, filteredPreschool);

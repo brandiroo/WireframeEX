@@ -47,7 +47,7 @@ public class WebViewActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intentToDetailsActivity = new Intent(WebViewActivity.this, SchoolDetails.class);
+                    Intent intentToDetailsActivity = new Intent(WebViewActivity.this, SchoolDetailsActivity.class);
                     intentToDetailsActivity.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolHolder);
                     setResult(RESULT_OK, intentToDetailsActivity);
                     finish();
@@ -106,7 +106,7 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intentToDetailsActivity = new Intent(WebViewActivity.this, SchoolDetails.class);
+        Intent intentToDetailsActivity = new Intent(WebViewActivity.this, SchoolDetailsActivity.class);
         intentToDetailsActivity.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolHolder);
         setResult(RESULT_OK, intentToDetailsActivity);
         finish();

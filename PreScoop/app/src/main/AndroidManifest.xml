@@ -40,7 +40,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".activity.SchoolDetails"
+            android:name=".activity.SchoolDetailsActivity"
             android:label="@string/title_activity_school_details"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme">
@@ -70,11 +70,11 @@
         <activity
             android:name=".activity.WebViewActivity"
             android:label="@string/title_activity_web_view"
-            android:parentActivityName=".activity.SchoolDetails"
+            android:parentActivityName=".activity.SchoolDetailsActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.project.salminnella.prescoop.activity.SchoolDetails" />
+                android:value="com.project.salminnella.prescoop.activity.SchoolDetailsActivity" />
         </activity>
     </application>
 
