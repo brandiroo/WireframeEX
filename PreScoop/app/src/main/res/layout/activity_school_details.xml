@@ -27,8 +27,8 @@
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
+                android:background="@color/colorPrimaryDark"
                 app:layout_collapseMode="parallax"
                 android:contentDescription="@string/collapsing_toolbar_image" />
             <android.support.v7.widget.Toolbar

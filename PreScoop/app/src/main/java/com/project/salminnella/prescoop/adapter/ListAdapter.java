@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.squareup.picasso.Picasso;
+import com.yelp.clientlib.entities.Business;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +24,24 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Context context;
     // Store a member variable for the schools
     private List<PreSchool> mSchools;
+    private List<Business> yelpBusiness;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(PreSchool preschool);
     }
 
+
     // constructor
     public ListAdapter(List<PreSchool> mSchools, OnItemClickListener listener) {
         this.mSchools = mSchools;
         this.listener = listener;
+    }
+
+    // constructor
+    public ListAdapter(List<Business> yelpBusiness) {
+        this.yelpBusiness = yelpBusiness;
+        //this.listener = listener;
     }
 
 

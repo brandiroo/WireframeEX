@@ -209,6 +209,10 @@
                     android:layout_height="400dp"
                     android:orientation="vertical"
                     android:layout_below="@id/yelp_rating">
+                    <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/rvSchoolsYelp"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent" />-->
                         <ListView
                             android:id="@+id/yelp_response_list"
                             android:layout_width="match_parent"

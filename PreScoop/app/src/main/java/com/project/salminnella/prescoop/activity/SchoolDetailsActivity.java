@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.project.salminnella.prescoop.R;
+import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
 import com.project.salminnella.prescoop.adapter.YelpAdapter;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
@@ -64,6 +66,9 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private TextView mFacilityType;
     private TextView mLicenseStatus;
     private TextView mLicenseDate;
+
+    private RecyclerView mRecyclerView;
+    private ListAdapter mRecycleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +152,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         mYelpTitleText = (TextView) findViewById(R.id.yelp_title_text_details);
         mYelpRating = (ImageView) findViewById(R.id.yelp_rating);
         mYelpListView = (ListView) findViewById(R.id.yelp_response_list);
+        //mRecyclerView = (RecyclerView) findViewById(R.id.rvSchoolsYelp);
         mYelpNumReviews = (TextView) findViewById(R.id.yelp_num_reviews);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mPhoneNumber = (TextView) findViewById(R.id.school_phone_text_details);
@@ -162,15 +168,21 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         if (mPreschoolMain.getImageUrl().matches("")) {
             Picasso.with(SchoolDetailsActivity.this).load(R.drawable.no_image_available).into(imageView);
         } else {
-            Picasso.with(SchoolDetailsActivity.this).load(mPreschoolMain.getImageUrl()).into(imageView);
+            Picasso.with(SchoolDetailsActivity.this).load(mPreschoolMain.getImageUrl())
+                    .into(imageView);
         }
+
+        Log.i(TAG, "loadBackdrop: inageview width: " + imageView);
+        Log.i(TAG, "loadBackdrop: inageview height: " + imageView.getHeight());
 
     }
 
     private void receiveIntent() {
         Intent receiveIntent = getIntent();
         mPreschoolMain = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
+    }
 
+    private void createRecycler() {
     }
 
 
@@ -242,6 +254,11 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                         ArrayList<Business> businesses = searchResponse.businesses();
                         mYelpAdapter = new YelpAdapter(SchoolDetailsActivity.this, businesses);
                         mYelpListView.setAdapter(mYelpAdapter);
+//
+//
+//                        mRecyclerView.setLayoutManager(new LinearLayoutManager(SchoolDetailsActivity.this));
+//                        mRecycleAdapter = new ListAdapter(businesses);
+//                        mRecyclerView.setAdapter(mRecycleAdapter);
                     }
                 }
             }

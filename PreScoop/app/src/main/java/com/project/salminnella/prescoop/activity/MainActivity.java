@@ -54,11 +54,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
     private static final int PERMISSION_REQUEST_CODE = 12345;
-    //TODO check support library for refresh
     //TODO markers for maps can be turned into an object class
     //TODO use firebase UI for recycler view instead of the onchild overrides
-    //TODO permissions for location services on maps
-    //TODO database helper for saved schools
     //TODO move the sort and search methods to Utilities
     private ArrayList<PreSchool> mSchoolsList;
     private Firebase mFireBaseRoot, mFirebasePreschoolRef;
@@ -121,8 +118,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
             @Override
             public void onMenuTabReSelected(@IdRes int menuItemId) {
-                if (menuItemId == R.id.abc_sort_bottom_bar) {
-                    // The user reselected item number one, scroll your content to top.
+                switchBottomBarTab(menuItemId);
+                if (menuItemId == R.id.refresh_bottom_bar) {
+                    // The user reselected refresh item
+                    mRecycleAdapter.swap(backupList);
+                    mRecyclerView.smoothScrollToPosition(0);
                 }
             }
         });
@@ -277,7 +277,9 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     // endregion SortMethods
 
     private void showProgressBar() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (mSchoolsList == null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     private void removeProgressBar() {
