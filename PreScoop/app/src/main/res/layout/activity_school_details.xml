@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.project.salminnella.prescoop.activity.SchoolDetails">
+    tools:context="com.project.salminnella.prescoop.activity.SchoolDetailsActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"

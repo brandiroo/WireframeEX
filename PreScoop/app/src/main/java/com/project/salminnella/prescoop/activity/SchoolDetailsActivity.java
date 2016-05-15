@@ -43,8 +43,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SchoolDetails extends AppCompatActivity implements TabLayoutFragment.XmlClickable {
-    private static final String TAG = "SchoolDetails";
+public class SchoolDetailsActivity extends AppCompatActivity implements TabLayoutFragment.XmlClickable {
+    private static final String TAG = "SchoolDetailsActivity";
     private TextView mSchoolName;
     private TextView mSchoolAddress;
     private PreSchool mPreschoolMain;
@@ -70,7 +70,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_details);
 
-        databaseHelper = DatabaseHelper.getInstance(SchoolDetails.this);
+        databaseHelper = DatabaseHelper.getInstance(SchoolDetailsActivity.this);
         receiveIntent();
         initToolbar();
         initViews();
@@ -89,7 +89,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Business clickedYelpBusiness = (Business) mYelpListView.getItemAtPosition(position);
-                Intent intentToWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
+                Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
                 intentToWebView.putExtra(Constants.WEB_URL_KEY, clickedYelpBusiness.mobileUrl());
                 intentToWebView.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolMain);
                 startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
@@ -160,9 +160,9 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         if (mPreschoolMain.getImageUrl().matches("")) {
-            Picasso.with(SchoolDetails.this).load(R.drawable.no_image_available).into(imageView);
+            Picasso.with(SchoolDetailsActivity.this).load(R.drawable.no_image_available).into(imageView);
         } else {
-            Picasso.with(SchoolDetails.this).load(mPreschoolMain.getImageUrl()).into(imageView);
+            Picasso.with(SchoolDetailsActivity.this).load(mPreschoolMain.getImageUrl()).into(imageView);
         }
 
     }
@@ -223,7 +223,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
                     schoolMatch = filterYelpResponse(searchResponse);
                     if (schoolMatch != null) {
                         mYelpTitleText.setText(schoolMatch.name());
-                        Picasso.with(SchoolDetails.this).load(schoolMatch.ratingImgUrlLarge()).into(mYelpRating);
+                        Picasso.with(SchoolDetailsActivity.this).load(schoolMatch.ratingImgUrlLarge()).into(mYelpRating);
                         String reviewText = String.valueOf(schoolMatch.reviewCount()) + " Reviews";
                         mYelpNumReviews.setText(reviewText);
                         mYelpTitleText.setPaintFlags(mYelpTitleText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -231,7 +231,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
                         mYelpTitleText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intentToWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
+                                Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
                                 intentToWebView.putExtra(Constants.WEB_URL_KEY, schoolMatch.mobileUrl());
                                 intentToWebView.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschoolMain);
                                 startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
@@ -240,7 +240,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
                     } else {
                         mYelpTitleText.setText(R.string.empty_yelp_response_title);
                         ArrayList<Business> businesses = searchResponse.businesses();
-                        mYelpAdapter = new YelpAdapter(SchoolDetails.this, businesses);
+                        mYelpAdapter = new YelpAdapter(SchoolDetailsActivity.this, businesses);
                         mYelpListView.setAdapter(mYelpAdapter);
                     }
                 }
@@ -275,7 +275,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
     private void initTabLayout() {
         // Set PagerAdapter so that it can display items
         viewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(),
-                SchoolDetails.this, mPreschoolMain));
+                SchoolDetailsActivity.this, mPreschoolMain));
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -297,7 +297,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
         int id = item.getItemId();
 
         if (id == R.id.maps_menu_item_details) {
-            Intent intentToMaps = new Intent(SchoolDetails.this, SchoolsMapFragment.class);
+            Intent intentToMaps = new Intent(SchoolDetailsActivity.this, SchoolsMapFragment.class);
             intentToMaps.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschoolMain);
             startActivity(intentToMaps);
         }
@@ -326,7 +326,7 @@ public class SchoolDetails extends AppCompatActivity implements TabLayoutFragmen
 
     @Override
     public void clickMethod(View view, String url) {
-        Intent intentWebView = new Intent(SchoolDetails.this, WebViewActivity.class);
+        Intent intentWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
         intentWebView.putExtra(Constants.WEB_URL_KEY, url);
         startActivity(intentWebView);
     }

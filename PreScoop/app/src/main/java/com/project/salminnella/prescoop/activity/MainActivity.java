@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     //TODO use firebase UI for recycler view instead of the onchild overrides
     //TODO permissions for location services on maps
     //TODO database helper for saved schools
-    //TODO rename SchoolDetails with Activity at the end
     //TODO move the sort and search methods to Utilities
     private ArrayList<PreSchool> mSchoolsList;
     private Firebase mFireBaseRoot, mFirebasePreschoolRef;
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
+                Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
                 intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschool);
                 startActivity(intentToDetails);
             }
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     @Override
     public void onItemClick(PreSchool preschool) {
-        Intent intentToDetails = new Intent(MainActivity.this, SchoolDetails.class);
+        Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
         intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
         startActivity(intentToDetails);
     }
