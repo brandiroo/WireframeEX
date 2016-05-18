@@ -59,7 +59,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private boolean saveSchool;
     private DatabaseHelper databaseHelper;
     private Business schoolMatch;
-    FloatingActionButton fab;
+    private FloatingActionButton fab;
     private TextView mPhoneNumber;
     private TextView mFacilityNumber;
     private TextView mFacilityCapacity;

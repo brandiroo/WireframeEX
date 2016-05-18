@@ -66,10 +66,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private ListAdapter mRecycleAdapter;
     private BottomBar mBottomBar;
     private ArrayList<PreSchool> backupList;
-    private ProgressBar progressBar;
+    private ProgressBar mProgressBar;
     private DatabaseHelper dbHelper;
-    //private DBCursorAdapter cursorAdapter;
-    private DBCursorAdapter rvDBCursorAdapter;
     private Cursor cursor;
     private ListView cursorListView;
     private ListView rvCursorListView;
@@ -86,11 +84,14 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         initFirebase();
         if (mSchoolsList == null) {
             queryFirebase();
+            //checkReportsFirebase();
         }
         createRecycler();
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
         setCursorListItemListener();
+
+
     }
 
     private void setCursorListItemListener() {
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
 
     private void initViews() {
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
         cursorListView = (ListView) findViewById(R.id.cursor_list_view);
     }
@@ -229,14 +230,14 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     private void showProgressBar() {
         if (mSchoolsList == null) {
-            progressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
             Toast.makeText(MainActivity.this, "progress bar made visible", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void removeProgressBar() {
         if (mSchoolsList.size() > 0) {
-            progressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -248,6 +249,51 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private void initFirebase(){
         mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
         mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
+    }
+
+    private void checkReportsFirebase() {
+        // List the names of all Mary's groups
+//        Firebase ref = new Firebase("https://docs-examples.firebaseio.com/web/org");
+        Firebase mFirebaseReportsRef = mFireBaseRoot.child("reports");
+        // fetch a list of Mary's groups
+        mFirebaseReportsRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+                // for each group, fetch the name and print it
+                String groupKey = snapshot.getKey();
+                Log.i(TAG, "onChildAdded: snapshot key " + groupKey);
+                mFireBaseRoot.child("reports/" + groupKey + "/mReportUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        Log.i(TAG, "onDataChange: for reports " + snapshot.getValue());
+                    }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                        // ignore
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
 
@@ -264,7 +310,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
+                //String groupKey = snapshot.getKey();
+                //Log.i(TAG, "onChildAdded: group key " + groupKey);
+                //mFireBaseRoot.child("reports/" + groupKey + "/mReportUrl").
                 mPreschool = snapshot.getValue(PreSchool.class);
+                Log.i(TAG, "onChildAdded: " + mPreschool);
                 mSchoolsList.add(mPreschool);
                 backupList.add(mPreschool);
                 mRecycleAdapter.notifyDataSetChanged();
@@ -345,8 +395,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         cursor = dbHelper.findAllSavedSchools();
         if (cursor.getCount() > 0) {
 //            cursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, 0);
-            rvDBCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor);
-            mRecyclerView.setAdapter(rvDBCursorAdapter);
+            DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor);
+            mRecyclerView.setAdapter(dbCursorAdapter);
             //cursorListView.setAdapter(cursorAdapter);
             //cursorListView.setVisibility(View.VISIBLE);
             //mRecyclerView.setVisibility(View.INVISIBLE);
