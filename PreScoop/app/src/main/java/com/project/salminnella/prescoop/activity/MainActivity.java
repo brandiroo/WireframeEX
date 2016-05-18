@@ -33,8 +33,9 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.salminnella.prescoop.R;
-import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
+//import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
+import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
@@ -42,6 +43,7 @@ import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.NameComparator;
 import com.project.salminnella.prescoop.utility.PriceComparator;
 import com.project.salminnella.prescoop.utility.RatingComparator;
+import com.project.salminnella.prescoop.utility.Utilities;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -66,9 +68,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private ArrayList<PreSchool> backupList;
     private ProgressBar progressBar;
     private DatabaseHelper dbHelper;
-    private DBCursorAdapter cursorAdapter;
+    //private DBCursorAdapter cursorAdapter;
+    private DBCursorAdapter rvDBCursorAdapter;
     private Cursor cursor;
     private ListView cursorListView;
+    private ListView rvCursorListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +154,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
                 sortByPrice();
                 break;
             case R.id.refresh_bottom_bar:
-                mRecycleAdapter.swap(backupList);
+                mRecyclerView.setAdapter(mRecycleAdapter);
+                //mRecycleAdapter.swap(backupList);
                 break;
         }
     }
@@ -172,11 +177,13 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
     @Override
     public void onItemClick(PreSchool preschool) {
+        Log.i(TAG, "onItemClick: recycler view click: " + preschool.getName());
         Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
         intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
         startActivity(intentToDetails);
     }
     // endregion RecyclerView
+
 
     // region FilterSearch
     @Override protected void onNewIntent(Intent intent) {
@@ -186,67 +193,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private void handleSearchFilterIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            filterSchoolsList(query);
+            ArrayList<PreSchool> filteredList = Utilities.filterSchoolsList(query, mSchoolsList);
+            mRecycleAdapter.swap(filteredList);
+
             Toast.makeText(MainActivity.this,"Searching for "+query,Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void filterSchoolsList(String query) {
-        if (!query.equals("")) {
-            char first = query.charAt(0);
-            if (first >= '0' && first <= '9') {
-                searchByZipCode(query);
-            } else if (Character.isLetter(first)) {
-                searchByNeighborhood(query);
-            } else {
-                searchByPriceRange(query);
-            }
-        }
-    }
-
-    private void searchByZipCode(String query) {
-        ArrayList<PreSchool> filteredList = new ArrayList<>();
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            if (mSchoolsList.get(i).getZipCode().equals(query)) {
-                filteredList.add(mSchoolsList.get(i));
-            }
-        }
-        mRecycleAdapter.swap(filteredList);
-    }
-
-    private void searchByNeighborhood(String query) {
-        ArrayList<PreSchool> filteredList = new ArrayList<>();
-        String queryLowerCase = query.toLowerCase();
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            String regionLowerCase = mSchoolsList.get(i).getRegion().toLowerCase();
-            if (regionLowerCase.contains(queryLowerCase)) {
-                filteredList.add(mSchoolsList.get(i));
-            }
-        }
-        mRecycleAdapter.swap(filteredList);
-    }
-
-    private void searchByPriceRange(String query) {
-        ArrayList<PreSchool> filteredList = new ArrayList<>();
-        int min = 0;
-        int max = 0;
-        if (query.equals("$")) {
-            min = 0;
-            max = 1000;
-        } else if (query.equals("$$")) {
-            min = 1001;
-            max = 2000;
-        } else if (query.equals("$$$")) {
-            min = 2001;
-            max = 5000;
-        }
-
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            if (mSchoolsList.get(i).getPrice() >= min && mSchoolsList.get(i).getPrice() <= max) {
-                filteredList.add(mSchoolsList.get(i));
-            }
-        }
-        mRecycleAdapter.swap(filteredList);
     }
     // endregion FilterSearch
 
@@ -279,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private void showProgressBar() {
         if (mSchoolsList == null) {
             progressBar.setVisibility(View.VISIBLE);
+            Toast.makeText(MainActivity.this, "progress bar made visible", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -364,15 +316,17 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
         switch (id) {
             case R.id.maps_menu_item_main:
-                checkPerms();
+                checkPermissions();
                 //buildIntentToMap();
                 break;
             case R.id.saved_schools_menu_main:
                 findSavedSchools();
                 break;
             case R.id.all_schools_menu_main:
-                cursorListView.setVisibility(View.INVISIBLE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+//                cursorListView.setVisibility(View.INVISIBLE);
+//                mRecyclerView.setVisibility(View.VISIBLE);
+                mRecycleAdapter.swap(backupList);
+
                 Toast.makeText(MainActivity.this, "all", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -390,10 +344,12 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     private void findSavedSchools() {
         cursor = dbHelper.findAllSavedSchools();
         if (cursor.getCount() > 0) {
-            cursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, 0);
-            cursorListView.setAdapter(cursorAdapter);
-            cursorListView.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.INVISIBLE);
+//            cursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, 0);
+            rvDBCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor);
+            mRecyclerView.setAdapter(rvDBCursorAdapter);
+            //cursorListView.setAdapter(cursorAdapter);
+            //cursorListView.setVisibility(View.VISIBLE);
+            //mRecyclerView.setVisibility(View.INVISIBLE);
             //cursor.close();
         } else {
             Toast.makeText(MainActivity.this, "No Saved Schools Yet", Toast.LENGTH_SHORT).show();
@@ -405,7 +361,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         LatLng coordinates;
         if (mSchoolsList == null) {
             return mapMarkersHashMap;
-            //TODO return something else
         }
         for (int i = 0; i < mSchoolsList.size(); i++) {
             coordinates = new LatLng(mSchoolsList.get(i).getLatitude(), mSchoolsList.get(i).getLongitude());
@@ -415,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         return mapMarkersHashMap;
     }
 
-    private void checkPerms() {
+    private void checkPermissions() {
         if (permissionExists()){
             buildIntentToMap();
         } else {
