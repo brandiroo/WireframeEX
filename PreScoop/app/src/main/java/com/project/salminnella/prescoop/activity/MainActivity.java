@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -33,9 +32,8 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.salminnella.prescoop.R;
-//import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
-import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
+import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
@@ -50,6 +48,8 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+
+//import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
     private static final String TAG = "MainActivity";
@@ -89,28 +89,28 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         createRecycler();
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
-        setCursorListItemListener();
+        //setCursorListItemListener();
 
 
     }
 
-    private void setCursorListItemListener() {
-        cursorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
-                intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschool);
-                startActivity(intentToDetails);
-            }
-        });
-    }
+//    private void setCursorListItemListener() {
+//        cursorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
+//                intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschool);
+//                startActivity(intentToDetails);
+//            }
+//        });
+//    }
 
 
     private void initViews() {
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
-        cursorListView = (ListView) findViewById(R.id.cursor_list_view);
+        //cursorListView = (ListView) findViewById(R.id.cursor_list_view);
     }
 
     private void buildBottomBar(Bundle savedInstanceState) {

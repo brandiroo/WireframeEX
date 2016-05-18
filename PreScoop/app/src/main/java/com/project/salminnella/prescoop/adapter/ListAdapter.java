@@ -2,9 +2,12 @@ package com.project.salminnella.prescoop.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.project.salminnella.prescoop.R;
@@ -73,6 +76,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         }
         holder.bind(mSchools.get(position), listener);
     }
+    public int dp2px(int dp) {
+        WindowManager wm = (WindowManager) this.context
+                .getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        display.getMetrics(displaymetrics);
+        return (int) (dp * displaymetrics.density + 0.5f);
+    }
+
 
     @Override
     public int getItemCount() {

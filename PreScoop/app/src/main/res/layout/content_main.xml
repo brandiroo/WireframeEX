@@ -34,12 +34,12 @@
 
     <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
-    <ListView
-        android:id="@+id/cursor_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:visibility="invisible"></ListView>
+    <!--<ListView-->
+        <!--android:id="@+id/cursor_list_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:divider="@null"-->
+        <!--android:visibility="invisible"></ListView>-->
 
 
 </RelativeLayout>
