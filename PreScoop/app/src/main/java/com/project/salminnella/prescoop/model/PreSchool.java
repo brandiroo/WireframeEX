@@ -64,6 +64,7 @@ public class PreSchool implements Serializable {
 
     private String licenseStatus;
     private String licenseDate;
+    private Reports reports;
 
     public PreSchool() {
     }
@@ -82,7 +83,7 @@ public class PreSchool implements Serializable {
                      int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVisits,
                      String otherVisitDates, int visitTypeACitation, int visitTypeBCitation, int totalReports,
                      String reportDates, String reportUrl, double pLongitude, double pLatitude, String licenseDate,
-                     String licenseStatus) {
+                     String licenseStatus, Reports reports) {
         this.name = schoolLocation.getName();
         this.streetAddress = schoolLocation.getStreetAddress();
         this.city = schoolLocation.getCity();
@@ -123,6 +124,7 @@ public class PreSchool implements Serializable {
         this.longitude = pLongitude;
         this.licenseDate = licenseDate;
         this.licenseStatus = licenseStatus;
+        this.reports = reports;
     }
 
     public String getName() {
@@ -483,5 +485,13 @@ public class PreSchool implements Serializable {
 
     public void setLicenseDate(String licenseDate) {
         this.licenseDate = licenseDate;
+    }
+
+    public Reports getReports() {
+        return reports;
+    }
+
+    public void setReports(Reports reports) {
+        this.reports = reports;
     }
 }

@@ -261,11 +261,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
             public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
                 // for each group, fetch the name and print it
                 String groupKey = snapshot.getKey();
-                Log.i(TAG, "onChildAdded: snapshot key " + groupKey);
+                //Log.i(TAG, "onChildAdded: snapshot key " + groupKey);
                 mFireBaseRoot.child("reports/" + groupKey + "/mReportUrl").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        Log.i(TAG, "onDataChange: for reports " + snapshot.getValue());
+                        //Log.i(TAG, "onDataChange: for reports " + snapshot.getValue());
                     }
                     @Override
                     public void onCancelled(FirebaseError firebaseError) {
@@ -310,14 +310,40 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                //String groupKey = snapshot.getKey();
-                //Log.i(TAG, "onChildAdded: group key " + groupKey);
-                //mFireBaseRoot.child("reports/" + groupKey + "/mReportUrl").
-                mPreschool = snapshot.getValue(PreSchool.class);
-                Log.i(TAG, "onChildAdded: " + mPreschool);
+                String groupKey = snapshot.getKey();
+                //Reports reports = snapshot.getValue(Reports.class);
+                Log.i(TAG, "onChildAdded: group key " + groupKey);
+                //Log.i(TAG, "onChildAdded: reports key " + reports);
+              mPreschool = snapshot.getValue(PreSchool.class);
+                Log.i(TAG, "onChildAdded: school name " + mPreschool.getName());
+                //Log.i(TAG, "onChildAdded: report url " + mPreschool.getReports().getmReportUrl());
                 mSchoolsList.add(mPreschool);
                 backupList.add(mPreschool);
                 mRecycleAdapter.notifyDataSetChanged();
+
+
+                    //mFireBaseRoot.child("Facility").addListenerForSingleValueEvent(new ValueEventListener() {
+                    //mFireBaseRoot.child("reports/" + groupKey + "/mReportUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+                // TODO need to figure the groupkey between the 2 tables
+                mFireBaseRoot.child("reports/reports05/mReportUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i(TAG, "onDataChange: snapshot value " + dataSnapshot.getValue());
+                        Log.i(TAG, "onDataChange: report url " + mPreschool.getReports().getmReportUrl());
+
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+//                mPreschool = snapshot.getValue(PreSchool.class);
+//                Log.i(TAG, "onChildAdded: school name " + mPreschool.getName());
+//                //Log.i(TAG, "onChildAdded: report url " + mPreschool.getReports().getmReportUrl());
+//                mSchoolsList.add(mPreschool);
+//                backupList.add(mPreschool);
+//                mRecycleAdapter.notifyDataSetChanged();
             }
 
             @Override

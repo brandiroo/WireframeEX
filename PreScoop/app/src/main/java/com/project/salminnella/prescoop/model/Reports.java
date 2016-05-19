@@ -1,9 +1,11 @@
 package com.project.salminnella.prescoop.model;
 
+import java.io.Serializable;
+
 /**
  * Created by anthony on 5/17/16.
  */
-public class Reports {
+public class Reports implements Serializable {
     private String mDate;
     private String mReportUrl;
     private String mTitle;
@@ -16,6 +18,10 @@ public class Reports {
 //        this.mTitle = mTitle;
 //        this.schools = schoolsKey;
 //    }
+
+    public Reports() {
+
+    }
 
     public Reports(String mDate, String mReportUrl, String mTitle) {
         this.mDate = mDate;
