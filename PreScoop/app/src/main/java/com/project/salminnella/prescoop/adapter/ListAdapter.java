@@ -2,12 +2,9 @@ package com.project.salminnella.prescoop.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.project.salminnella.prescoop.R;
@@ -27,15 +24,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
     // Store a member variable for the schools
     private List<PreSchool> mSchools;
     private List<Business> yelpBusiness;
-    private OnItemClickListener listener;
-
-    public interface OnItemClickListener {
-        void onItemClick(PreSchool preschool);
-    }
-
+    private OnRvItemClickListener listener;
 
     // constructor
-    public ListAdapter(List<PreSchool> mSchools, OnItemClickListener listener) {
+    public ListAdapter(List<PreSchool> mSchools, OnRvItemClickListener listener) {
         this.mSchools = mSchools;
         this.listener = listener;
     }
@@ -75,14 +67,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
             Picasso.with(context).load(preSchool.getImageUrl()).into(holder.schoolImageView);
         }
         holder.bind(mSchools.get(position), listener);
-    }
-    public int dp2px(int dp) {
-        WindowManager wm = (WindowManager) this.context
-                .getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        display.getMetrics(displaymetrics);
-        return (int) (dp * displaymetrics.density + 0.5f);
     }
 
 
