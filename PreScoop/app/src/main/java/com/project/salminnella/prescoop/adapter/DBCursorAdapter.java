@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,8 @@ import android.widget.TextView;
 
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
+import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.utility.Utilities;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -26,24 +27,20 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
     private static final String TAG = "DBCursorAdapter";
     CursorAdapter mCursorAdapter;
     Context mContext;
-    OnRvItemClickListener listener;
-    private OnItemClickListener onItemClickListener;
+    OnRvItemClickListener onRvClickListener;
     //TODO need to change the click listenere name - too close to package name
 
-    public DBCursorAdapter(Context context, Cursor c, OnItemClickListener listener) {
+    public DBCursorAdapter(Context context, Cursor c, OnRvItemClickListener listener) {
 
         mContext = context;
-        //this.listener = listener;
-//        this.onItemClickListener = listener;
         setOnItemClickListener(listener);
-        mCursorAdapter = new android.support.v4.widget.CursorAdapter(mContext, c, 0) {
 
+        mCursorAdapter = new android.support.v4.widget.CursorAdapter(mContext, c, 0) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
                 // Inflate the view here
                 return LayoutInflater.from(context).inflate(R.layout.recycler_view_items,parent,false);
             }
-
             @Override
             public void bindView(View view, Context context, Cursor cursor) {
                 // Binding operations
@@ -51,9 +48,7 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
                 TextView schoolName = (TextView) view.findViewById(R.id.school_name_items);
 
                 schoolName.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME)));
-
                 String url = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_IMAGE_URL));
-
                 if (url.matches("")) {
                     Picasso.with(context).load(R.drawable.no_image_available).into(schoolImage);
                 } else {
@@ -63,22 +58,15 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
         };
     }
 
-    public void setOnItemClickListener(final OnItemClickListener onItemClickListener)
+    public void setOnItemClickListener(final OnRvItemClickListener onRvItemClickListener)
     {
-        this.onItemClickListener = onItemClickListener;
-    }
-
-    public interface OnItemClickListener
-    {
-//        void onItemClicked(Cursor cursor);
-        void onItemClicked(String text);
+        this.onRvClickListener = onRvItemClickListener;
     }
 
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Passing the inflater job to the cursor-adapter
         View v = mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent);
-//        final View view = this.layoutInflater.inflate(R.layout.listitem_search, parent, false);
         v.setOnClickListener(this);
 
         return new ListViewHolder(v);
@@ -98,20 +86,18 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
     @Override
     public void onClick(final View view)
     {
-        if (this.onItemClickListener != null)
+        if (this.onRvClickListener != null)
         {
             final RecyclerView recyclerView = (RecyclerView) view.getParent();
             final int position = recyclerView.getChildLayoutPosition(view);
             if (position != RecyclerView.NO_POSITION)
             {
-                //final Cursor cursor = this.;
-                this.onItemClickListener.onItemClicked("clicked it");
+                final Cursor cursor = (Cursor) this.mCursorAdapter.getItem(position);
+                PreSchool preschool = Utilities.buildPreschoolObject(cursor);
+                this.onRvClickListener.onListItemClick(preschool);
             }
-            Log.i(TAG, "onClick: from db cursor adapter");
         }
     }
-
-
 
     @Override
     public int getItemCount() {

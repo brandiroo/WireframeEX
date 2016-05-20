@@ -54,7 +54,7 @@ import java.util.List;
 
 //import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 
-public class MainActivity extends AppCompatActivity implements OnRvItemClickListener, DBCursorAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements OnRvItemClickListener{ //, DBCursorAdapter.OnItemClickListener
     private static final String TAG = "MainActivity";
 
     private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
@@ -463,8 +463,5 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         }
     }
 
-    @Override
-    public void onItemClicked(String text) {
-        Toast.makeText(MainActivity.this, "= " + text, Toast.LENGTH_SHORT).show();
-    }
+
 }

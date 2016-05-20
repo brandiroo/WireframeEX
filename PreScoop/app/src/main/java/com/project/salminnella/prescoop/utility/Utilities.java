@@ -1,10 +1,12 @@
 package com.project.salminnella.prescoop.utility;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.model.PreSchool;
 
 import java.util.ArrayList;
@@ -119,7 +121,11 @@ public final class Utilities {
         return filteredListPrice;
     }
 
-
+    public static PreSchool buildPreschoolObject(Cursor cursor) {
+        PreSchool preschool = new PreSchool();
+        preschool.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME)));
+        return preschool;
+    }
 
 
 

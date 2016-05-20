@@ -1,17 +1,23 @@
 package com.project.salminnella.prescoop.fragment;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.project.salminnella.prescoop.R;
+import com.project.salminnella.prescoop.adapter.ReportsAdapter;
 import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.model.Reports;
 import com.project.salminnella.prescoop.utility.Constants;
+
+import java.util.List;
 
 /**
  * Created by anthony on 5/9/16.
@@ -114,20 +120,36 @@ public class TabLayoutFragment extends Fragment {
             final View reports = inflater.inflate(R.layout.fragment_reports, container, false);
 
             TextView totalReports = (TextView) reports.findViewById(R.id.total_reports_text_frag);
-            TextView totalReportsDate = (TextView) reports.findViewById(R.id.reports_date_text_frag);
-
-            totalReports.setText(String.valueOf(preschool.getTotalReports()));
-            totalReportsDate.setText(preschool.getReportDates());
-            if (preschool.getReportUrl().contains("http")) {
-                totalReportsDate.setPaintFlags(totalReportsDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                totalReportsDate.setTextColor(getResources().getColor(R.color.htmlLink));
-                totalReportsDate.setOnClickListener(new View.OnClickListener() {
+            ListView reportsListView = (ListView) reports.findViewById(R.id.reports_list_view_frag);
+            Log.i(TAG, "onCreateView: " + preschool.getReportsData());
+            List<Reports> reportsList = preschool.getReportsData();
+            if (reportsList != null) {
+                ReportsAdapter reportsAdapter = new ReportsAdapter(getActivity(), reportsList);
+                reportsListView.setAdapter(reportsAdapter);
+                reportsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        textClickListener.clickMethod(reports, preschool.getReportUrl());
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        textClickListener.clickMethod(reports, preschool.getReportsData().get(position).getmReportUrl());
                     }
                 });
             }
+//            TextView totalReportsDate = (TextView) reports.findViewById(R.id.reports_date_text_frag);
+//
+//            totalReports.setText(String.valueOf(preschool.getTotalReports()));
+//            totalReportsDate.setText(preschool.getReportDates());
+
+
+//            if (preschool.getReportUrl().contains("http")) {
+//                totalReportsDate.setPaintFlags(totalReportsDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//                totalReportsDate.setTextColor(getResources().getColor(R.color.htmlLink));
+//                totalReportsDate.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        textClickListener.clickMethod(reports, preschool.getReportUrl());
+//                    }
+//                });
+//            }
+
             return reports;
         }
 
