@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +19,7 @@ import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 
 public class WebViewActivity extends AppCompatActivity {
-
+    private static final String TAG = "WebViewActivity";
     private WebView mWebview;
     String url;
     ProgressBar progressBar;
@@ -76,6 +77,7 @@ public class WebViewActivity extends AppCompatActivity {
         });
 
         mWebview.loadUrl(url);
+        Log.i(TAG, "loadWebview: " + url);
 //        setContentView(mWebview);
         progressBar.setVisibility(View.INVISIBLE);
     }

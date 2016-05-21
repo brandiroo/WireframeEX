@@ -4,6 +4,7 @@ package com.project.salminnella.prescoop.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by anthony on 5/5/16.
@@ -64,16 +65,10 @@ public class PreSchool implements Serializable {
 
     private String licenseStatus;
     private String licenseDate;
-    private Reports reports;
+    //private Reports reports;
+    private List<Reports> reportsData;
 
     public PreSchool() {
-    }
-
-    public PreSchool(String name, String address, String phoneNumber, String zipcode) {
-        this.name = name;
-        this.streetAddress = address;
-        this.phoneNumber = phoneNumber;
-        this.zipCode = zipcode;
     }
 
     public PreSchool(SchoolLocation schoolLocation, String phoneNumber, long facilityNumber, int capacity, int price, String type, String websiteUrl,
@@ -83,7 +78,7 @@ public class PreSchool implements Serializable {
                      int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVisits,
                      String otherVisitDates, int visitTypeACitation, int visitTypeBCitation, int totalReports,
                      String reportDates, String reportUrl, double pLongitude, double pLatitude, String licenseDate,
-                     String licenseStatus, Reports reports) {
+                     String licenseStatus) {
         this.name = schoolLocation.getName();
         this.streetAddress = schoolLocation.getStreetAddress();
         this.city = schoolLocation.getCity();
@@ -124,7 +119,8 @@ public class PreSchool implements Serializable {
         this.longitude = pLongitude;
         this.licenseDate = licenseDate;
         this.licenseStatus = licenseStatus;
-        this.reports = reports;
+
+
     }
 
     public String getName() {
@@ -487,11 +483,11 @@ public class PreSchool implements Serializable {
         this.licenseDate = licenseDate;
     }
 
-    public Reports getReports() {
-        return reports;
+    public List<Reports> getReportsData() {
+        return reportsData;
     }
 
-    public void setReports(Reports reports) {
-        this.reports = reports;
+    public void setReportsData(List<Reports> reportsData) {
+        this.reportsData = reportsData;
     }
 }

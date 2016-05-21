@@ -34,9 +34,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
+import com.project.salminnella.prescoop.adapter.OnRvItemClickListener;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.model.Reports;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.NameComparator;
 import com.project.salminnella.prescoop.utility.PriceComparator;
@@ -48,10 +50,11 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 //import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 
-public class MainActivity extends AppCompatActivity implements ListAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements OnRvItemClickListener{ //, DBCursorAdapter.OnItemClickListener
     private static final String TAG = "MainActivity";
 
     private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
@@ -177,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
     }
 
     @Override
-    public void onItemClick(PreSchool preschool) {
+    public void onListItemClick(PreSchool preschool) {
         Log.i(TAG, "onItemClick: recycler view click: " + preschool.getName());
         Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
         intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
@@ -251,51 +254,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
     }
 
-    private void checkReportsFirebase() {
-        // List the names of all Mary's groups
-//        Firebase ref = new Firebase("https://docs-examples.firebaseio.com/web/org");
-        Firebase mFirebaseReportsRef = mFireBaseRoot.child("reports");
-        // fetch a list of Mary's groups
-        mFirebaseReportsRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
-                // for each group, fetch the name and print it
-                String groupKey = snapshot.getKey();
-                //Log.i(TAG, "onChildAdded: snapshot key " + groupKey);
-                mFireBaseRoot.child("reports/" + groupKey + "/mReportUrl").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        //Log.i(TAG, "onDataChange: for reports " + snapshot.getValue());
-                    }
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-                        // ignore
-                    }
-                });
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
 
     private void queryFirebase(){
         mSchoolsList = new ArrayList<>();
@@ -311,26 +269,25 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
                 String groupKey = snapshot.getKey();
-                //Reports reports = snapshot.getValue(Reports.class);
                 Log.i(TAG, "onChildAdded: group key " + groupKey);
-                //Log.i(TAG, "onChildAdded: reports key " + reports);
-              mPreschool = snapshot.getValue(PreSchool.class);
-                Log.i(TAG, "onChildAdded: school name " + mPreschool.getName());
-                //Log.i(TAG, "onChildAdded: report url " + mPreschool.getReports().getmReportUrl());
+                mPreschool = snapshot.getValue(PreSchool.class);
                 mSchoolsList.add(mPreschool);
                 backupList.add(mPreschool);
                 mRecycleAdapter.notifyDataSetChanged();
 
-
-                    //mFireBaseRoot.child("Facility").addListenerForSingleValueEvent(new ValueEventListener() {
-                    //mFireBaseRoot.child("reports/" + groupKey + "/mReportUrl").addListenerForSingleValueEvent(new ValueEventListener() {
-                // TODO need to figure the groupkey between the 2 tables
-                mFireBaseRoot.child("reports/reports05/mReportUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+                mFirebasePreschoolRef.child(groupKey + "/reports/").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.i(TAG, "onDataChange: snapshot value " + dataSnapshot.getValue());
-                        Log.i(TAG, "onDataChange: report url " + mPreschool.getReports().getmReportUrl());
 
+                        List<Reports> reportsList = new ArrayList<Reports>(); // Result will be held Here
+                        for(DataSnapshot dsp : dataSnapshot.getChildren()){
+                            reportsList.add(dsp.getValue(Reports.class)); //add result into array list
+                        }
+                        mPreschool.setReportsData(reportsList);
+                        for (int i = 0; i<mPreschool.getReportsData().size(); i++) {
+                            Log.i(TAG, "onDataChange: list item " + mPreschool.getReportsData().get(i).getmReportUrl());
+                        }
                     }
 
                     @Override
@@ -338,12 +295,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
 
                     }
                 });
-//                mPreschool = snapshot.getValue(PreSchool.class);
-//                Log.i(TAG, "onChildAdded: school name " + mPreschool.getName());
-//                //Log.i(TAG, "onChildAdded: report url " + mPreschool.getReports().getmReportUrl());
-//                mSchoolsList.add(mPreschool);
-//                backupList.add(mPreschool);
-//                mRecycleAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -421,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
         cursor = dbHelper.findAllSavedSchools();
         if (cursor.getCount() > 0) {
 //            cursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, 0);
-            DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor);
+            DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
             mRecyclerView.setAdapter(dbCursorAdapter);
             //cursorListView.setAdapter(cursorAdapter);
             //cursorListView.setVisibility(View.VISIBLE);
@@ -511,5 +462,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.OnIte
                 break;
         }
     }
+
 
 }

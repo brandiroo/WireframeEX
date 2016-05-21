@@ -1,10 +1,14 @@
 package com.project.salminnella.prescoop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
  * Created by anthony on 5/17/16.
  */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Reports implements Serializable {
     private String mDate;
     private String mReportUrl;
