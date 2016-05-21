@@ -67,7 +67,7 @@
             <!--android:layout_height="wrap_content"-->
             <!--android:textSize="16sp"-->
             <!--android:clickable="true"-->
-            <!--android:onClick="clickMethod"-->
+            <!--android:onClick="listItemClicked"-->
             <!--android:layout_marginLeft="30dp"/>-->
         <!---->
         <!--<TextView-->

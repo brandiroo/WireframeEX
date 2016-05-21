@@ -37,6 +37,10 @@ import com.yelp.clientlib.connection.YelpAPIFactory;
 import com.yelp.clientlib.entities.Business;
 import com.yelp.clientlib.entities.SearchResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SchoolDetailsActivity extends AppCompatActivity implements TabLayoutFragment.XmlClickable {
+public class SchoolDetailsActivity extends AppCompatActivity implements TabLayoutFragment.ListItemClickable {
     private static final String TAG = "SchoolDetailsActivity";
     private TextView mSchoolName;
     private TextView mSchoolAddress;
@@ -322,7 +326,23 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         return super.onOptionsItemSelected(item);
     }
 
+    private String arrayListAsString(PreSchool preschool) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("schoolReports", new JSONArray(preschool.getReportsData()));
+            for (int i = 0; i < preschool.getReportsData().size(); i++) {
+                Log.i(TAG, "arrayListAsString: url " + preschool.getReportsData().get(i).getmReportUrl());
+                Log.i(TAG, "arrayListAsString: date " + preschool.getReportsData().get(i).getmDate());
+                Log.i(TAG, "arrayListAsString: title " + preschool.getReportsData().get(i).getmTitle());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String arrayList = json.toString();
+        Log.i(TAG, "arrayListAsString: " + arrayList);
 
+        return arrayList;
+    }
 
     private boolean isBookmarkAlreadySaved() {
         Cursor bookmarkCursor = databaseHelper.findSavedSchool(mPreschoolMain.getName());
@@ -335,6 +355,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         if (saveSchool) {
             if (!isBookmarkAlreadySaved()) {
                 databaseHelper.insertSavedSchool(mPreschoolMain);
+                String str = arrayListAsString(mPreschoolMain);
             }
         } else if (isBookmarkAlreadySaved()) {
                 databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
@@ -342,7 +363,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     }
 
     @Override
-    public void clickMethod(View view, String url) {
+    public void listItemClicked(View view, String url) {
         Intent intentWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
         intentWebView.putExtra(Constants.WEB_URL_KEY, url);
         startActivity(intentWebView);

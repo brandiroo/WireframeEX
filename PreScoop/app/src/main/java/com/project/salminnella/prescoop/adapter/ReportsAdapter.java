@@ -44,7 +44,7 @@ public class ReportsAdapter extends ArrayAdapter<Reports> {
 //            reportTitle.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        textClickListener.clickMethod(reports, preschool.getReportUrl());
+//                        textClickListener.listItemClicked(reports, preschool.getReportUrl());
 //                    }
 //                });
 //            }
@@ -57,7 +57,7 @@ public class ReportsAdapter extends ArrayAdapter<Reports> {
 //            @Override
 //            public void onClick(View v) {
 //                //Toast.makeText(ReportsAdapter.this, "logged click", Toast.LENGTH_SHORT).show();
-////                textClickListener.clickMethod(reports, preschool.getReportUrl());
+////                textClickListener.listItemClicked(reports, preschool.getReportUrl());
 //
 //            }
 //        });

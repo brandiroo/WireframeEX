@@ -27,10 +27,10 @@ public class TabLayoutFragment extends Fragment {
 
     private int mPage;
     static PreSchool preschool;
-    XmlClickable textClickListener;
+    ListItemClickable listener;
 
-    public interface XmlClickable {
-        void clickMethod(View view, String url);
+    public interface ListItemClickable {
+        void listItemClicked(View view, String url);
     }
 
     public static TabLayoutFragment newInstance(int page, PreSchool schoolData) {
@@ -46,9 +46,9 @@ public class TabLayoutFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            textClickListener = (XmlClickable) getActivity();
+            listener = (ListItemClickable) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString() + " must implement textClickListener");
+            throw new ClassCastException(getActivity().toString() + " must implement List Item Click Listener");
         }
     }
 
@@ -129,7 +129,7 @@ public class TabLayoutFragment extends Fragment {
                 reportsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        textClickListener.clickMethod(reports, preschool.getReportsData().get(position).getmReportUrl());
+                        listener.listItemClicked(reports, preschool.getReportsData().get(position).getmReportUrl());
                     }
                 });
             }
@@ -145,7 +145,7 @@ public class TabLayoutFragment extends Fragment {
 //                totalReportsDate.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        textClickListener.clickMethod(reports, preschool.getReportUrl());
+//                        listener.listItemClicked(reports, preschool.getReportUrl());
 //                    }
 //                });
 //            }
