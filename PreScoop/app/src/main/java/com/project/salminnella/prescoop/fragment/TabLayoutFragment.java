@@ -3,7 +3,6 @@ package com.project.salminnella.prescoop.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import com.project.salminnella.prescoop.adapter.ReportsAdapter;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.model.Reports;
 import com.project.salminnella.prescoop.utility.Constants;
-
-import java.util.List;
 
 /**
  * Created by anthony on 5/9/16.
@@ -121,15 +118,14 @@ public class TabLayoutFragment extends Fragment {
 
             TextView totalReports = (TextView) reports.findViewById(R.id.total_reports_text_frag);
             ListView reportsListView = (ListView) reports.findViewById(R.id.reports_list_view_frag);
-            Log.i(TAG, "onCreateView: " + preschool.getReportsData());
-            List<Reports> reportsList = preschool.getReportsData();
+            Reports[] reportsList = preschool.getReports();
             if (reportsList != null) {
                 ReportsAdapter reportsAdapter = new ReportsAdapter(getActivity(), reportsList);
                 reportsListView.setAdapter(reportsAdapter);
                 reportsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        listener.listItemClicked(reports, preschool.getReportsData().get(position).getmReportUrl());
+                        listener.listItemClicked(reports, preschool.getReports()[position].getmReportUrl());
                     }
                 });
             }

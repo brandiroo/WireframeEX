@@ -38,7 +38,6 @@ import com.project.salminnella.prescoop.adapter.OnRvItemClickListener;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
-import com.project.salminnella.prescoop.model.Reports;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.NameComparator;
 import com.project.salminnella.prescoop.utility.PriceComparator;
@@ -50,7 +49,6 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 //import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
 
@@ -280,14 +278,16 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.i(TAG, "onDataChange: snapshot value " + dataSnapshot.getValue());
 
-                        List<Reports> reportsList = new ArrayList<Reports>(); // Result will be held Here
-                        for(DataSnapshot dsp : dataSnapshot.getChildren()){
-                            reportsList.add(dsp.getValue(Reports.class)); //add result into array list
-                        }
-                        mPreschool.setReportsData(reportsList);
-                        for (int i = 0; i<mPreschool.getReportsData().size(); i++) {
-                            Log.i(TAG, "onDataChange: list item " + mPreschool.getReportsData().get(i).getmReportUrl());
-                        }
+//                        List<Reports> reportsList = new ArrayList<Reports>(); // Result will be held Here
+//                        for(DataSnapshot dsp : dataSnapshot.getChildren()){
+//                            reportsList.add(dsp.getValue(Reports.class)); //add result into array list
+//                            Log.i(TAG, "onDataChange: snapshot name " );
+//
+//                        }
+//                        mPreschool.setReportsData(reportsList);
+//                        for (int i = 0; i<mPreschool.getReportsData().size(); i++) {
+//                            Log.i(TAG, "onDataChange: list item " + mPreschool.getReportsData().get(i).getmReportUrl());
+//                        }
                     }
 
                     @Override

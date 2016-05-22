@@ -28,7 +28,6 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
     CursorAdapter mCursorAdapter;
     Context mContext;
     OnRvItemClickListener onRvClickListener;
-    //TODO need to change the click listenere name - too close to package name
 
     public DBCursorAdapter(Context context, Cursor c, OnRvItemClickListener listener) {
 
