@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
@@ -29,6 +30,7 @@ import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.fragment.TabLayoutFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.model.Reports;
 import com.project.salminnella.prescoop.utility.Constants;
 import com.project.salminnella.prescoop.utility.Utilities;
 import com.squareup.picasso.Picasso;
@@ -36,10 +38,6 @@ import com.yelp.clientlib.connection.YelpAPI;
 import com.yelp.clientlib.connection.YelpAPIFactory;
 import com.yelp.clientlib.entities.Business;
 import com.yelp.clientlib.entities.SearchResponse;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,10 +173,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
             Picasso.with(SchoolDetailsActivity.this).load(mPreschoolMain.getImageUrl())
                     .into(imageView);
         }
-
-        Log.i(TAG, "loadBackdrop: inageview width: " + imageView);
-        Log.i(TAG, "loadBackdrop: inageview height: " + imageView.getHeight());
-
     }
 
     private void receiveIntent() {
@@ -327,22 +321,42 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     }
 
     private String arrayListAsString(PreSchool preschool) {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("schoolReports", new JSONArray(preschool.getReportsData()));
-            for (int i = 0; i < preschool.getReportsData().size(); i++) {
-                Log.i(TAG, "arrayListAsString: url " + preschool.getReportsData().get(i).getmReportUrl());
-                Log.i(TAG, "arrayListAsString: date " + preschool.getReportsData().get(i).getmDate());
-                Log.i(TAG, "arrayListAsString: title " + preschool.getReportsData().get(i).getmTitle());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String arrayList = json.toString();
-        Log.i(TAG, "arrayListAsString: " + arrayList);
-
-        return arrayList;
+//        JSONObject json = new JSONObject();
+//        ArrayList<Reports> reportsArrayList = new ArrayList<>();
+//        reportsArrayList.addAll(preschool.getReportsData());
+//        try {
+//            json.put("schoolReports", new JSONArray(reportsArrayList));
+//            Log.i(TAG, "arrayListAsString: " + json);
+//            for (int i = 0; i < preschool.getReportsData().size(); i++) {
+//                Log.i(TAG, "arrayListAsString: url " + preschool.getReportsData().get(i).getmReportUrl());
+//                Log.i(TAG, "arrayListAsString: date " + preschool.getReportsData().get(i).getmDate());
+//                Log.i(TAG, "arrayListAsString: title " + preschool.getReportsData().get(i).getmTitle());
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        String arrayList = json.toString();
+//        Log.i(TAG, "arrayListAsString: " + arrayList);
+//
+//        return arrayList;
+        return null;
     }
+
+    private String arrayListAsGSONString(PreSchool preschool) {
+        if (preschool.getReports() != null) {
+            Reports[] reportsArray = preschool.getReports();
+            Gson gson = new Gson();
+            String inputString = gson.toJson(reportsArray);
+            Log.i(TAG, "arrayListAsString: " + inputString);
+
+            return inputString;
+        } else {
+            return null;
+            //TODO check this return
+        }
+    }
+
+
 
     private boolean isBookmarkAlreadySaved() {
         Cursor bookmarkCursor = databaseHelper.findSavedSchool(mPreschoolMain.getName());
@@ -350,15 +364,15 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         if (saveSchool) {
             if (!isBookmarkAlreadySaved()) {
-                databaseHelper.insertSavedSchool(mPreschoolMain);
-                String str = arrayListAsString(mPreschoolMain);
+                String reportsList = arrayListAsGSONString(mPreschoolMain);
+                databaseHelper.insertSavedSchool(mPreschoolMain, reportsList);
             }
         } else if (isBookmarkAlreadySaved()) {
-                databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
+            databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
         }
     }
 

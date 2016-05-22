@@ -12,17 +12,16 @@ import android.widget.TextView;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.Reports;
 
-import java.util.List;
-
 /**
  * Created by anthony on 5/20/16.
  */
 public class ReportsAdapter extends ArrayAdapter<Reports> {
 
-    List<Reports> mObjects;
+//    List<Reports> mObjects;
+    Reports[] mObjects;
     Context context;
 
-    public ReportsAdapter(Context context, List<Reports> mObjects ) {
+    public ReportsAdapter(Context context, Reports[] mObjects ) {
         super(context, -1, mObjects);
         this.mObjects = mObjects;
         this.context = context;
@@ -36,7 +35,7 @@ public class ReportsAdapter extends ArrayAdapter<Reports> {
         reportTitle.setTextColor(Color.BLUE);
         reportTitle.setPaintFlags(reportTitle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        Reports reports = mObjects.get(position);
+        Reports reports = mObjects[position];
 
 //        if (reports.getmReportUrl().contains("http")) {
 //            reportTitle.setPaintFlags(reportTitle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

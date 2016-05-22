@@ -159,7 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
-    public void insertSavedSchool(PreSchool school) {
+    public void insertSavedSchool(PreSchool school, String reportsList) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -199,7 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_OTHER_VISIT_DATES, school.getOtherVisitDates());
         values.put(COL_VISIT_TYPE_A_CITATION, school.getVisitTypeACitation());
         values.put(COL_VISIT_TYPE_B_CITATION, school.getVisitTypeBCitation());
-        values.put(COL_REPORTS_LIST, "replace with string array");
+        values.put(COL_REPORTS_LIST, reportsList);
         values.put(COL_TOTAL_REPORTS, school.getTotalReports());
         values.put(COL_REPORT_DATES, school.getReportDates());
         values.put(COL_REPORT_URL, school.getReportUrl());
