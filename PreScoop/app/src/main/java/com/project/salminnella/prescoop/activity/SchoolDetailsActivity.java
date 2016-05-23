@@ -10,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.project.salminnella.prescoop.R;
-import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
 import com.project.salminnella.prescoop.adapter.YelpAdapter;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
@@ -69,9 +67,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private TextView mLicenseStatus;
     private TextView mLicenseDate;
 
-    private RecyclerView mRecyclerView;
-    private ListAdapter mRecycleAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +105,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i(TAG, "onClick: fab - saveSchool = " + saveSchool);
                     if (saveSchool) {
                         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark));
                         saveSchool = false;
@@ -118,14 +112,12 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_selected));
                         saveSchool = true;
                     }
-                    Log.i(TAG, "onClick: fab - saveSchool after click = " + saveSchool);
                 }
             });
         }
     }
 
     private void adjustFabIcon() {
-        Log.i(TAG, "adjustFabIcon: before if - saveSchool = " + saveSchool);
         if (isBookmarkAlreadySaved()) {
             fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_selected));
             saveSchool = true;
@@ -154,7 +146,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         mYelpTitleText = (TextView) findViewById(R.id.yelp_title_text_details);
         mYelpRating = (ImageView) findViewById(R.id.yelp_rating);
         mYelpListView = (ListView) findViewById(R.id.yelp_response_list);
-        //mRecyclerView = (RecyclerView) findViewById(R.id.rvSchoolsYelp);
         mYelpNumReviews = (TextView) findViewById(R.id.yelp_num_reviews);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mPhoneNumber = (TextView) findViewById(R.id.school_phone_text_details);
@@ -179,10 +170,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         Intent receiveIntent = getIntent();
         mPreschoolMain = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
     }
-
-    private void createRecycler() {
-    }
-
 
     private void populateSchoolDetails() {
         mSchoolName.setText(mPreschoolMain.getName());
@@ -252,11 +239,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                         ArrayList<Business> businesses = searchResponse.businesses();
                         mYelpAdapter = new YelpAdapter(SchoolDetailsActivity.this, businesses);
                         mYelpListView.setAdapter(mYelpAdapter);
-//
-//
-//                        mRecyclerView.setLayoutManager(new LinearLayoutManager(SchoolDetailsActivity.this));
-//                        mRecycleAdapter = new ListAdapter(businesses);
-//                        mRecyclerView.setAdapter(mRecycleAdapter);
                     }
                 }
             }
@@ -321,33 +303,10 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     }
 
     private String arrayListAsString(PreSchool preschool) {
-//        JSONObject json = new JSONObject();
-//        ArrayList<Reports> reportsArrayList = new ArrayList<>();
-//        reportsArrayList.addAll(preschool.getReportsData());
-//        try {
-//            json.put("schoolReports", new JSONArray(reportsArrayList));
-//            Log.i(TAG, "arrayListAsString: " + json);
-//            for (int i = 0; i < preschool.getReportsData().size(); i++) {
-//                Log.i(TAG, "arrayListAsString: url " + preschool.getReportsData().get(i).getmReportUrl());
-//                Log.i(TAG, "arrayListAsString: date " + preschool.getReportsData().get(i).getmDate());
-//                Log.i(TAG, "arrayListAsString: title " + preschool.getReportsData().get(i).getmTitle());
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        String arrayList = json.toString();
-//        Log.i(TAG, "arrayListAsString: " + arrayList);
-//
-//        return arrayList;
-        return null;
-    }
-
-    private String arrayListAsGSONString(PreSchool preschool) {
         if (preschool.getReports() != null) {
             Reports[] reportsArray = preschool.getReports();
             Gson gson = new Gson();
             String inputString = gson.toJson(reportsArray);
-            Log.i(TAG, "arrayListAsString: " + inputString);
 
             return inputString;
         } else {
@@ -368,7 +327,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         super.onStop();
         if (saveSchool) {
             if (!isBookmarkAlreadySaved()) {
-                String reportsList = arrayListAsGSONString(mPreschoolMain);
+                String reportsList = arrayListAsString(mPreschoolMain);
                 databaseHelper.insertSavedSchool(mPreschoolMain, reportsList);
             }
         } else if (isBookmarkAlreadySaved()) {

@@ -10,17 +10,17 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -50,7 +50,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-//import com.project.salminnella.prescoop.adapter.DBCursorAdapter;
+import static android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+
 
 public class MainActivity extends AppCompatActivity implements OnRvItemClickListener{ //, DBCursorAdapter.OnItemClickListener
     private static final String TAG = "MainActivity";
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     //TODO markers for maps can be turned into an object class
     //TODO use firebase UI for recycler view instead of the onchild overrides
     //TODO move the sort and search methods to Utilities
+
     private ArrayList<PreSchool> mSchoolsList;
     private Firebase mFireBaseRoot, mFirebasePreschoolRef;
     private PreSchool mPreschool;
@@ -70,8 +72,15 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private ProgressBar mProgressBar;
     private DatabaseHelper dbHelper;
     private Cursor cursor;
-    private ListView cursorListView;
-    private ListView rvCursorListView;
+    private DBCursorAdapter dbCursorAdapter;
+    private boolean isViewingSavedSchools;
+    private ArrayList<PreSchool> filteredList;
+    private SwipeRefreshLayout swipeContainer;
+    private SearchView searchView;
+    private MenuItem mSearchMenuItem;
+    private String searchQuery;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,37 +94,47 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         initFirebase();
         if (mSchoolsList == null) {
             queryFirebase();
-            //checkReportsFirebase();
         }
         createRecycler();
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
-        //setCursorListItemListener();
-
+        initSwipeListener();
 
     }
-
-//    private void setCursorListItemListener() {
-//        cursorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
-//                intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschool);
-//                startActivity(intentToDetails);
-//            }
-//        });
-//    }
-
 
     private void initViews() {
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
-        //cursorListView = (ListView) findViewById(R.id.cursor_list_view);
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+    }
+
+    private void initSwipeListener() {
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setDistanceToTriggerSync(500);
+        swipeContainer.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mRecyclerView.setAdapter(mRecycleAdapter);
+                mRecycleAdapter.swap(backupList);
+                if (filteredList != null) {
+                    filteredList.clear();
+                }
+                mSearchMenuItem.collapseActionView();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+        // refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void buildBottomBar(Bundle savedInstanceState) {
-        mBottomBar = BottomBar.attach(this, savedInstanceState);
+        mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.coordinator_Layout_main),
+                null, savedInstanceState);
+        mBottomBar.noResizeGoodness();
+        mBottomBar.setTextAppearance(R.style.CardView);
         mBottomBar.setItemsFromMenu(R.menu.menu_bottom_bar_main, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
@@ -125,11 +144,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             @Override
             public void onMenuTabReSelected(@IdRes int menuItemId) {
                 switchBottomBarTab(menuItemId);
-                if (menuItemId == R.id.refresh_bottom_bar) {
-                    // The user reselected refresh item
-                    mRecycleAdapter.swap(backupList);
-                    mRecyclerView.smoothScrollToPosition(0);
-                }
             }
         });
 
@@ -139,33 +153,31 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         mBottomBar.mapColorForTab(1, 0xFF5D4037);
         mBottomBar.mapColorForTab(2, "#7B1FA2");
         mBottomBar.mapColorForTab(3, "#FF5252");
+
     }
 
     private void switchBottomBarTab(int menuItemId) {
         switch (menuItemId) {
             case R.id.abc_sort_bottom_bar:
-                Toast.makeText(MainActivity.this, "Sorted alphabetically", Toast.LENGTH_SHORT).show();
                 sortByName();
                 break;
             case R.id.rating_sort_bottom_bar:
-                Toast.makeText(MainActivity.this, "Sorted By Rating", Toast.LENGTH_SHORT).show();
                 sortByRating();
                 break;
             case R.id.price_sort_bottom_bar:
-                Toast.makeText(MainActivity.this, "Sort By Price", Toast.LENGTH_SHORT).show();
                 sortByPrice();
                 break;
-            case R.id.refresh_bottom_bar:
-                mRecyclerView.setAdapter(mRecycleAdapter);
-                //mRecycleAdapter.swap(backupList);
+            case R.id.maps_bottom_bar:
+                checkPermissions();
                 break;
+
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Necessary to restore the BottomBar's state, otherwise we would
+        // restore the BottomBar's state, otherwise we would
         // lose the current tab on orientation change.
         mBottomBar.onSaveInstanceState(outState);
     }
@@ -179,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
     @Override
     public void onListItemClick(PreSchool preschool) {
-        Log.i(TAG, "onItemClick: recycler view click: " + preschool.getName());
         Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
         intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
         startActivity(intentToDetails);
@@ -194,11 +205,15 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
     private void handleSearchFilterIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            ArrayList<PreSchool> filteredList = Utilities.filterSchoolsList(query, mSchoolsList);
-            mRecycleAdapter.swap(filteredList);
 
-            Toast.makeText(MainActivity.this,"Searching for "+query,Toast.LENGTH_SHORT).show();
+            searchQuery = intent.getStringExtra(SearchManager.QUERY);
+            filteredList = Utilities.filterSchoolsList(searchQuery, mSchoolsList);
+            if (filteredList.size() > 0) {
+                mRecycleAdapter.swap(filteredList);
+            } else {
+                Toast.makeText(MainActivity.this, "No matches found.", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
     // endregion FilterSearch
@@ -206,18 +221,12 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     // region SortMethods
     private void sortByPrice() {
         Collections.sort(mSchoolsList, new PriceComparator());
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            Log.i(TAG, "sortByPrice: " + mSchoolsList.get(i).getName() + "price: " + mSchoolsList.get(i).getPrice());
-        }
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
     }
 
     private void sortByRating() {
         Collections.sort(mSchoolsList, new RatingComparator());
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            Log.i(TAG, "sortByrating: " + mSchoolsList.get(i).getName() + "rating: " + mSchoolsList.get(i).getRating());
-        }
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
     }
@@ -232,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private void showProgressBar() {
         if (mSchoolsList == null) {
             mProgressBar.setVisibility(View.VISIBLE);
-            Toast.makeText(MainActivity.this, "progress bar made visible", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -266,35 +274,10 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                String groupKey = snapshot.getKey();
-                Log.i(TAG, "onChildAdded: group key " + groupKey);
                 mPreschool = snapshot.getValue(PreSchool.class);
                 mSchoolsList.add(mPreschool);
                 backupList.add(mPreschool);
                 mRecycleAdapter.notifyDataSetChanged();
-
-                mFirebasePreschoolRef.child(groupKey + "/reports/").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.i(TAG, "onDataChange: snapshot value " + dataSnapshot.getValue());
-
-//                        List<Reports> reportsList = new ArrayList<Reports>(); // Result will be held Here
-//                        for(DataSnapshot dsp : dataSnapshot.getChildren()){
-//                            reportsList.add(dsp.getValue(Reports.class)); //add result into array list
-//                            Log.i(TAG, "onDataChange: snapshot name " );
-//
-//                        }
-//                        mPreschool.setReportsData(reportsList);
-//                        for (int i = 0; i<mPreschool.getReportsData().size(); i++) {
-//                            Log.i(TAG, "onDataChange: list item " + mPreschool.getReportsData().get(i).getmReportUrl());
-//                        }
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
             }
 
             @Override
@@ -325,10 +308,10 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
+        mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
@@ -342,22 +325,34 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.maps_menu_item_main:
-                checkPermissions();
-                //buildIntentToMap();
-                break;
-            case R.id.saved_schools_menu_main:
-                findSavedSchools();
-                break;
-            case R.id.all_schools_menu_main:
-//                cursorListView.setVisibility(View.INVISIBLE);
-//                mRecyclerView.setVisibility(View.VISIBLE);
-                mRecycleAdapter.swap(backupList);
-
-                Toast.makeText(MainActivity.this, "all", Toast.LENGTH_SHORT).show();
+            case R.id.bookmarks_menu_item_main:
+                swapListContents(item);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    private void swapListContents(MenuItem item) {
+        if (isViewingSavedSchools) {
+            mRecyclerView.setAdapter(mRecycleAdapter);
+            if (filteredList.size() > 0) {
+                mRecycleAdapter.swap(filteredList);
+                mSearchMenuItem.expandActionView();
+                searchView.setQuery(searchQuery, false);
+                searchView.clearFocus();
+            } else {
+                mRecycleAdapter.swap(backupList);
+            }
+            isViewingSavedSchools = false;
+            item.setIcon(R.drawable.ic_bookmark);
+        } else {
+            findSavedSchools();
+            item.setIcon(R.drawable.ic_bookmark_selected);
+            mSearchMenuItem.collapseActionView();
+
+        }
     }
 
     private void buildIntentToMap() {
@@ -371,13 +366,9 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private void findSavedSchools() {
         cursor = dbHelper.findAllSavedSchools();
         if (cursor.getCount() > 0) {
-//            cursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, 0);
-            DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
+            dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
             mRecyclerView.setAdapter(dbCursorAdapter);
-            //cursorListView.setAdapter(cursorAdapter);
-            //cursorListView.setVisibility(View.VISIBLE);
-            //mRecyclerView.setVisibility(View.INVISIBLE);
-            //cursor.close();
+            isViewingSavedSchools = true;
         } else {
             Toast.makeText(MainActivity.this, "No Saved Schools Yet", Toast.LENGTH_SHORT).show();
         }
@@ -397,6 +388,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         return mapMarkersHashMap;
     }
 
+    // region Permission Check
     private void checkPermissions() {
         if (permissionExists()){
             buildIntentToMap();
@@ -462,6 +454,5 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                 break;
         }
     }
-
-
+    // endregion Permission Check
 }

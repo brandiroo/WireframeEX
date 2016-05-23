@@ -17,7 +17,6 @@ import com.project.salminnella.prescoop.model.Reports;
  */
 public class ReportsAdapter extends ArrayAdapter<Reports> {
 
-//    List<Reports> mObjects;
     Reports[] mObjects;
     Context context;
 
@@ -37,29 +36,8 @@ public class ReportsAdapter extends ArrayAdapter<Reports> {
 
         Reports reports = mObjects[position];
 
-//        if (reports.getmReportUrl().contains("http")) {
-//            reportTitle.setPaintFlags(reportTitle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-//            reportTitle.setTextColor(g);
-//            reportTitle.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        textClickListener.listItemClicked(reports, preschool.getReportUrl());
-//                    }
-//                });
-//            }
-
-
         reportDate.setText(reports.getmDate());
         reportTitle.setText(reports.getmTitle());
-
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //Toast.makeText(ReportsAdapter.this, "logged click", Toast.LENGTH_SHORT).show();
-////                textClickListener.listItemClicked(reports, preschool.getReportUrl());
-//
-//            }
-//        });
 
         return view;
     }

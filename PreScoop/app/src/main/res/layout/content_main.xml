@@ -11,7 +11,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.MainActivity"
     tools:showIn="@layout/activity_main">
-
     <ProgressBar
         android:id="@+id/progress_bar_main"
         android:layout_width="wrap_content"
@@ -19,27 +18,14 @@
         android:visibility="invisible"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"/>
-
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@+id/swipeContainer"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvSchools"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
-
-    <!--<ListView-->
-        <!--android:id="@+id/cursor_list_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:divider="@null"-->
-        <!--android:visibility="invisible"></ListView>-->
-
-
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

@@ -2,27 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.MainActivity">
-    <item
-        android:id="@+id/maps_menu_item_main"
-        android:orderInCategory="100"
-        android:title="Go To Maps"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:icon="@android:drawable/ic_dialog_map" />
-
     <item android:id="@+id/search_menu_item_main"
         android:title="Search"
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
-
-    <item android:id="@+id/saved_schools_menu_main"
-        android:title="Saved Schools"
-        android:icon="@drawable/ic_bookmark_selected"
-        app:showAsAction="never"
-        />
-    <item android:id="@+id/all_schools_menu_main"
-        android:title="All Schools"
+    <item
+        android:id="@+id/bookmarks_menu_item_main"
         android:icon="@drawable/ic_bookmark"
-        app:showAsAction="never"
-        />
+        android:title="Saved Schools"
+        app:showAsAction="collapseActionView|always"/>
 </menu>

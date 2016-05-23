@@ -129,22 +129,6 @@ public class TabLayoutFragment extends Fragment {
                     }
                 });
             }
-//            TextView totalReportsDate = (TextView) reports.findViewById(R.id.reports_date_text_frag);
-//
-//            totalReports.setText(String.valueOf(preschool.getTotalReports()));
-//            totalReportsDate.setText(preschool.getReportDates());
-
-
-//            if (preschool.getReportUrl().contains("http")) {
-//                totalReportsDate.setPaintFlags(totalReportsDate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-//                totalReportsDate.setTextColor(getResources().getColor(R.color.htmlLink));
-//                totalReportsDate.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        listener.listItemClicked(reports, preschool.getReportUrl());
-//                    }
-//                });
-//            }
 
             return reports;
         }
