@@ -332,8 +332,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         return super.onOptionsItemSelected(item);
     }
 
-
-
     private void swapListContents(MenuItem item) {
         if (isViewingSavedSchools) {
             mRecyclerView.setAdapter(mRecycleAdapter);
