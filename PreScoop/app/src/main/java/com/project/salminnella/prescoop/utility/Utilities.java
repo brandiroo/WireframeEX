@@ -164,8 +164,8 @@ public final class Utilities {
         preschool.setVisitTypeACitation(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_VISIT_TYPE_A_CITATION)));
         preschool.setVisitTypeBCitation(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_VISIT_TYPE_B_CITATION)));
         preschool.setTotalReports(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_TOTAL_REPORTS)));
-        preschool.setReportDates(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_DATES)));
-        preschool.setReportUrl(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_URL)));
+//        preschool.setReportDates(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_DATES)));
+//        preschool.setReportUrl(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_URL)));
         preschool.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LATITUDE)));
         preschool.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LONGITUDE)));
         preschool.setLicenseStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_LICENSE_STATUS)));

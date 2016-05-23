@@ -21,6 +21,8 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     // for any view that will be set as you render a row
     public TextView schoolNameTextView;
     public ImageView schoolImageView;
+    public TextView schoolPriceTextView;
+    public ImageView schoolRatingImageView;
 
     // We also create a constructor that accepts the entire item row
     // and does the view lookups to find each subview
@@ -29,7 +31,10 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         // to access the context from any CursorViewHolder instance.
         super(itemView);
         schoolNameTextView = (TextView) itemView.findViewById(R.id.school_name_items);
+        schoolPriceTextView = (TextView) itemView.findViewById(R.id.school_price_items);
         schoolImageView = (ImageView) itemView.findViewById(R.id.school_image_items);
+        schoolRatingImageView = (ImageView) itemView.findViewById(R.id.school_rating_items);
+
     }
 
     public void bind(final PreSchool preschool, final OnRvItemClickListener listener){

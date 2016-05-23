@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private void swapListContents(MenuItem item) {
         if (isViewingSavedSchools) {
             mRecyclerView.setAdapter(mRecycleAdapter);
-            if (filteredList.size() > 0) {
+            if (filteredList != null && filteredList.size() > 0) {
                 mRecycleAdapter.swap(filteredList);
                 mSearchMenuItem.expandActionView();
                 searchView.setQuery(searchQuery, false);

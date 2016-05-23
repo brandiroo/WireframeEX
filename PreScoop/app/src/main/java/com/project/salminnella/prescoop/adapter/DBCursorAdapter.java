@@ -43,15 +43,21 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
             @Override
             public void bindView(View view, Context context, Cursor cursor) {
                 // Binding operations
-                ImageView schoolImage = (ImageView) view.findViewById(R.id.school_image_items);
-                TextView schoolName = (TextView) view.findViewById(R.id.school_name_items);
+                ImageView schoolImageView = (ImageView) view.findViewById(R.id.school_image_items);
+                ImageView schoolRatingImageView = (ImageView) view.findViewById(R.id.school_rating_items);
+                TextView schoolNameTextView = (TextView) view.findViewById(R.id.school_name_items);
+                TextView schoolPriceTextView = (TextView) view.findViewById(R.id.school_price_items);
 
-                schoolName.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME)));
+
+                schoolNameTextView.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME)));
+                String price = "$" + cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_PRICE)) + " /mo";
+                schoolPriceTextView.setText(price);
+                schoolRatingImageView.setImageResource(getRatingImage(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_RATING))));
                 String url = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_IMAGE_URL));
                 if (url.matches("")) {
-                    Picasso.with(context).load(R.drawable.no_image_available).into(schoolImage);
+                    Picasso.with(context).load(R.drawable.no_image).into(schoolImageView);
                 } else {
-                    Picasso.with(context).load(url).into(schoolImage);
+                    Picasso.with(context).load(url).into(schoolImageView);
                 }
             }
         };
@@ -103,4 +109,20 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
         return mCursorAdapter.getCount();
     }
 
+    private int getRatingImage(int rating){
+        switch(rating){
+            case 1:
+                return R.drawable.one_star;
+            case 2:
+                return R.drawable.two_stars;
+            case 3:
+                return R.drawable.three_stars;
+            case 4:
+                return R.drawable.four_stars;
+            case 5:
+                return R.drawable.five_stars;
+            default:
+                return 0;
+        }
+    }
 }

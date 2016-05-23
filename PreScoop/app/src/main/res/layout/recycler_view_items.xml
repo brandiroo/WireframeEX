@@ -22,15 +22,47 @@
                 android:id="@+id/school_image_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"/>
-            <!--android:scaleType="fitStart"-->
-            <TextView
-                android:id="@+id/school_name_items"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:id="@+id/school_linear_layout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/school_image_items"
-                android:layout_centerHorizontal="true"/>
+                android:layout_below="@+id/school_image_items"
+                android:background="#A4DBFF"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/school_name_items"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:gravity="center" />
+                <LinearLayout
+                    android:id="@+id/school_info_linear_layout"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/school_price_items"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+                    <ImageView
+                        android:id="@+id/school_rating_items"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </RelativeLayout>
 

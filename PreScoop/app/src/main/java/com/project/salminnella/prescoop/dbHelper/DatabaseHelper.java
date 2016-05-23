@@ -76,8 +76,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // reports list
     public static final String COL_REPORTS_LIST = "reportsList";
     public static final String COL_TOTAL_REPORTS = "totalReports";
-    public static final String COL_REPORT_DATES = "reportDates";
-    public static final String COL_REPORT_URL = "reportUrl";
+//    public static final String COL_REPORT_DATES = "reportDates";
+//    public static final String COL_REPORT_URL = "reportUrl";
     public static final String COL_LATITUDE = "latitude";
     public static final String COL_LONGITUDE = "longitude";
     public static final String COL_LICENSE_STATUS = "licenseStatus";
@@ -92,7 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_COMPLAINT_TOTAL, COL_COMPLAINT_ALLEG_SUB, COL_COMPLAINT_ALLEG_INCON, COL_TOTAL_COMPLAINT_TYPE_A_CITATION,
             COL_TOTAL_COMPLAINT_TYPE_B_CITATION, COL_TOTAL_COMPLAINT_VISITS, COL_COMPLAINT_DETAILS, COL_OTHER_VISITS,
             COL_OTHER_VISIT_DATES, COL_VISIT_TYPE_A_CITATION, COL_VISIT_TYPE_B_CITATION, COL_REPORTS_LIST, COL_TOTAL_REPORTS,
-            COL_REPORT_DATES, COL_REPORT_URL, COL_LATITUDE, COL_LONGITUDE, COL_LICENSE_STATUS, COL_LICENSE_DATE};
+            COL_LATITUDE, COL_LONGITUDE, COL_LICENSE_STATUS, COL_LICENSE_DATE};
 
     // the actual sql statement to create the table
     public static final String CREATE_PRESCHOOLS_TABLE = "CREATE TABLE IF NOT EXISTS " + PRESCHOOL_TABLE_NAME +
@@ -136,8 +136,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_VISIT_TYPE_B_CITATION + " TEXT, " +
             COL_REPORTS_LIST + " TEXT, " +
             COL_TOTAL_REPORTS + " TEXT, " +
-            COL_REPORT_DATES + " TEXT, " +
-            COL_REPORT_URL + " TEXT, " +
+//            COL_REPORT_DATES + " TEXT, " +
+//            COL_REPORT_URL + " TEXT, " +
             COL_LATITUDE + " TEXT, " +
             COL_LONGITUDE + " TEXT, " +
             COL_LICENSE_STATUS + " TEXT, " +
@@ -201,8 +201,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_VISIT_TYPE_B_CITATION, school.getVisitTypeBCitation());
         values.put(COL_REPORTS_LIST, reportsList);
         values.put(COL_TOTAL_REPORTS, school.getTotalReports());
-        values.put(COL_REPORT_DATES, school.getReportDates());
-        values.put(COL_REPORT_URL, school.getReportUrl());
+//        values.put(COL_REPORT_DATES, school.getReportDates());
+//        values.put(COL_REPORT_URL, school.getReportUrl());
         values.put(COL_LATITUDE, school.getLatitude());
         values.put(COL_LONGITUDE, school.getLongitude());
         values.put(COL_LICENSE_STATUS, school.getLicenseStatus());

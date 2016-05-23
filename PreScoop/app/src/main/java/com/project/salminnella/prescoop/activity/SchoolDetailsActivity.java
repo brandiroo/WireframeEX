@@ -159,7 +159,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         if (mPreschoolMain.getImageUrl().matches("")) {
-            Picasso.with(SchoolDetailsActivity.this).load(R.drawable.no_image_available).into(imageView);
+            Picasso.with(SchoolDetailsActivity.this).load(R.drawable.no_image).into(imageView);
         } else {
             Picasso.with(SchoolDetailsActivity.this).load(mPreschoolMain.getImageUrl())
                     .into(imageView);

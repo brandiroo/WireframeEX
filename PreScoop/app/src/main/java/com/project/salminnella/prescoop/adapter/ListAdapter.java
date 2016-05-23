@@ -59,10 +59,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
 
         // Set item views based on the data model
         TextView schoolNameTextView = holder.schoolNameTextView;
+        TextView schoolPriceTextView = holder.schoolPriceTextView;
         schoolNameTextView.setText(preSchool.getName());
+        schoolPriceTextView.setText("$" + preSchool.getPrice() + " /mo");
+        holder.schoolRatingImageView.setImageResource(getRatingImage(preSchool.getRating()));
+
 
         if (preSchool.getImageUrl().matches("")) {
-            Picasso.with(context).load(R.drawable.no_image_available).into(holder.schoolImageView);
+            Picasso.with(context).load(R.drawable.no_image).into(holder.schoolImageView);
         } else {
             Picasso.with(context).load(preSchool.getImageUrl()).into(holder.schoolImageView);
         }
@@ -79,5 +83,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         mSchools.clear();
         mSchools.addAll(schools);
         notifyDataSetChanged();
+    }
+
+    private int getRatingImage(int rating){
+        switch(rating){
+            case 1:
+                return R.drawable.one_star;
+            case 2:
+                return R.drawable.two_stars;
+            case 3:
+                return R.drawable.three_stars;
+            case 4:
+                return R.drawable.four_stars;
+            case 5:
+                return R.drawable.five_stars;
+            default:
+                return 0;
+        }
     }
 }
