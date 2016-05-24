@@ -385,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private HashMap<String, LatLng> buildMapMarkers() {
         HashMap<String, LatLng> mapMarkersHashMap = new HashMap<>();
         LatLng coordinates;
-        if (mSchoolsList == null || cursor == null) {
+        if (mSchoolsList == null && cursor == null) {
             return mapMarkersHashMap;
         }
         if (isViewingSavedSchools) {
