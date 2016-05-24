@@ -19,7 +19,7 @@
     <string name="report_title_label">Title</string>
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="empty_yelp_response_title">No Matches Found, But Heres Some Related Preschools</string>
-    <string name="empty_yelp_response">Sorry, there were no matches from Yelp for reviews</string>
+    <string name="empty_yelp_response">No matches from Yelp for reviews</string>
     <string name="facility_number">Facility Number:</string>
     <string name="facility_capacity">Facility Capacity:</string>
     <string name="status">Status:</string>
@@ -27,4 +27,11 @@
     <string name="facility_type">Facility Type:</string>
     <string name="type_a_citation">Type A Citation</string>
     <string name="type_b_citation">Type B Citation</string>
+    <string name="all_visits_fragment_info">All visits include Inspection Visits, other visits and may include complaint visits.</string>
+    <string name="citation_fragment_info">One or more citations may be under appeal and/or may have been corrected. Contact the State Licensing Office for more information.</string>
+    <string name="citation_a_more_info">Immediate heath, safety, or personal rights impact</string>
+    <string name="citation_b_info">Potential health, safety or personal rights impact</string>
+    <string name="num_inspections_label">Number of Inspections</string>
+    <string name="inspection_dates_label">All Inspection Dates</string>
+    <string name="other_visit_citation_info">Other visits include anything other than yearly inspections and complaints, where the state may visit for administrative or follow up purposes, such as pre/post licensing processes. One or more citations may be under appeal.</string>
 </resources>

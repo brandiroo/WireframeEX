@@ -3,6 +3,7 @@ package com.project.salminnella.prescoop.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,8 +83,20 @@ public class TabLayoutFragment extends Fragment {
         } else if (mPage == 3) {
             View view = inflater.inflate(R.layout.fragment_inspections, container, false);
 
-            TextView textView = (TextView) view.findViewById(R.id.inspections_frag_text);
-            textView.setText("Inspections" + mPage);
+            TextView numInspections = (TextView) view.findViewById(R.id.num_inspections_text_frag);
+            TextView inspectionDates = (TextView) view.findViewById(R.id.inspection_dates_text_frag);
+            TextView citationA = (TextView) view.findViewById(R.id.inspection_citation_a_text_frag);
+            TextView citationB = (TextView) view.findViewById(R.id.inspection_citation_b_text_frag);
+
+            numInspections.setText(String.valueOf(preschool.getInspectionNum()));
+            citationA.setText(String.valueOf(preschool.getInspectionTypeA()));
+            citationB.setText(String.valueOf(preschool.getInspectionTypeB()));
+            Log.i(TAG, "onCreateView: tab fragment inspections " + preschool.getInspectionDates());
+            if (preschool.getInspectionDates() == null) {
+                inspectionDates.setText("N/A");
+            } else {
+                inspectionDates.setText(preschool.getInspectionDates());
+            }
 
             return view;
 
@@ -108,8 +121,20 @@ public class TabLayoutFragment extends Fragment {
 
         } else if (mPage == 5) {
             View view = inflater.inflate(R.layout.fragment_other_visits, container, false);
-            TextView textView = (TextView) view.findViewById(R.id.other_visits_frag_text);
-            textView.setText("other visits" + mPage);
+
+            TextView numVisitInspection = (TextView) view.findViewById(R.id.num_other_visits_text_frag);
+            TextView inspectionDates = (TextView) view.findViewById(R.id.other_visit_dates_text_frag);
+            TextView visitCitationA = (TextView) view.findViewById(R.id.other_visits_citation_a_text_frag);
+            TextView visitCitationB = (TextView) view.findViewById(R.id.other_visits_citation_b_text_frag);
+
+            numVisitInspection.setText(String.valueOf(preschool.getInspectionNum()));
+            visitCitationA.setText(String.valueOf(preschool.getVisitTypeACitation()));
+            visitCitationB.setText(String.valueOf(preschool.getVisitTypeBCitation()));
+            if (preschool.getInspectionDates() == null) {
+                inspectionDates.setText("N/A");
+            } else {
+                inspectionDates.setText(preschool.getInspectionDates());
+            }
 
             return view;
 
@@ -118,6 +143,8 @@ public class TabLayoutFragment extends Fragment {
 
             TextView totalReports = (TextView) reports.findViewById(R.id.total_reports_text_frag);
             ListView reportsListView = (ListView) reports.findViewById(R.id.reports_list_view_frag);
+
+            totalReports.setText(String.valueOf(preschool.getTotalReports()));
             Reports[] reportsList = preschool.getReports();
             if (reportsList != null) {
                 ReportsAdapter reportsAdapter = new ReportsAdapter(getActivity(), reportsList);

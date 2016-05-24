@@ -1,12 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/inspections_frag_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"/>
+    <LinearLayout
+        android:id="@+id/other_visits_label_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp">
+        <TextView
+            android:id="@+id/num_other_visits_label_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/num_inspections_label"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/inspection_dates_label_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/inspection_dates_label"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/citation_type_a_label_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type_a_citation"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/citation_a_more_info"
+            android:textStyle="italic"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"/>
+        <TextView
+            android:id="@+id/citation_type_b_label_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type_b_citation"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/citation_b_info"
+            android:textStyle="italic"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/inspections_text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignTop="@+id/other_visits_label_layout"
+        android:layout_toEndOf="@+id/other_visits_label_layout"
+        android:layout_marginStart="0dp">
+
+        <TextView
+            android:id="@+id/num_inspections_text_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginStart="30dp"/>
+        <TextView
+            android:id="@+id/inspection_dates_text_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginStart="30dp"/>
+        <TextView
+            android:id="@+id/inspection_citation_a_text_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginStart="30dp"/>
+        <TextView
+            android:id="@+id/inspection_citation_b_text_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="24dp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/label_info_text_frag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/citation_fragment_info"
+            android:gravity="center"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+</RelativeLayout>

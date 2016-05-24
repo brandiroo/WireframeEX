@@ -18,7 +18,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp">
             <RelativeLayout
                 android:id="@+id/school_details_relative_layout"
@@ -31,7 +31,8 @@
                     android:id="@+id/school_name_text_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:gravity="center"/>
 
                 <TextView
                     android:id="@+id/school_address_text_details"
@@ -45,28 +46,197 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/school_address_text_details"/>
 
+                <View
+                    android:id="@+id/view_separator_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@android:color/darker_gray"
+                    android:layout_below="@+id/school_phone_text_details"/>
+                <LinearLayout
+                    android:id="@+id/details_linear_layout_1_labels"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_separator_1">
+                    <TextView
+                        android:id="@+id/school_neighborhood_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Neighborhood:"
+                        android:textStyle="bold"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        />
+                    <TextView
+                        android:id="@+id/school_price_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price:"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="10dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/details_linear_layout_1_text"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/details_linear_layout_1_labels">
+                    <TextView
+                        android:id="@+id/school_neighborhood_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        />
+
+                    <TextView
+                        android:id="@+id/school_price_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="14dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/details_linear_layout_phil_labels"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/details_linear_layout_1_text"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/school_philosophy_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="School Philosophy"
+                        android:textStyle="bold"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        />
+                    <TextView
+                        android:id="@+id/school_ratio_label_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Teacher / Student Ratio"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="10dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/details_linear_layout_phil_text"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/details_linear_layout_phil_labels">
+                    <TextView
+                        android:id="@+id/school_philosophy_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="N/A"
+                        android:layout_marginStart="5dp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        />
+
+                    <TextView
+                        android:id="@+id/school_ratio_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="14dp"
+                        android:text="N/A"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/school_web_link_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_below="@+id/details_linear_layout_phil_text"
+                    android:layout_marginTop="10dp">
+                    <TextView
+                        android:id="@+id/school_weblink_text_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/htmlLink"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/school_rating_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_below="@+id/school_web_link_linear_layout"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp">
+                    <ImageView
+                        android:id="@+id/school_rating_image_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
+
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="570dp"
             android:layout_margin="16dp">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp">
+                android:layout_gravity="center">
+                <LinearLayout
+                    android:id="@+id/licensing_title_linear_layout"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+                    <TextView
+                        android:id="@+id/school_licensing_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:gravity="center"
+                        android:text="Licensing Information"/>
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/labels_linear_layout"
                     android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_below="@+id/licensing_title_linear_layout"
+                    android:layout_marginStart="5dp">
+
                     <TextView
                         android:id="@+id/license_status_label_details"
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:text="@string/status"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        />
 
                     <TextView
                         android:id="@+id/license_date_label_details"
@@ -101,8 +271,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true">
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/licensing_title_linear_layout">
                     <TextView
                         android:id="@+id/license_status_text_details"
                         android:layout_width="wrap_content"
@@ -133,51 +303,78 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp" />
                 </LinearLayout>
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
 
-
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="3dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/sliding_tabs"
+                <LinearLayout
+                    android:id="@+id/inspection_title_linear_layout"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabMode="scrollable"
-                    app:tabGravity="fill"
-                    app:tabTextColor="@color/tab_unselected_text"
-                    app:tabSelectedTextColor="@color/tab_selected_text"
-                    android:minHeight="?attr/actionBarSize"/>
+                    android:layout_below="@+id/text_linear_layout"
+                    android:layout_marginTop="30dp">
+                    <TextView
+                        android:id="@+id/school_inspection_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:gravity="center"
+                        android:text="Inspection Details"/>
+                </LinearLayout>
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/viewpager"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                <LinearLayout
+                    android:id="@+id/inspection_linear_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_weight="1"
-                    android:background="@android:color/white" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/inspection_title_linear_layout">
 
-            </LinearLayout>
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/sliding_tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:tabMode="scrollable"
+                        app:tabGravity="center"
+                        app:tabPadding="10dp"
+                        app:tabTextColor="@color/tab_unselected_text"
+                        app:tabSelectedTextColor="@color/tab_selected_text"
+                        android:minHeight="?attr/actionBarSize"/>
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/viewpager"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        android:layout_width="match_parent"
+                        android:layout_height="0px"
+                        android:layout_weight="1"
+                        android:background="#FFF8E1" />
+
+                </LinearLayout>
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
+            <LinearLayout
+                android:id="@+id/reviews_title_linear_layout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+                <TextView
+                    android:id="@+id/review_section_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:gravity="center"
+                    android:text="Reviews"/>
+            </LinearLayout>
             <RelativeLayout
-                android:id="@+id/yelp_icon_rel_layout_details"
+                android:id="@+id/yelp_icon_rel_layout_list_details"
                 style="@style/Widget.CardContent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp">
+
                 <ImageView
                     android:id="@+id/yelp_icon_image"
                     android:layout_width="wrap_content"
@@ -189,7 +386,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/yelp_icon_image"
                     android:layout_marginTop="14dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
                 <ImageView
                     android:id="@+id/yelp_rating"
                     android:layout_width="wrap_content"
@@ -203,13 +400,20 @@
                     android:layout_toEndOf="@id/yelp_rating"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/yelp_title_text_details"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/yelp_review_snippet_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/yelp_num_reviews"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="12dp"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
                     android:orientation="vertical"
-                    android:layout_below="@id/yelp_rating">
+                    android:layout_below="@id/yelp_icon_image">
                     <!--<android.support.v7.widget.RecyclerView-->
                         <!--android:id="@+id/rvSchoolsYelp"-->
                         <!--android:layout_width="match_parent"-->
@@ -217,8 +421,7 @@
                         <ListView
                             android:id="@+id/yelp_response_list"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@id/yelp_icon_image"></ListView>
+                            android:layout_height="match_parent"></ListView>
 
                 </LinearLayout>
             </RelativeLayout>

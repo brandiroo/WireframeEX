@@ -42,7 +42,7 @@ public class YelpAdapter extends ArrayAdapter<Business> {
         String reviewText = String.valueOf(business.reviewCount()) + " Reviews";
         yelpNumReviews.setText(reviewText);
         yelpReviewSnippet.setText(business.snippetText());
-        Picasso.with(context).load(business.ratingImgUrl()).into(yelpRating);
+        Picasso.with(context).load(business.ratingImgUrlLarge()).into(yelpRating);
         Picasso.with(context).load(business.imageUrl()).into(yelpImage);
 
         return rowItem;

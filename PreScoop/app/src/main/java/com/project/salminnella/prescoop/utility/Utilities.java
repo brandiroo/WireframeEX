@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.model.Reports;
@@ -164,8 +165,8 @@ public final class Utilities {
         preschool.setVisitTypeACitation(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_VISIT_TYPE_A_CITATION)));
         preschool.setVisitTypeBCitation(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_VISIT_TYPE_B_CITATION)));
         preschool.setTotalReports(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_TOTAL_REPORTS)));
-        preschool.setReportDates(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_DATES)));
-        preschool.setReportUrl(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_URL)));
+//        preschool.setReportDates(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_DATES)));
+//        preschool.setReportUrl(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_URL)));
         preschool.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LATITUDE)));
         preschool.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LONGITUDE)));
         preschool.setLicenseStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_LICENSE_STATUS)));
@@ -190,6 +191,22 @@ public final class Utilities {
         return finalOutputList;
     }
 
+    public static int getRatingImage(int rating){
+        switch(rating){
+            case 1:
+                return R.drawable.one_star;
+            case 2:
+                return R.drawable.two_stars;
+            case 3:
+                return R.drawable.three_stars;
+            case 4:
+                return R.drawable.four_stars;
+            case 5:
+                return R.drawable.five_stars;
+            default:
+                return 0;
+        }
+    }
 
 
 //    // region SortMethods

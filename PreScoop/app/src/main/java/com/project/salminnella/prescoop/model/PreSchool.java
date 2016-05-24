@@ -11,19 +11,11 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PreSchool implements Serializable {
 
-    private String name;
-    private String streetAddress;
-    private String city;
-    private String state;
-    private String zipCode;
-    private String region;
-    private String phoneNumber;
+    private String name, streetAddress, city, state, zipCode, region, phoneNumber;
     private long facilityNumber;
     private int capacity;
     private int price;
-    private String type;
-    private String websiteUrl;
-    private String imageUrl;
+    private String type, websiteUrl, imageUrl;
 
     private int range;
     private String schoolDescription;
@@ -50,22 +42,15 @@ public class PreSchool implements Serializable {
     private int totalComplaintTypeBCitation;
     private int totalComplaintVisits;
     private String complaintDetails;
-
     private int otherVisits;
     private String otherVisitDates;
     private int visitTypeACitation;
     private int visitTypeBCitation;
-
     private int totalReports;
-    private String reportDates;
-    private String reportUrl;
-
     private double latitude, longitude;
-
     private String licenseStatus;
     private String licenseDate;
     private Reports[] reports;
-    //private List<Reports> reportsData;
 
     public PreSchool() {
     }
@@ -76,8 +61,7 @@ public class PreSchool implements Serializable {
                      int totalComplaintAllegSub, int totalComplaintAllegIncon, int totalComplaintTypeACitation,
                      int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVisits,
                      String otherVisitDates, int visitTypeACitation, int visitTypeBCitation, int totalReports,
-                     String reportDates, String reportUrl, double pLongitude, double pLatitude, String licenseDate,
-                     String licenseStatus, Reports[] reports) {
+                     double pLongitude, double pLatitude, String licenseDate, String licenseStatus, Reports[] reports) {
         this.name = schoolLocation.getName();
         this.streetAddress = schoolLocation.getStreetAddress();
         this.city = schoolLocation.getCity();
@@ -112,8 +96,6 @@ public class PreSchool implements Serializable {
         this.visitTypeACitation = visitTypeACitation;
         this.visitTypeBCitation = visitTypeBCitation;
         this.totalReports = totalReports;
-        this.reportDates = reportDates;
-        this.reportUrl = reportUrl;
         this.latitude = pLatitude;
         this.longitude = pLongitude;
         this.licenseDate = licenseDate;
@@ -433,22 +415,6 @@ public class PreSchool implements Serializable {
 
     public void setTotalReports(int totalReports) {
         this.totalReports = totalReports;
-    }
-
-    public String getReportDates() {
-        return reportDates;
-    }
-
-    public void setReportDates(String reportDates) {
-        this.reportDates = reportDates;
-    }
-
-    public String getReportUrl() {
-        return reportUrl;
-    }
-
-    public void setReportUrl(String reportUrl) {
-        this.reportUrl = reportUrl;
     }
 
     public double getLatitude() {
