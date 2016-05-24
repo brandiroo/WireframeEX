@@ -7,11 +7,11 @@
 
     <item
         android:id="@+id/rating_sort_bottom_bar"
-        android:icon="@drawable/ic_grade_black_24dp"
+        android:icon="@drawable/ic_star"
         android:title="Rating" />
     <item
         android:id="@+id/price_sort_bottom_bar"
-        android:icon="@drawable/ic_attach_money_black_24dp"
+        android:icon="@drawable/ic_money_sign"
         android:title="Price" />
 
     <item

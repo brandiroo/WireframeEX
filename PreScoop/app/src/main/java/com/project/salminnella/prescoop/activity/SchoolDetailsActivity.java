@@ -273,6 +273,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                         ArrayList<Business> businesses = searchResponse.businesses();
                         mYelpAdapter = new YelpAdapter(SchoolDetailsActivity.this, businesses);
                         mYelpListView.setAdapter(mYelpAdapter);
+
                     }
                 }
             }
