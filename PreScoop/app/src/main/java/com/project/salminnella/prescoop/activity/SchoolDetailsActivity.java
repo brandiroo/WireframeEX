@@ -90,7 +90,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         populateSchoolDetails();
         callYelpProvider();
         initTabLayout();
-
         setYelpListClickListener();
 
     }

@@ -51,7 +51,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:text="@string/report_title_label"
-            android:layout_marginStart="98dp"/>
+            android:layout_marginStart="80dp"/>
 
     </LinearLayout>
 
@@ -61,21 +61,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@+id/total_reports_label_layout_frag">
-        <!--<TextView-->
-            <!--android:id="@+id/reports_date_text_frag"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="16sp"-->
-            <!--android:clickable="true"-->
-            <!--android:onClick="listItemClicked"-->
-            <!--android:layout_marginLeft="30dp"/>-->
-        <!---->
-        <!--<TextView-->
-            <!--android:id="@+id/reports_title_text_frag"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="16sp"-->
-            <!--android:layout_marginLeft="30dp"/>-->
         <ListView
             android:id="@+id/reports_list_view_frag"
             android:layout_width="match_parent"

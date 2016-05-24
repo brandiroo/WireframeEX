@@ -8,8 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp">
         <TextView
             android:id="@+id/total_complaint_label_frag"
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:text="@string/total_alleg_sub"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/total_alleg_incon_label_frag"
             android:layout_width="wrap_content"
@@ -41,12 +41,26 @@
             android:textStyle="bold"
             android:textSize="16sp"/>
         <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/citation_a_more_info"
+            android:textStyle="italic"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"/>
+        <TextView
             android:id="@+id/total_type_b_citation_label_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_type_b_citations"
             android:textStyle="bold"
             android:textSize="16sp"/>
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/citation_b_info"
+            android:textStyle="italic"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"/>
         <TextView
             android:id="@+id/total_complaint_visits_label_frag"
             android:layout_width="wrap_content"
@@ -88,20 +102,32 @@
             android:id="@+id/total_type_a_citation_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="1"/>
+            android:textSize="16sp"/>
         <TextView
             android:id="@+id/total_type_b_citation_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="1"/>
+            android:layout_marginTop="30dp"/>
         <TextView
             android:id="@+id/total_complaint_visits_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="1"/>
+            android:layout_marginTop="30dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/label_info_text_frag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/citation_fragment_info"
+            android:gravity="center"
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </RelativeLayout>
