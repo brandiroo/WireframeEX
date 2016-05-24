@@ -332,7 +332,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:tabMode="scrollable"
-                        app:tabGravity="fill"
+                        app:tabGravity="center"
+                        app:tabPadding="10dp"
                         app:tabTextColor="@color/tab_unselected_text"
                         app:tabSelectedTextColor="@color/tab_selected_text"
                         android:minHeight="?attr/actionBarSize"/>

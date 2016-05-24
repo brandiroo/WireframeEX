@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private SearchView searchView;
     private MenuItem mSearchMenuItem;
     private String searchQuery;
+    private Menu menu;
 
 
 
@@ -120,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                     filteredList.clear();
                 }
                 mSearchMenuItem.collapseActionView();
+                isViewingSavedSchools = false;
+                menu.getItem(1).setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -224,18 +227,21 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         Collections.sort(mSchoolsList, new PriceComparator());
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, "Sorted by Price", Toast.LENGTH_SHORT).show();
     }
 
     private void sortByRating() {
         Collections.sort(mSchoolsList, new RatingComparator());
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, "Sorted by Rating", Toast.LENGTH_SHORT).show();
     }
 
     private void sortByName() {
         Collections.sort(mSchoolsList, new NameComparator());
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, "Sorted Alphabetically", Toast.LENGTH_SHORT).show();
     }
     // endregion SortMethods
 
@@ -309,8 +315,11 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
+        // the saved schools icon should change if list was refreshed
+        this.menu = menu;
+
         // Associate searchable configuration with the SearchView
+        mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -345,10 +354,10 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                 mRecycleAdapter.swap(backupList);
             }
             isViewingSavedSchools = false;
-            item.setIcon(R.drawable.ic_bookmark);
+            item.setIcon(R.drawable.ic_favorite_border_white_24dp);
         } else {
             findSavedSchools();
-            item.setIcon(R.drawable.ic_bookmark_selected);
+            item.setIcon(R.drawable.ic_favorite_white_24dp);
             mSearchMenuItem.collapseActionView();
 
         }
@@ -376,18 +385,26 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private HashMap<String, LatLng> buildMapMarkers() {
         HashMap<String, LatLng> mapMarkersHashMap = new HashMap<>();
         LatLng coordinates;
-        if (mSchoolsList == null) {
+        if (mSchoolsList == null || cursor == null) {
             return mapMarkersHashMap;
         }
         if (isViewingSavedSchools) {
-            for (int i = 0; i < mSchoolsList.size(); i++) {
-                coordinates = new LatLng(mSchoolsList.get(i).getLatitude(), mSchoolsList.get(i).getLongitude());
-                mapMarkersHashMap.put(mSchoolsList.get(i).getName(), coordinates);
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++){
+                String title = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME));
+                double latitude = cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LATITUDE));
+                double longitude = cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LONGITUDE));
+                coordinates = new LatLng(latitude, longitude);
+                mapMarkersHashMap.put(title, coordinates);
+                cursor.moveToNext();
             }
         } else {
             for (int i = 0; i < mSchoolsList.size(); i++) {
-                coordinates = new LatLng(mSchoolsList.get(i).getLatitude(), mSchoolsList.get(i).getLongitude());
-                mapMarkersHashMap.put(mSchoolsList.get(i).getName(), coordinates);
+                String title = mSchoolsList.get(i).getName();
+                double latitude = mSchoolsList.get(i).getLatitude();
+                double longitude = mSchoolsList.get(i).getLongitude();
+                coordinates = new LatLng(latitude, longitude);
+                mapMarkersHashMap.put(title, coordinates);
             }
         }
         return mapMarkersHashMap;
@@ -460,4 +477,20 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         }
     }
     // endregion Permission Check
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // clears the search filter focus to prevent keyboard from popping up when returning from
+        // school details Activity.
+        if (searchView != null) {
+            searchView.clearFocus();
+        }
+        // refresh list with updated cursor contents if a saved school was removed
+        if (cursor != null && isViewingSavedSchools) {
+            findSavedSchools();
+        }
+    }
 }

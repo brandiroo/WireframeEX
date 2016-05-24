@@ -126,10 +126,10 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                 @Override
                 public void onClick(View view) {
                     if (saveSchool) {
-                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark));
+                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
                         saveSchool = false;
                     } else {
-                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_selected));
+                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
                         saveSchool = true;
                     }
                 }
@@ -139,7 +139,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
 
     private void adjustFabIcon() {
         if (isBookmarkAlreadySaved()) {
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_selected));
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
             saveSchool = true;
         }
     }

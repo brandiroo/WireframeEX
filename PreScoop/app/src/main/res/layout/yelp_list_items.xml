@@ -1,36 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="7dp">
+
     <ImageView
         android:id="@+id/yelp_list_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/yelp_icon"/>
+        android:src="@drawable/yelp_icon"
+        android:layout_marginTop="8dp"/>
 
     <TextView
         android:id="@+id/yelp_list_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="yelp title"/>
+        android:layout_toEndOf="@id/yelp_list_image"
+        android:textStyle="bold"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="5dp"/>
+
 
     <ImageView
         android:id="@+id/yelp_list_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_attach_money_black_24dp"/>
+        android:layout_toEndOf="@id/yelp_list_image"
+        android:layout_below="@id/yelp_list_title"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="5dp"/>
 
     <TextView
         android:id="@+id/yelp_list_num_reviews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="reviews"/>
+        android:layout_toEndOf="@id/yelp_list_rating"
+        android:layout_below="@id/yelp_list_title"
+        android:layout_marginStart="8dp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/yelp_list_snippet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="review snippet"/>
+        android:layout_below="@id/yelp_list_num_reviews"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"/>
 
-</LinearLayout>
+</RelativeLayout>
+
+
+
+
+
+
