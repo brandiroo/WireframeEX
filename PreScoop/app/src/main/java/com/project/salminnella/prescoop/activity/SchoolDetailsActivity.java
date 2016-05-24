@@ -52,6 +52,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private PreSchool mPreschoolMain;
     private TextView mYelpTitleText;
     private TextView mYelpNumReviews;
+    private TextView mYelpSnippet;
     private ImageView mYelpRating;
     private ListView mYelpListView;
     private ViewPager viewPager;
@@ -66,6 +67,12 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private TextView mFacilityType;
     private TextView mLicenseStatus;
     private TextView mLicenseDate;
+    private TextView mSchoolPrice;
+    private TextView mSchoolNeighborhood;
+    private TextView mSchoolWebLink;
+    private ImageView mSchoolRating;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +83,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         receiveIntent();
         initToolbar();
         initViews();
+        setWebLinkClickListener();
         setFab();
         adjustFabIcon();
         populateSchoolDetails();
@@ -84,6 +92,18 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
 
         setYelpListClickListener();
 
+    }
+
+    private void setWebLinkClickListener() {
+        mSchoolWebLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
+                intentToWebView.putExtra(Constants.WEB_URL_KEY, mPreschoolMain.getWebsiteUrl());
+                intentToWebView.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolMain);
+                startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
+            }
+        });
     }
 
     private void setYelpListClickListener() {
@@ -147,6 +167,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         mYelpRating = (ImageView) findViewById(R.id.yelp_rating);
         mYelpListView = (ListView) findViewById(R.id.yelp_response_list);
         mYelpNumReviews = (TextView) findViewById(R.id.yelp_num_reviews);
+        mYelpSnippet = (TextView) findViewById(R.id.yelp_review_snippet_details);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mPhoneNumber = (TextView) findViewById(R.id.school_phone_text_details);
         mFacilityNumber = (TextView) findViewById(R.id.facility_num_text_details);
@@ -154,6 +175,10 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         mFacilityType = (TextView) findViewById(R.id.facility_type_text_details);
         mLicenseStatus = (TextView) findViewById(R.id.license_status_text_details);
         mLicenseDate = (TextView) findViewById(R.id.license_date_text_details);
+        mSchoolPrice = (TextView) findViewById(R.id.school_price_text_details);
+        mSchoolNeighborhood = (TextView) findViewById(R.id.school_neighborhood_text_details);
+        mSchoolWebLink = (TextView) findViewById(R.id.school_weblink_text_details);
+        mSchoolRating = (ImageView) findViewById(R.id.school_rating_image_details);
     }
 
     private void loadBackdrop() {
@@ -180,6 +205,12 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         mFacilityType.setText(mPreschoolMain.getType());
         mLicenseStatus.setText(mPreschoolMain.getLicenseStatus());
         mLicenseDate.setText(mPreschoolMain.getLicenseDate());
+        String price = "$" + mPreschoolMain.getPrice();
+        mSchoolPrice.setText(price);
+        mSchoolNeighborhood.setText(mPreschoolMain.getRegion());
+        mSchoolWebLink.setText(mPreschoolMain.getWebsiteUrl());
+        mSchoolWebLink.setPaintFlags(mSchoolWebLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        mSchoolRating.setImageResource(Utilities.getRatingImage(mPreschoolMain.getRating()));
     }
 
     private void setSchoolAddressTextView() {
@@ -223,6 +254,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                         Picasso.with(SchoolDetailsActivity.this).load(schoolMatch.ratingImgUrlLarge()).into(mYelpRating);
                         String reviewText = String.valueOf(schoolMatch.reviewCount()) + " Reviews";
                         mYelpNumReviews.setText(reviewText);
+                        mYelpSnippet.setText(schoolMatch.snippetText());
                         mYelpTitleText.setPaintFlags(mYelpTitleText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                         mYelpTitleText.setTextColor(Color.parseColor("#000099"));
                         mYelpTitleText.setOnClickListener(new View.OnClickListener() {

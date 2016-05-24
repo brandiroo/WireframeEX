@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.coordinator_Layout_main),
                 null, savedInstanceState);
         mBottomBar.noResizeGoodness();
+        mBottomBar.noTabletGoodness();
         mBottomBar.setTextAppearance(R.style.CardView);
         mBottomBar.setItemsFromMenu(R.menu.menu_bottom_bar_main, new OnMenuTabClickListener() {
             @Override
@@ -378,11 +379,17 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         if (mSchoolsList == null) {
             return mapMarkersHashMap;
         }
-        for (int i = 0; i < mSchoolsList.size(); i++) {
-            coordinates = new LatLng(mSchoolsList.get(i).getLatitude(), mSchoolsList.get(i).getLongitude());
-            mapMarkersHashMap.put(mSchoolsList.get(i).getName(), coordinates);
+        if (isViewingSavedSchools) {
+            for (int i = 0; i < mSchoolsList.size(); i++) {
+                coordinates = new LatLng(mSchoolsList.get(i).getLatitude(), mSchoolsList.get(i).getLongitude());
+                mapMarkersHashMap.put(mSchoolsList.get(i).getName(), coordinates);
+            }
+        } else {
+            for (int i = 0; i < mSchoolsList.size(); i++) {
+                coordinates = new LatLng(mSchoolsList.get(i).getLatitude(), mSchoolsList.get(i).getLongitude());
+                mapMarkersHashMap.put(mSchoolsList.get(i).getName(), coordinates);
+            }
         }
-
         return mapMarkersHashMap;
     }
 

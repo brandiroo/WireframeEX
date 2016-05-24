@@ -52,7 +52,7 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
                 schoolNameTextView.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME)));
                 String price = "$" + cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_PRICE)) + " /mo";
                 schoolPriceTextView.setText(price);
-                schoolRatingImageView.setImageResource(getRatingImage(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_RATING))));
+                schoolRatingImageView.setImageResource(Utilities.getRatingImage(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_RATING))));
                 String url = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_IMAGE_URL));
                 if (url.matches("")) {
                     Picasso.with(context).load(R.drawable.no_image).into(schoolImageView);
@@ -109,20 +109,5 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
         return mCursorAdapter.getCount();
     }
 
-    private int getRatingImage(int rating){
-        switch(rating){
-            case 1:
-                return R.drawable.one_star;
-            case 2:
-                return R.drawable.two_stars;
-            case 3:
-                return R.drawable.three_stars;
-            case 4:
-                return R.drawable.four_stars;
-            case 5:
-                return R.drawable.five_stars;
-            default:
-                return 0;
-        }
-    }
+
 }
