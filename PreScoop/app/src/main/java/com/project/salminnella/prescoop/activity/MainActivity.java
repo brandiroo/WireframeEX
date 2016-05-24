@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -63,23 +64,22 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     //TODO move the sort and search methods to Utilities
 
     private ArrayList<PreSchool> mSchoolsList;
-    private Firebase mFireBaseRoot, mFirebasePreschoolRef;
+    private Firebase mFirebasePreschoolRef;
     private PreSchool mPreschool;
     private RecyclerView mRecyclerView;
     private ListAdapter mRecycleAdapter;
     private BottomBar mBottomBar;
-    private ArrayList<PreSchool> backupList;
+    private ArrayList<PreSchool> mBackupList;
     private ProgressBar mProgressBar;
     private DatabaseHelper dbHelper;
     private Cursor cursor;
-    private DBCursorAdapter dbCursorAdapter;
     private boolean isViewingSavedSchools;
-    private ArrayList<PreSchool> filteredList;
-    private SwipeRefreshLayout swipeContainer;
-    private SearchView searchView;
+    private ArrayList<PreSchool> mFilteredList;
+    private SwipeRefreshLayout mSwipeContainer;
+    private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-    private String searchQuery;
-    private Menu menu;
+    private String mSearchQuery;
+    private Menu mMenu;
 
 
 
@@ -100,34 +100,33 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         handleSearchFilterIntent(getIntent());
         buildBottomBar(savedInstanceState);
         initSwipeListener();
-
     }
 
     private void initViews() {
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        mSwipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
     }
 
     private void initSwipeListener() {
         // Setup refresh listener which triggers new data loading
-        swipeContainer.setDistanceToTriggerSync(500);
-        swipeContainer.setOnRefreshListener(new OnRefreshListener() {
+        mSwipeContainer.setDistanceToTriggerSync(500);
+        mSwipeContainer.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mRecyclerView.setAdapter(mRecycleAdapter);
-                mRecycleAdapter.swap(backupList);
-                if (filteredList != null) {
-                    filteredList.clear();
+                mRecycleAdapter.swap(mBackupList);
+                if (mFilteredList != null) {
+                    mFilteredList.clear();
                 }
                 mSearchMenuItem.collapseActionView();
                 isViewingSavedSchools = false;
-                menu.getItem(1).setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
-                swipeContainer.setRefreshing(false);
+                mMenu.getItem(1).setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
+                mSwipeContainer.setRefreshing(false);
             }
         });
         // refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+        mSwipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -209,15 +208,13 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
     private void handleSearchFilterIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-
-            searchQuery = intent.getStringExtra(SearchManager.QUERY);
-            filteredList = Utilities.filterSchoolsList(searchQuery, mSchoolsList);
-            if (filteredList.size() > 0) {
-                mRecycleAdapter.swap(filteredList);
+            mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
+            mFilteredList = Utilities.filterSchoolsList(mSearchQuery, mSchoolsList);
+            if (mFilteredList.size() > 0) {
+                mRecycleAdapter.swap(mFilteredList);
             } else {
-                Toast.makeText(MainActivity.this, "No matches found.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.filter_search_no_matches, Toast.LENGTH_SHORT).show();
             }
-
         }
     }
     // endregion FilterSearch
@@ -227,21 +224,21 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         Collections.sort(mSchoolsList, new PriceComparator());
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, "Sorted by Price", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, R.string.price_sort, Toast.LENGTH_SHORT).show();
     }
 
     private void sortByRating() {
         Collections.sort(mSchoolsList, new RatingComparator());
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, "Sorted by Rating", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, R.string.rating_sort, Toast.LENGTH_SHORT).show();
     }
 
     private void sortByName() {
         Collections.sort(mSchoolsList, new NameComparator());
         mRecycleAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, "Sorted Alphabetically", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, R.string.abc_sort, Toast.LENGTH_SHORT).show();
     }
     // endregion SortMethods
 
@@ -263,14 +260,14 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     }
 
     private void initFirebase(){
-        mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
+        Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
         mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
     }
 
 
     private void queryFirebase(){
         mSchoolsList = new ArrayList<>();
-        backupList = new ArrayList<>();
+        mBackupList = new ArrayList<>();
         Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -283,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
                 mPreschool = snapshot.getValue(PreSchool.class);
                 mSchoolsList.add(mPreschool);
-                backupList.add(mPreschool);
+                mBackupList.add(mPreschool);
                 mRecycleAdapter.notifyDataSetChanged();
             }
 
@@ -316,13 +313,13 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         // the saved schools icon should change if list was refreshed
-        this.menu = menu;
+        this.mMenu = menu;
 
         // Associate searchable configuration with the SearchView
         mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        mSearchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }
@@ -345,13 +342,13 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private void swapListContents(MenuItem item) {
         if (isViewingSavedSchools) {
             mRecyclerView.setAdapter(mRecycleAdapter);
-            if (filteredList != null && filteredList.size() > 0) {
-                mRecycleAdapter.swap(filteredList);
+            if (mFilteredList != null && mFilteredList.size() > 0) {
+                mRecycleAdapter.swap(mFilteredList);
                 mSearchMenuItem.expandActionView();
-                searchView.setQuery(searchQuery, false);
-                searchView.clearFocus();
+                mSearchView.setQuery(mSearchQuery, false);
+                mSearchView.clearFocus();
             } else {
-                mRecycleAdapter.swap(backupList);
+                mRecycleAdapter.swap(mBackupList);
             }
             isViewingSavedSchools = false;
             item.setIcon(R.drawable.ic_favorite_border_white_24dp);
@@ -372,14 +369,28 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     }
 
     private void findSavedSchools() {
-        cursor = dbHelper.findAllSavedSchools();
-        if (cursor.getCount() > 0) {
-            dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
-            mRecyclerView.setAdapter(dbCursorAdapter);
-            isViewingSavedSchools = true;
-        } else {
-            Toast.makeText(MainActivity.this, "No Saved Schools Yet", Toast.LENGTH_SHORT).show();
-        }
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                cursor = dbHelper.findAllSavedSchools();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (cursor.getCount() > 0) {
+                    fillCursorList();
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.no_schools, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute();
+    }
+
+    private void fillCursorList() {
+        DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
+        mRecyclerView.setAdapter(dbCursorAdapter);
+        isViewingSavedSchools = true;
     }
 
     private HashMap<String, LatLng> buildMapMarkers() {
@@ -399,12 +410,14 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                 cursor.moveToNext();
             }
         } else {
-            for (int i = 0; i < mSchoolsList.size(); i++) {
-                String title = mSchoolsList.get(i).getName();
-                double latitude = mSchoolsList.get(i).getLatitude();
-                double longitude = mSchoolsList.get(i).getLongitude();
-                coordinates = new LatLng(latitude, longitude);
-                mapMarkersHashMap.put(title, coordinates);
+            if (mSchoolsList != null) {
+                for (int i = 0; i < mSchoolsList.size(); i++) {
+                    String title = mSchoolsList.get(i).getName();
+                    double latitude = mSchoolsList.get(i).getLatitude();
+                    double longitude = mSchoolsList.get(i).getLongitude();
+                    coordinates = new LatLng(latitude, longitude);
+                    mapMarkersHashMap.put(title, coordinates);
+                }
             }
         }
         return mapMarkersHashMap;
@@ -425,22 +438,18 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      * NOTE: If we detect that this phone is an older OS then Android M, we assume
      * the permission is true because they are granted at INSTALL time.
      *
-     * @return
+     * @return PackageManager Permission Granted
      */
     @TargetApi(23)
     private boolean permissionExists(){
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion < Build.VERSION_CODES.M){
-
             // Permissions are already granted during INSTALL TIME for older OS version
             return true;
         }
 
         int granted = checkSelfPermission(LOCATION_PERMISSION);
-        if (granted == PackageManager.PERMISSION_GRANTED){
-            return true;
-        }
-        return false;
+        return granted == PackageManager.PERMISSION_GRANTED;
     }
 
     @TargetApi(23)
@@ -469,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                     buildIntentToMap();
                 } else {
                     // contacts permission was denied, lets warn the user that we need this permission!
-                    Toast.makeText(getApplicationContext(), "You need to grant location permission", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.grant_location_permission, Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -478,15 +487,13 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     }
     // endregion Permission Check
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
         // clears the search filter focus to prevent keyboard from popping up when returning from
         // school details Activity.
-        if (searchView != null) {
-            searchView.clearFocus();
+        if (mSearchView != null) {
+            mSearchView.clearFocus();
         }
         // refresh list with updated cursor contents if a saved school was removed
         if (cursor != null && isViewingSavedSchools) {
