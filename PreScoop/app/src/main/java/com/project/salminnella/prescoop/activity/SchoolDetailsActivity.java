@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.project.salminnella.prescoop.R;
@@ -128,9 +129,11 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                     if (saveSchool) {
                         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
                         saveSchool = false;
+                        Toast.makeText(SchoolDetailsActivity.this, "Removed From Favorites", Toast.LENGTH_SHORT).show();
                     } else {
                         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
                         saveSchool = true;
+                        Toast.makeText(SchoolDetailsActivity.this, "Added To Favorites", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
