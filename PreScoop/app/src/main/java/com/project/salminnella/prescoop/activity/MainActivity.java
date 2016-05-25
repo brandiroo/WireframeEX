@@ -111,28 +111,10 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         mSwipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
     }
 
-    private void initSwipeListener() {
-        // Setup refresh listener which triggers new data loading
-        mSwipeContainer.setDistanceToTriggerSync(300);
-        mSwipeContainer.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mRecyclerView.setAdapter(mRecycleAdapter);
-                mRecycleAdapter.swap(mBackupList);
-                if (mFilteredList != null) {
-                    mFilteredList.clear();
-                }
-                mSearchMenuItem.collapseActionView();
-                isViewingSavedSchools = false;
-                mMenu.getItem(1).setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
-                mSwipeContainer.setRefreshing(false);
-            }
-        });
-        // refreshing colors
-        mSwipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     private void buildBottomBar(Bundle savedInstanceState) {
@@ -188,88 +170,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         mBottomBar.onSaveInstanceState(outState);
     }
 
-    // region RecyclerView
-    private void createRecycler() {
-        mRecycleAdapter = new ListAdapter(mSchoolsList, this);
-        mRecyclerView.setAdapter(mRecycleAdapter);
-
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
-            gridLayoutManager = new GridLayoutManager(this, 1);
-        } else if (getResources().getConfiguration().orientation == 1) {
-            gridLayoutManager = new GridLayoutManager(this, 2);
-        } else {
-            gridLayoutManager = new GridLayoutManager(this, 3);
-        }
-
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-    }
-
-    @Override
-    public void onListItemClick(PreSchool preschool) {
-        Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
-        intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
-        startActivity(intentToDetails);
-    }
-    // endregion RecyclerView
-
-
-    // region FilterSearch
-    @Override protected void onNewIntent(Intent intent) {
-        handleSearchFilterIntent(intent);
-    }
-
-    private void handleSearchFilterIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
-            mFilteredList = Utilities.filterSchoolsList(mSearchQuery, mBackupList);
-            if (mFilteredList.size() > 0) {
-                mRecycleAdapter.swap(mFilteredList);
-            } else {
-                Toast.makeText(MainActivity.this, R.string.filter_search_no_matches, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    // endregion FilterSearch
-
-    // region SortMethods
-    private void sortByPrice() {
-        Collections.sort(mSchoolsList, new PriceComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.price_sort, Toast.LENGTH_SHORT).show();
-    }
-
-    private void sortByRating() {
-        Collections.sort(mSchoolsList, new RatingComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.rating_sort, Toast.LENGTH_SHORT).show();
-    }
-
-    private void sortByName() {
-        Collections.sort(mSchoolsList, new NameComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.abc_sort, Toast.LENGTH_SHORT).show();
-    }
-    // endregion SortMethods
-
-    private void showProgressBar() {
-        if (mSchoolsList == null) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void removeProgressBar() {
-            mProgressBar.setVisibility(View.INVISIBLE);
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-    }
-
     private void initFirebase(){
         Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
         mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
@@ -317,38 +217,104 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         });
     }
 
+    // region RecyclerView
+    private void createRecycler() {
+        mRecycleAdapter = new ListAdapter(mSchoolsList, this);
+        mRecyclerView.setAdapter(mRecycleAdapter);
 
+        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+            gridLayoutManager = new GridLayoutManager(this, 1);
+        } else if (getResources().getConfiguration().orientation == 1) {
+            gridLayoutManager = new GridLayoutManager(this, 2);
+        } else {
+            gridLayoutManager = new GridLayoutManager(this, 3);
+        }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        // the saved schools icon should change if list was refreshed
-        this.mMenu = menu;
-
-        // Associate searchable configuration with the SearchView
-        mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
-        mFavoriteMenuItem = menu.findItem(R.id.favorites_menu_item_main);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        return true;
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void onListItemClick(PreSchool preschool) {
+        Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
+        intentToDetails.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool);
+        startActivity(intentToDetails);
+    }
+    // endregion RecyclerView
 
-        switch (id) {
-            case R.id.favorites_menu_item_main:
-                swapListContents(item);
-                break;
+    // region FilterSearch
+    @Override protected void onNewIntent(Intent intent) {
+        handleSearchFilterIntent(intent);
+    }
+
+    private void handleSearchFilterIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
+            mFilteredList = Utilities.filterSchoolsList(mSearchQuery, mBackupList);
+            if (mFilteredList.size() > 0) {
+                mRecycleAdapter.swap(mFilteredList);
+            } else {
+                Toast.makeText(MainActivity.this, R.string.filter_search_no_matches, Toast.LENGTH_SHORT).show();
+            }
         }
-        return super.onOptionsItemSelected(item);
+    }
+    // endregion FilterSearch
+
+    private void initSwipeListener() {
+        // Setup refresh listener which triggers new data loading
+        mSwipeContainer.setDistanceToTriggerSync(300);
+        mSwipeContainer.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mRecyclerView.setAdapter(mRecycleAdapter);
+                mRecycleAdapter.swap(mBackupList);
+                if (mFilteredList != null) {
+                    mFilteredList.clear();
+                }
+                mSearchMenuItem.collapseActionView();
+                isViewingSavedSchools = false;
+                mMenu.getItem(1).setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
+                mSwipeContainer.setRefreshing(false);
+            }
+        });
+        // refreshing colors
+        mSwipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    // region SortMethods
+    private void sortByPrice() {
+        Collections.sort(mSchoolsList, new PriceComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, R.string.price_sort, Toast.LENGTH_SHORT).show();
+    }
+
+    private void sortByRating() {
+        Collections.sort(mSchoolsList, new RatingComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, R.string.rating_sort, Toast.LENGTH_SHORT).show();
+    }
+
+    private void sortByName() {
+        Collections.sort(mSchoolsList, new NameComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, R.string.abc_sort, Toast.LENGTH_SHORT).show();
+    }
+    // endregion SortMethods
+
+    private void showProgressBar() {
+        if (mSchoolsList == null) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void removeProgressBar() {
+            mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     private void swapListContents(MenuItem item) {
@@ -366,10 +332,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             item.setIcon(R.drawable.ic_favorite_border_white_24dp);
         } else {
             findSavedSchools(item);
-//            if (cursor.getCount() > 0) {
-//                item.setIcon(R.drawable.ic_favorite_white_24dp);
-//                isViewingSavedSchools = true;
-//            }
             mSearchMenuItem.collapseActionView();
         }
     }
@@ -453,9 +415,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     /**
      * Returns true if the permission is granted. False otherwise.
      *
-     * NOTE: If we detect that this phone is an older OS then Android M, we assume
-     * the permission is true because they are granted at INSTALL time.
-     *
      * @return PackageManager Permission Granted
      */
     @TargetApi(23)
@@ -504,6 +463,38 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         }
     }
     // endregion Permission Check
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // the saved schools icon should change if list was refreshed
+        this.mMenu = menu;
+
+        // Associate searchable configuration with the SearchView
+        mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
+        mFavoriteMenuItem = menu.findItem(R.id.favorites_menu_item_main);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mSearchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.favorites_menu_item_main:
+                swapListContents(item);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onResume() {

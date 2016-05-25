@@ -1,11 +1,7 @@
 package com.project.salminnella.prescoop.utility;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.project.salminnella.prescoop.R;
@@ -23,47 +19,10 @@ import java.util.List;
  */
 public final class Utilities {
 
-    /**
-     * takes an address String, and returns a Latitude / Longitude that the Maps fragment
-     * will use to add markers with
-     * @param context Context
-     * @param strAddress String
-     * @return LatLng
-     */
-    public static LatLng getLocationFromAddress(Context context, String strAddress)
-    {
-        Geocoder coder= new Geocoder(context);
-        List<Address> address;
-        LatLng p1 = null;
-
-        try
-        {
-            address = coder.getFromLocationName(strAddress, 5);
-            if(address==null)
-            {
-                return null;
-            }
-            Address location = address.get(0);
-            location.getLatitude();
-            location.getLongitude();
-
-            p1 = new LatLng(location.getLatitude(), location.getLongitude());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return p1;
-    }
-
-
     public static String buildAddressString(String streetAddress, String city, String state, String zipcode) {
         String strAddress = streetAddress + ", " + city + ", " + state + " " + zipcode;
         return strAddress;
     }
-
-
-
 
     public static ArrayList<PreSchool> filterSchoolsList(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredList = new ArrayList<>();
@@ -144,7 +103,6 @@ public final class Utilities {
         preschool.setRange(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_RANGE)));
         preschool.setSchoolDescription(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_SCHOOL_DESCRIPTION)));
         preschool.setRating(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_RATING)));
-        //preschool.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_FAVORITE)));
         preschool.setNumVisits(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_NUM_VISITS)));
         preschool.setVisitDates(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_VISIT_DATES)));
         preschool.setCitationTypeA(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_CITATION_TYPE_A)));
@@ -165,8 +123,6 @@ public final class Utilities {
         preschool.setVisitTypeACitation(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_VISIT_TYPE_A_CITATION)));
         preschool.setVisitTypeBCitation(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_VISIT_TYPE_B_CITATION)));
         preschool.setTotalReports(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_TOTAL_REPORTS)));
-//        preschool.setReportDates(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_DATES)));
-//        preschool.setReportUrl(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORT_URL)));
         preschool.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LATITUDE)));
         preschool.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LONGITUDE)));
         preschool.setLicenseStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_LICENSE_STATUS)));
@@ -207,32 +163,4 @@ public final class Utilities {
                 return 0;
         }
     }
-
-
-//    // region SortMethods
-//    private void sortByPrice() {
-//        Collections.sort(mSchoolsList, new PriceComparator());
-//        for (int i = 0; i < mSchoolsList.size(); i++) {
-//            Log.i(TAG, "sortByPrice: " + mSchoolsList.get(i).getName() + "price: " + mSchoolsList.get(i).getPrice());
-//        }
-//        mRecycleAdapter.notifyDataSetChanged();
-//        mRecyclerView.smoothScrollToPosition(0);
-//    }
-//
-//    private void sortByRating() {
-//        Collections.sort(mSchoolsList, new RatingComparator());
-//        for (int i = 0; i < mSchoolsList.size(); i++) {
-//            Log.i(TAG, "sortByrating: " + mSchoolsList.get(i).getName() + "rating: " + mSchoolsList.get(i).getRating());
-//        }
-//        mRecycleAdapter.notifyDataSetChanged();
-//        mRecyclerView.smoothScrollToPosition(0);
-//    }
-//
-//    private void sortByName() {
-//        Collections.sort(mSchoolsList, new NameComparator());
-//        mRecycleAdapter.notifyDataSetChanged();
-//        mRecyclerView.smoothScrollToPosition(0);
-//    }
-//    // endregion SortMethods
-
 }
