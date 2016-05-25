@@ -45,4 +45,6 @@
     <string name="remove_favorites">Removed From Favorites</string>
     <string name="add_favorites">Added To Favorites</string>
     <string name="inspection_details">Inspection Details</string>
+    <string name="contact_school_price_label">$-Contact School</string>
+    <string name="contact_school_label_details">Contact School</string>
 </resources>

@@ -2,10 +2,10 @@ package com.project.salminnella.prescoop.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +33,6 @@ public class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web_view);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_web_viewer);
-        mProgressBar.setVisibility(View.VISIBLE);
 
         receiveIntent();
         initToolbar();
@@ -73,18 +72,15 @@ public class WebViewActivity extends AppCompatActivity {
         }
 
         final Activity activity = this;
-        mWebview.setWebViewClient(new WebViewClient() {
+        mWebview.setWebViewClient(new WebClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 Toast.makeText(activity, description, Toast.LENGTH_SHORT).show();
             }
         });
 
         mWebview.loadUrl(mUrl);
-        Log.i(TAG, "loadWebview: " + mUrl);
         mProgressBar.setVisibility(View.INVISIBLE);
     }
-
-
 
 
 
@@ -114,5 +110,29 @@ public class WebViewActivity extends AppCompatActivity {
         intentToDetailsActivity.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolHolder);
         setResult(RESULT_OK, intentToDetailsActivity);
         finish();
+    }
+
+    public class WebClient extends WebViewClient
+    {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            view.loadUrl(url);
+            return true;
+
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            // TODO Auto-generated method stub
+            super.onPageFinished(view, url);
+
+            mProgressBar.setVisibility(View.GONE);
+        }
     }
 }

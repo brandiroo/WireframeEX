@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.squareup.picasso.Picasso;
-import com.yelp.clientlib.entities.Business;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +18,8 @@ import java.util.List;
  * Created by anthony on 5/2/16.
  */
 public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
-    private static final String TAG = "ListAdapter";
     private Context context;
-    // Store a member variable for the schools
     private List<PreSchool> mSchools;
-    private List<Business> yelpBusiness;
     private OnRvItemClickListener listener;
 
     // constructor
@@ -31,13 +27,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         this.mSchools = mSchools;
         this.listener = listener;
     }
-
-    // constructor
-    public ListAdapter(List<Business> yelpBusiness) {
-        this.yelpBusiness = yelpBusiness;
-        //this.listener = listener;
-    }
-
 
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,9 +50,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         TextView schoolNameTextView = holder.schoolNameTextView;
         TextView schoolPriceTextView = holder.schoolPriceTextView;
         schoolNameTextView.setText(preSchool.getName());
-        schoolPriceTextView.setText("$" + preSchool.getPrice() + " /mo");
         holder.schoolRatingImageView.setImageResource(getRatingImage(preSchool.getRating()));
 
+        if (preSchool.getPrice() == 999) {
+            schoolPriceTextView.setText(R.string.contact_school_price_label);
+        } else {
+            String price = "$" + preSchool.getPrice() + " /mo";
+            schoolPriceTextView.setText(price);
+        }
 
         if (preSchool.getImageUrl().matches("")) {
             Picasso.with(context).load(R.drawable.no_image).into(holder.schoolImageView);
@@ -72,7 +66,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         }
         holder.bind(mSchools.get(position), listener);
     }
-
 
     @Override
     public int getItemCount() {
