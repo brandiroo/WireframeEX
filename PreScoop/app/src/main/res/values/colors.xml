@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#B71C1C</color>
     <color name="htmlLink">#000099</color>
     <color name="tab_selected_text">#000000</color>
     <color name="tab_unselected_text">#FFFFFF</color>

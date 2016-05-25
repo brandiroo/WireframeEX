@@ -284,25 +284,25 @@
                         android:id="@+id/license_date_text_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_marginStart="5dp"/>
 
                     <TextView
                         android:id="@+id/facility_num_text_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_marginStart="5dp"/>
 
                     <TextView
                         android:id="@+id/facility_capacity_text_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginStart="5dp" />
 
                     <TextView
                         android:id="@+id/facility_type_text_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginStart="5dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -318,7 +318,8 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:gravity="center"
-                        android:text="Inspection Details"/>
+                        android:text="@string/inspection_details"
+                        android:layout_marginBottom="6dp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -327,7 +328,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_below="@+id/inspection_title_linear_layout">
-
                     <android.support.design.widget.TabLayout
                         android:id="@+id/sliding_tabs"
                         android:layout_width="match_parent"
@@ -338,14 +338,13 @@
                         app:tabTextColor="@color/tab_unselected_text"
                         app:tabSelectedTextColor="@color/tab_selected_text"
                         android:minHeight="?attr/actionBarSize"/>
-
                     <android.support.v4.view.ViewPager
                         android:id="@+id/viewpager"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         android:layout_width="match_parent"
                         android:layout_height="0px"
                         android:layout_weight="1"
-                        android:background="#FFF8E1" />
+                        android:background="#BDBDBD" />
 
                 </LinearLayout>
             </RelativeLayout>

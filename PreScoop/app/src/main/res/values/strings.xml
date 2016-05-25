@@ -34,4 +34,15 @@
     <string name="num_inspections_label">Number of Inspections</string>
     <string name="inspection_dates_label">All Inspection Dates</string>
     <string name="other_visit_citation_info">Other visits include anything other than yearly inspections and complaints, where the state may visit for administrative or follow up purposes, such as pre/post licensing processes. One or more citations may be under appeal.</string>
+    <string name="school_image">School Image</string>
+    <string name="school_rating_image">school rating</string>
+    <string name="filter_search_no_matches">No matches found.</string>
+    <string name="price_sort">Sorted by Price</string>
+    <string name="rating_sort">Sorted by Rating</string>
+    <string name="abc_sort">Sorted Alphabetically</string>
+    <string name="no_schools">No Saved Schools Yet</string>
+    <string name="grant_location_permission">You need to grant location permission</string>
+    <string name="remove_favorites">Removed From Favorites</string>
+    <string name="add_favorites">Added To Favorites</string>
+    <string name="inspection_details">Inspection Details</string>
 </resources>

@@ -21,8 +21,9 @@ import com.project.salminnella.prescoop.utility.Constants;
 public class WebViewActivity extends AppCompatActivity {
     private static final String TAG = "WebViewActivity";
     private WebView mWebview;
-    String url;
-    ProgressBar progressBar;
+    String mUrl;
+    String mTitle;
+    ProgressBar mProgressBar;
     PreSchool mPreschoolHolder;
 
 
@@ -31,16 +32,17 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_web_viewer);
-        progressBar.setVisibility(View.VISIBLE);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_web_viewer);
+        mProgressBar.setVisibility(View.VISIBLE);
 
-        initToolbar();
         receiveIntent();
+        initToolbar();
         loadWebview();
     }
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(mTitle);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -59,15 +61,16 @@ public class WebViewActivity extends AppCompatActivity {
 
     private void receiveIntent() {
         Intent receiveIntent = getIntent();
-        url = receiveIntent.getStringExtra(Constants.WEB_URL_KEY);
+        mUrl = receiveIntent.getStringExtra(Constants.WEB_URL_KEY);
         mPreschoolHolder = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
-
+        mTitle = receiveIntent.getStringExtra(Constants.WEB_VIEW_TITLE_KEY);
     }
 
     private void loadWebview() {
         mWebview  = (WebView) findViewById(R.id.web_viewer);
-//        mWebview  = new WebView(this);
-        mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
+        if (mWebview != null) {
+            mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
+        }
 
         final Activity activity = this;
         mWebview.setWebViewClient(new WebViewClient() {
@@ -76,10 +79,9 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
-        mWebview.loadUrl(url);
-        Log.i(TAG, "loadWebview: " + url);
-//        setContentView(mWebview);
-        progressBar.setVisibility(View.INVISIBLE);
+        mWebview.loadUrl(mUrl);
+        Log.i(TAG, "loadWebview: " + mUrl);
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
 
