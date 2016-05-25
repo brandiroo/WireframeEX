@@ -222,8 +222,12 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         mFacilityType.setText(mPreschool.getType());
         mLicenseStatus.setText(mPreschool.getLicenseStatus());
         mLicenseDate.setText(mPreschool.getLicenseDate());
-        String price = "$" + mPreschool.getPrice();
-        mSchoolPrice.setText(price);
+        if (mPreschool.getPrice() == 999) {
+            mSchoolPrice.setText(R.string.contact_school_label_details);
+        } else {
+            String price = "$" + mPreschool.getPrice();
+            mSchoolPrice.setText(price);
+        }
         mSchoolNeighborhood.setText(mPreschool.getRegion());
         mSchoolWebLink.setText(mPreschool.getWebsiteUrl());
         mSchoolWebLink.setPaintFlags(mSchoolWebLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
