@@ -12,9 +12,13 @@ public final class Constants {
     public static final String ORDER_BY_NAME = "name";
     public static final String SCHOOLS_LIST_KEY = "schoolsList";
     public static final String SCHOOL_MARKER_KEY = "schoolMarker";
+    public static final String SCHOOL_REPORT_TITLE = "School Report";
     public static final String WEB_URL_KEY = "webUrl";
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String YELP_CLICKED_ITEM_KEY = "yelpUrl";
+    public static final String YELP_REVIEWS_TITLE = "Yelp Reviews";
+    public static final String WEB_VIEW_TITLE_KEY = "yelpReviews";
+    public static final String SCHOOLS_WEBSITE_URL = "schoolUrl";
     public static final int WEB_REQUEST_CODE = 49;
 
 

@@ -42,4 +42,7 @@
     <string name="abc_sort">Sorted Alphabetically</string>
     <string name="no_schools">No Saved Schools Yet</string>
     <string name="grant_location_permission">You need to grant location permission</string>
+    <string name="remove_favorites">Removed From Favorites</string>
+    <string name="add_favorites">Added To Favorites</string>
+    <string name="inspection_details">Inspection Details</string>
 </resources>

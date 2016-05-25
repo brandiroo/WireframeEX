@@ -50,7 +50,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private static final String TAG = "SchoolDetailsActivity";
     private TextView mSchoolName;
     private TextView mSchoolAddress;
-    private PreSchool mPreschoolMain;
+    private PreSchool mPreschool;
     private TextView mYelpTitleText;
     private TextView mYelpNumReviews;
     private TextView mYelpSnippet;
@@ -60,7 +60,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private YelpAdapter mYelpAdapter;
     private boolean saveSchool;
     private DatabaseHelper databaseHelper;
-    private Business schoolMatch;
+    private Business mYelpSchoolMatch;
     private FloatingActionButton fab;
     private TextView mPhoneNumber;
     private TextView mFacilityNumber;
@@ -84,40 +84,14 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         receiveIntent();
         initToolbar();
         initViews();
-        setWebLinkClickListener();
         setFab();
         adjustFabIcon();
         populateSchoolDetails();
         callYelpProvider();
         initTabLayout();
-        setYelpListClickListener();
-
+        setClickListeners();
     }
 
-    private void setWebLinkClickListener() {
-        mSchoolWebLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
-                intentToWebView.putExtra(Constants.WEB_URL_KEY, mPreschoolMain.getWebsiteUrl());
-                intentToWebView.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolMain);
-                startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
-            }
-        });
-    }
-
-    private void setYelpListClickListener() {
-        mYelpListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Business clickedYelpBusiness = (Business) mYelpListView.getItemAtPosition(position);
-                Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
-                intentToWebView.putExtra(Constants.WEB_URL_KEY, clickedYelpBusiness.mobileUrl());
-                intentToWebView.putExtra(Constants.SCHOOL_OBJECT_KEY, mPreschoolMain);
-                startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
-            }
-        });
-    }
 
     private void setFab() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -128,11 +102,11 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                     if (saveSchool) {
                         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
                         saveSchool = false;
-                        Toast.makeText(SchoolDetailsActivity.this, "Removed From Favorites", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SchoolDetailsActivity.this, R.string.remove_favorites, Toast.LENGTH_SHORT).show();
                     } else {
                         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
                         saveSchool = true;
-                        Toast.makeText(SchoolDetailsActivity.this, "Added To Favorites", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SchoolDetailsActivity.this, R.string.add_favorites, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -153,7 +127,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitle(mPreschoolMain.getName());
+            collapsingToolbarLayout.setTitle(mPreschool.getName());
 
             collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
         }
@@ -185,41 +159,82 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
 
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        if (mPreschoolMain.getImageUrl().matches("")) {
+        if (mPreschool.getImageUrl().matches("")) {
             Picasso.with(SchoolDetailsActivity.this).load(R.drawable.no_image).into(imageView);
         } else {
-            Picasso.with(SchoolDetailsActivity.this).load(mPreschoolMain.getImageUrl())
+            Picasso.with(SchoolDetailsActivity.this).load(mPreschool.getImageUrl())
                     .into(imageView);
         }
     }
 
     private void receiveIntent() {
         Intent receiveIntent = getIntent();
-        mPreschoolMain = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
+        mPreschool = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
+    }
+
+
+    private void setClickListeners() {
+        mSchoolWebLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIntentToWebView(mPreschool.getWebsiteUrl(), mPreschool.getName(), mPreschool);
+            }
+        });
+
+        mYelpListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Business clickedYelpBusiness = (Business) mYelpListView.getItemAtPosition(position);
+                startIntentToWebView(clickedYelpBusiness.mobileUrl(), Constants.YELP_REVIEWS_TITLE, mPreschool);
+            }
+        });
+    }
+
+    private void setYelpClickListener() {
+        mYelpTitleText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIntentToWebView(mYelpSchoolMatch.mobileUrl(), Constants.YELP_REVIEWS_TITLE, mPreschool);
+            }
+        });
+    }
+
+    @Override
+    public void listItemClicked(View view, String url) {
+        startIntentToWebView(url, Constants.SCHOOL_REPORT_TITLE, mPreschool);
+    }
+
+    private void startIntentToWebView(String url, String title, PreSchool preschool) {
+        Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
+        intentToWebView.putExtra(Constants.WEB_URL_KEY, url); // weburl
+        intentToWebView.putExtra(Constants.WEB_VIEW_TITLE_KEY, title); // review title
+        intentToWebView.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool); // preschool object
+        startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
+
     }
 
     private void populateSchoolDetails() {
-        mSchoolName.setText(mPreschoolMain.getName());
+        mSchoolName.setText(mPreschool.getName());
         setSchoolAddressTextView();
-        mPhoneNumber.setText(mPreschoolMain.getPhoneNumber());
-        mFacilityNumber.setText(String.valueOf(mPreschoolMain.getFacilityNumber()));
-        mFacilityCapacity.setText(String.valueOf(mPreschoolMain.getCapacity()));
-        mFacilityType.setText(mPreschoolMain.getType());
-        mLicenseStatus.setText(mPreschoolMain.getLicenseStatus());
-        mLicenseDate.setText(mPreschoolMain.getLicenseDate());
-        String price = "$" + mPreschoolMain.getPrice();
+        mPhoneNumber.setText(mPreschool.getPhoneNumber());
+        mFacilityNumber.setText(String.valueOf(mPreschool.getFacilityNumber()));
+        mFacilityCapacity.setText(String.valueOf(mPreschool.getCapacity()));
+        mFacilityType.setText(mPreschool.getType());
+        mLicenseStatus.setText(mPreschool.getLicenseStatus());
+        mLicenseDate.setText(mPreschool.getLicenseDate());
+        String price = "$" + mPreschool.getPrice();
         mSchoolPrice.setText(price);
-        mSchoolNeighborhood.setText(mPreschoolMain.getRegion());
-        mSchoolWebLink.setText(mPreschoolMain.getWebsiteUrl());
+        mSchoolNeighborhood.setText(mPreschool.getRegion());
+        mSchoolWebLink.setText(mPreschool.getWebsiteUrl());
         mSchoolWebLink.setPaintFlags(mSchoolWebLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        mSchoolRating.setImageResource(Utilities.getRatingImage(mPreschoolMain.getRating()));
+        mSchoolRating.setImageResource(Utilities.getRatingImage(mPreschool.getRating()));
     }
 
     private void setSchoolAddressTextView() {
-        mSchoolAddress.setText(Utilities.buildAddressString(mPreschoolMain.getStreetAddress(),
-                mPreschoolMain.getCity(),
-                mPreschoolMain.getState(),
-                mPreschoolMain.getZipCode()));
+        mSchoolAddress.setText(Utilities.buildAddressString(mPreschool.getStreetAddress(),
+                mPreschool.getCity(),
+                mPreschool.getState(),
+                mPreschool.getZipCode()));
     }
 
     private void callYelpProvider() {
@@ -234,7 +249,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         Map<String, String> params = new HashMap<>();
 
         // general params
-        params.put("term", mPreschoolMain.getName());
+        params.put("term", mPreschool.getName());
         params.put("limit", Constants.YELP_RESPONSE_LIMIT_STRING);
         params.put("category_filter", "preschools");
         params.put("sort", "0");
@@ -250,24 +265,16 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                 } else {
                     // Update UI text with the searchResponse.
 
-                    schoolMatch = filterYelpResponse(searchResponse);
-                    if (schoolMatch != null) {
-                        mYelpTitleText.setText(schoolMatch.name());
-                        Picasso.with(SchoolDetailsActivity.this).load(schoolMatch.ratingImgUrlLarge()).into(mYelpRating);
-                        String reviewText = String.valueOf(schoolMatch.reviewCount()) + " Reviews";
+                    mYelpSchoolMatch = filterYelpResponse(searchResponse);
+                    if (mYelpSchoolMatch != null) {
+                        mYelpTitleText.setText(mYelpSchoolMatch.name());
+                        Picasso.with(SchoolDetailsActivity.this).load(mYelpSchoolMatch.ratingImgUrlLarge()).into(mYelpRating);
+                        String reviewText = String.valueOf(mYelpSchoolMatch.reviewCount()) + " Reviews";
                         mYelpNumReviews.setText(reviewText);
-                        mYelpSnippet.setText(schoolMatch.snippetText());
+                        mYelpSnippet.setText(mYelpSchoolMatch.snippetText());
                         mYelpTitleText.setPaintFlags(mYelpTitleText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                         mYelpTitleText.setTextColor(Color.parseColor("#000099"));
-                        mYelpTitleText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
-                                intentToWebView.putExtra(Constants.WEB_URL_KEY, schoolMatch.mobileUrl());
-                                intentToWebView.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschoolMain);
-                                startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
-                            }
-                        });
+                        setYelpClickListener();
                     } else {
                         mYelpTitleText.setText(R.string.empty_yelp_response_title);
                         ArrayList<Business> businesses = searchResponse.businesses();
@@ -293,9 +300,9 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
             limit = Constants.YELP_RESPONSE_LIMIT_INT;
         }
         for (int i = 0; i < limit; i++) {
-            int strContains = response.businesses().get(i).name().indexOf(mPreschoolMain.getName());
+            int strContains = response.businesses().get(i).name().indexOf(mPreschool.getName());
             if (strContains != -1) {
-                Log.i(TAG, response.businesses().get(i).name() + " contains " + mPreschoolMain.getName());
+                Log.i(TAG, response.businesses().get(i).name() + " contains " + mPreschool.getName());
                 return response.businesses().get(i);
             }
         }
@@ -307,7 +314,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private void initTabLayout() {
         // Set PagerAdapter so that it can display items
         viewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(),
-                SchoolDetailsActivity.this, mPreschoolMain));
+                SchoolDetailsActivity.this, mPreschool));
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -330,7 +337,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
 
         if (id == R.id.maps_menu_item_details) {
             Intent intentToMaps = new Intent(SchoolDetailsActivity.this, SchoolsMapFragment.class);
-            intentToMaps.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschoolMain);
+            intentToMaps.putExtra(Constants.SCHOOL_MARKER_KEY, mPreschool);
             startActivity(intentToMaps);
         }
 
@@ -353,7 +360,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
 
 
     private boolean isBookmarkAlreadySaved() {
-        Cursor bookmarkCursor = databaseHelper.findSavedSchool(mPreschoolMain.getName());
+        Cursor bookmarkCursor = databaseHelper.findSavedSchool(mPreschool.getName());
         return bookmarkCursor.getCount() != 0;
     }
 
@@ -362,27 +369,21 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         super.onStop();
         if (saveSchool) {
             if (!isBookmarkAlreadySaved()) {
-                String reportsList = arrayListAsString(mPreschoolMain);
-                databaseHelper.insertSavedSchool(mPreschoolMain, reportsList);
+                String reportsList = arrayListAsString(mPreschool);
+                databaseHelper.insertSavedSchool(mPreschool, reportsList);
             }
         } else if (isBookmarkAlreadySaved()) {
-            databaseHelper.deleteSavedSchool(mPreschoolMain.getName());
+            databaseHelper.deleteSavedSchool(mPreschool.getName());
         }
     }
 
-    @Override
-    public void listItemClicked(View view, String url) {
-        Intent intentWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
-        intentWebView.putExtra(Constants.WEB_URL_KEY, url);
-        startActivity(intentWebView);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
-                mPreschoolMain = (PreSchool) data.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
+                mPreschool = (PreSchool) data.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
             }
         }
     }

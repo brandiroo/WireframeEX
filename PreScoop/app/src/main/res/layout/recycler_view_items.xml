@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/school_image_items"
-                android:background="#C5CAE9"
+                android:background="#BDBDBD"
                 android:layout_centerInParent="true"
                 android:gravity="center_horizontal">
                 <TextView
