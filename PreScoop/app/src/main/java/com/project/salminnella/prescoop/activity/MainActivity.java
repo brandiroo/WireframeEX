@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private void handleSearchFilterIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
-            mFilteredList = Utilities.filterSchoolsList(mSearchQuery, mSchoolsList);
+            mFilteredList = Utilities.filterSchoolsList(mSearchQuery, mBackupList);
             if (mFilteredList.size() > 0) {
                 mRecycleAdapter.swap(mFilteredList);
             } else {
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
         // Associate searchable configuration with the SearchView
         mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
-        mFavoriteMenuItem = menu.findItem(R.id.favorites_menu_item_main)
+        mFavoriteMenuItem = menu.findItem(R.id.favorites_menu_item_main);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -394,6 +394,9 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             protected void onPostExecute(Void avoid) {
                 if (cursor.getCount() > 0) {
                     fillCursorList(item);
+                } else if (isViewingSavedSchools && cursor.getCount() == 0) {
+                    mRecyclerView.setAdapter(mRecycleAdapter);
+                    mFavoriteMenuItem.setIcon(R.drawable.ic_favorite_border_white_24dp);
                 } else {
                     Toast.makeText(MainActivity.this, R.string.no_schools, Toast.LENGTH_SHORT).show();
                 }
@@ -512,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         }
         // refresh list with updated cursor contents if a saved school was removed
         if (isViewingSavedSchools) {
-            findSavedSchools(null);
+            findSavedSchools(mFavoriteMenuItem);
         }
     }
 }
