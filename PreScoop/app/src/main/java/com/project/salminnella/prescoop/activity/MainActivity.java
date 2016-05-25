@@ -440,7 +440,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         // request the location!
         String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-
     }
 
     @Override

@@ -47,4 +47,6 @@
     <string name="inspection_details">Inspection Details</string>
     <string name="contact_school_price_label">$-Contact School</string>
     <string name="contact_school_label_details">Contact School</string>
+    <string name="implement_click_listener">must implement List Item Click Listener</string>
+    <string name="not_available">N/A</string>
 </resources>
