@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,7 +16,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private PreSchool mPreschool;
     private RecyclerView mRecyclerView;
     private ListAdapter mRecycleAdapter;
+    private GridLayoutManager gridLayoutManager;
     private BottomBar mBottomBar;
     private ArrayList<PreSchool> mBackupList;
     private ProgressBar mProgressBar;
@@ -91,9 +93,9 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         dbHelper = DatabaseHelper.getInstance(MainActivity.this);
         initViews();
         initToolbar();
-        showProgressBar();
         initFirebase();
         if (mSchoolsList == null) {
+            showProgressBar();
             queryFirebase();
         }
         createRecycler();
@@ -187,9 +189,18 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
     // region RecyclerView
     private void createRecycler() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mRecycleAdapter = new ListAdapter(mSchoolsList, this);
         mRecyclerView.setAdapter(mRecycleAdapter);
+
+        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+            gridLayoutManager = new GridLayoutManager(this, 1);
+        } else if (getResources().getConfiguration().orientation == 1)
+            gridLayoutManager = new GridLayoutManager(this, 2);
+        else gridLayoutManager = new GridLayoutManager(this, 3);
+
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
     }
 
     @Override
@@ -249,9 +260,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     }
 
     private void removeProgressBar() {
-        if (mSchoolsList.size() > 0) {
             mProgressBar.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void initToolbar() {
