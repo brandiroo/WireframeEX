@@ -11,95 +11,89 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PreSchool implements Serializable {
 
-    private String name, streetAddress, city, state, zipCode, region, phoneNumber;
-    private long facilityNumber;
     private int capacity;
     private int price;
-    private String type, websiteUrl, imageUrl;
-
     private int range;
-    private String schoolDescription;
     private int rating;
     private int favorite;
-
-    private int[] images;
-    private String[] imageDescription;
-
     private int numVisits;
-    private String visitDates;
     private int citationTypeA;
     private int citationTypeB;
-
     private int inspectionNum;
-    private String inspectionDates;
     private int inspectionTypeA;
     private int inspectionTypeB;
-
     private int complaintTotal;
     private int totalComplaintAllegSub;
     private int totalComplaintAllegIncon;
     private int totalComplaintTypeACitation;
     private int totalComplaintTypeBCitation;
     private int totalComplaintVisits;
-    private String complaintDetails;
     private int otherVisits;
-    private String otherVisitDates;
     private int visitTypeACitation;
     private int visitTypeBCitation;
     private int totalReports;
+    private int[] images;
+    private long facilityNumber;
     private double latitude, longitude;
+    private String name, streetAddress, city, state, zipCode, region, phoneNumber;
+    private String type, websiteUrl, imageUrl;
+    private String schoolDescription;
+    private String visitDates;
+    private String inspectionDates;
+    private String complaintDetails;
+    private String otherVisitDates;
     private String licenseStatus;
     private String licenseDate;
+    private String[] imageDescription;
     private Reports[] reports;
 
+
+    // empty constructor for firebase
     public PreSchool() {
     }
 
-    public PreSchool(SchoolLocation schoolLocation, String phoneNumber, long facilityNumber, int capacity, int price, String type, String websiteUrl,
-                     String imageUrl, int rating, AllVisits allVisits, int citationTypeA, int citationTypeB,
-                     int inspectionNum, String inspectionDates, int inspectionTypeA, int inspectionTypeB, int complaintTotal,
-                     int totalComplaintAllegSub, int totalComplaintAllegIncon, int totalComplaintTypeACitation,
-                     int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails, int otherVisits,
-                     String otherVisitDates, int visitTypeACitation, int visitTypeBCitation, int totalReports,
-                     double pLongitude, double pLatitude, String licenseDate, String licenseStatus, Reports[] reports) {
+    public PreSchool(SchoolLocation schoolLocation, SchoolVisits schoolVisits, SchoolDetails schoolDetails,
+                     SchoolLicense schoolLicense, SchoolInspection schoolInspection, SchoolComplaint schoolComplaint,
+                     Reports[] reports) {
+
         this.name = schoolLocation.getName();
         this.streetAddress = schoolLocation.getStreetAddress();
         this.city = schoolLocation.getCity();
         this.state = schoolLocation.getState();
         this.zipCode = schoolLocation.getZipCode();
         this.region = schoolLocation.getRegion();
-        this.phoneNumber = phoneNumber;
-        this.facilityNumber = facilityNumber;
-        this.capacity = capacity;
-        this.price = price;
-        this.type = type;
-        this.websiteUrl = websiteUrl;
-        this.imageUrl = imageUrl;
-        this.rating = rating;
-        this.numVisits = allVisits.getNumVisits();
-        this.visitDates = allVisits.getVisitDates();
-        this.citationTypeA = citationTypeA;
-        this.citationTypeB = citationTypeB;
-        this.inspectionNum = inspectionNum;
-        this.inspectionDates = inspectionDates;
-        this.inspectionTypeA = inspectionTypeA;
-        this.inspectionTypeB = inspectionTypeB;
-        this.complaintTotal = complaintTotal;
-        this.totalComplaintAllegSub = totalComplaintAllegSub;
-        this.totalComplaintAllegIncon = totalComplaintAllegIncon;
-        this.totalComplaintTypeACitation = totalComplaintTypeACitation;
-        this.totalComplaintTypeBCitation = totalComplaintTypeBCitation;
-        this.totalComplaintVisits = totalComplaintVisits;
-        this.complaintDetails = complaintDetails;
-        this.otherVisits = otherVisits;
-        this.otherVisitDates = otherVisitDates;
-        this.visitTypeACitation = visitTypeACitation;
-        this.visitTypeBCitation = visitTypeBCitation;
-        this.totalReports = totalReports;
-        this.latitude = pLatitude;
-        this.longitude = pLongitude;
-        this.licenseDate = licenseDate;
-        this.licenseStatus = licenseStatus;
+        this.phoneNumber = schoolDetails.getPhoneNumber();
+        this.facilityNumber = schoolLicense.getFacilityNumber();
+        this.capacity = schoolLicense.getCapacity();
+        this.price = schoolDetails.getPrice();
+        this.type = schoolDetails.getType();
+        this.websiteUrl = schoolDetails.getWebsiteUrl();
+        this.imageUrl = schoolDetails.getImageUrl();
+        this.rating = schoolLicense.getRating();
+        this.numVisits = schoolVisits.getNumVisits();
+        this.visitDates = schoolVisits.getVisitDates();
+        this.citationTypeA = schoolInspection.getCitationTypeA();
+        this.citationTypeB = schoolInspection.getCitationTypeB();
+        this.inspectionNum = schoolInspection.getInspectionNum();
+        this.inspectionDates = schoolInspection.getInspectionDates();
+        this.inspectionTypeA = schoolInspection.getInspectionTypeA();
+        this.inspectionTypeB = schoolInspection.getInspectionTypeB();
+        this.complaintTotal = schoolComplaint.getComplaintTotal();
+        this.totalComplaintAllegSub = schoolComplaint.getTotalComplaintAllegSub();
+        this.totalComplaintAllegIncon = schoolComplaint.getTotalComplaintAllegIncon();
+        this.totalComplaintTypeACitation = schoolComplaint.getTotalComplaintTypeACitation();
+        this.totalComplaintTypeBCitation = schoolComplaint.getTotalComplaintTypeBCitation();
+        this.totalComplaintVisits = schoolComplaint.getTotalComplaintVisits();
+        this.complaintDetails = schoolComplaint.getComplaintDetails();
+        this.otherVisits = schoolVisits.getOtherVisits();
+        this.otherVisitDates = schoolVisits.getOtherVisitDates();
+        this.visitTypeACitation = schoolVisits.getVisitTypeACitation();
+        this.visitTypeBCitation = schoolVisits.getVisitTypeBCitation();
+        this.totalReports = schoolVisits.getTotalReports();
+        this.latitude = schoolDetails.getpLatitude();
+        this.longitude = schoolDetails.getpLongitude();
+        this.licenseDate = schoolLicense.getLicenseDate();
+        this.licenseStatus = schoolLicense.getLicenseStatus();
         this.reports = reports;
 
 

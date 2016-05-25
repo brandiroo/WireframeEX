@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private SwipeRefreshLayout mSwipeContainer;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
+    private MenuItem mFavoriteMenuItem;
     private String mSearchQuery;
     private Menu mMenu;
 
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
     private void initSwipeListener() {
         // Setup refresh listener which triggers new data loading
-        mSwipeContainer.setDistanceToTriggerSync(500);
+        mSwipeContainer.setDistanceToTriggerSync(300);
         mSwipeContainer.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -194,11 +195,12 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
             gridLayoutManager = new GridLayoutManager(this, 1);
-        } else if (getResources().getConfiguration().orientation == 1)
+        } else if (getResources().getConfiguration().orientation == 1) {
             gridLayoutManager = new GridLayoutManager(this, 2);
-        else gridLayoutManager = new GridLayoutManager(this, 3);
+        } else {
+            gridLayoutManager = new GridLayoutManager(this, 3);
+        }
 
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
     }
@@ -326,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
         // Associate searchable configuration with the SearchView
         mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
+        mFavoriteMenuItem = menu.findItem(R.id.favorites_menu_item_main)
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView = (SearchView) menu.findItem(R.id.search_menu_item_main).getActionView();
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -341,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.bookmarks_menu_item_main:
+            case R.id.favorites_menu_item_main:
                 swapListContents(item);
                 break;
         }
@@ -362,10 +365,12 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             isViewingSavedSchools = false;
             item.setIcon(R.drawable.ic_favorite_border_white_24dp);
         } else {
-            findSavedSchools();
-            item.setIcon(R.drawable.ic_favorite_white_24dp);
+            findSavedSchools(item);
+//            if (cursor.getCount() > 0) {
+//                item.setIcon(R.drawable.ic_favorite_white_24dp);
+//                isViewingSavedSchools = true;
+//            }
             mSearchMenuItem.collapseActionView();
-
         }
     }
 
@@ -377,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         startActivity(intentToMaps);
     }
 
-    private void findSavedSchools() {
+    private void findSavedSchools(final MenuItem item) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -386,9 +391,9 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Void avoid) {
                 if (cursor.getCount() > 0) {
-                    fillCursorList();
+                    fillCursorList(item);
                 } else {
                     Toast.makeText(MainActivity.this, R.string.no_schools, Toast.LENGTH_SHORT).show();
                 }
@@ -396,9 +401,10 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         }.execute();
     }
 
-    private void fillCursorList() {
+    private void fillCursorList(MenuItem item) {
         DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
         mRecyclerView.setAdapter(dbCursorAdapter);
+        item.setIcon(R.drawable.ic_favorite_white_24dp);
         isViewingSavedSchools = true;
     }
 
@@ -505,8 +511,8 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             mSearchView.clearFocus();
         }
         // refresh list with updated cursor contents if a saved school was removed
-        if (cursor != null && isViewingSavedSchools) {
-            findSavedSchools();
+        if (isViewingSavedSchools) {
+            findSavedSchools(null);
         }
     }
 }

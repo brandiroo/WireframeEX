@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/yelp_list_image"
         android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:layout_marginTop="3dp"
         android:layout_marginStart="5dp"/>
 
@@ -44,10 +45,11 @@
         android:id="@+id/yelp_list_snippet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/yelp_list_num_reviews"
+        android:layout_below="@id/yelp_list_rating"
         android:layout_marginTop="3dp"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"/>
+        android:layout_marginEnd="2dp"
+        android:layout_alignStart="@id/yelp_list_rating"/>
 
 </RelativeLayout>
 
