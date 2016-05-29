@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      * Adapter, and populates the list with those results.  When clicked again, it swaps the list
      * with either the search results from the filter, or the backup list.
      *
-     * @param item
+     * @param item MenuItem
      */
     private void swapListContents(MenuItem item) {
         if (isViewingSavedSchools) {
@@ -408,43 +408,28 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         }
     }
 
+    /**
+     * When the user clicks the map icon in the bottom bar, a hashmap is created.
+     * The hashmap holds the school name and its coordinates to be used to add markers to the google map.
+     * The hashmap is created from the current schools in the viewed list, that are either results
+     * from a filter search, the users saved schools, or the complete list from Firebase.
+     *
+     * The corresponding list of schools is also passed to the google maps, in order to allow
+     * the user to go to the SchoolDetailsActivity with the matching object to populate all the
+     * school details.
+     */
     private void buildIntentToMap() {
         HashMap<String, LatLng> markersHashMap = buildMapMarkers();
         Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
         intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, markersHashMap);
-        intentToMaps.putExtra(Constants.SCHOOLS_LIST_KEY, mSchoolsList);
+        intentToMaps.putExtra(Constants.SCHOOLS_LIST_KEY, mSchoolsList); //TODO correct list?
         startActivity(intentToMaps);
     }
 
-    private void findSavedSchools(final MenuItem item) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                cursor = dbHelper.findAllSavedSchools();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void avoid) {
-                if (cursor.getCount() > 0) {
-                    fillCursorList(item);
-                } else if (isViewingSavedSchools && cursor.getCount() == 0) {
-                    mRecyclerView.setAdapter(mRecycleAdapter);
-                    mFavoriteMenuItem.setIcon(R.drawable.ic_favorite_border_white_24dp);
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.no_schools, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }.execute();
-    }
-
-    private void fillCursorList(MenuItem item) {
-        DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
-        mRecyclerView.setAdapter(dbCursorAdapter);
-        item.setIcon(R.drawable.ic_favorite_white_24dp);
-        isViewingSavedSchools = true;
-    }
-
+    /**
+     * Creates the HashMap sent with the intentToMaps
+     * @return HashMap
+     */
     private HashMap<String, LatLng> buildMapMarkers() {
         HashMap<String, LatLng> mapMarkersHashMap = new HashMap<>();
         LatLng coordinates;
@@ -475,7 +460,52 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         return mapMarkersHashMap;
     }
 
+    /**
+     * Performs a database query an an Async Task to find all of the users saved schools.
+     * The menu item for the favorites icon is passed to this method in order to be updated when
+     * the cursor adapter fills the recycler view.
+     *
+     * @param item MenuItem
+     */
+    private void findSavedSchools(final MenuItem item) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                cursor = dbHelper.findAllSavedSchools();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void avoid) {
+                if (cursor.getCount() > 0) {
+                    fillRecyclerViewWithCursor(item);
+                } else if (isViewingSavedSchools && cursor.getCount() == 0) {
+                    mRecyclerView.setAdapter(mRecycleAdapter);
+                    mFavoriteMenuItem.setIcon(R.drawable.ic_favorite_border_white_24dp);
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.no_schools, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute();
+    }
+
+    /**
+     * Uses the cursor of saved schools to fill the recycler view, and changes the favorites icon
+     * @param item MeuItem
+     */
+    private void fillRecyclerViewWithCursor(MenuItem item) {
+        DBCursorAdapter dbCursorAdapter = new DBCursorAdapter(MainActivity.this, cursor, this);
+        mRecyclerView.setAdapter(dbCursorAdapter);
+        item.setIcon(R.drawable.ic_favorite_white_24dp);
+        isViewingSavedSchools = true;
+    }
+
     // region Permission Check
+
+    /**
+     * Begins checking if permissions have been allowed. Checked when user clicks on the map icon
+     * from the bottom bar.
+     */
     private void checkPermissions() {
         if (permissionExists()){
             buildIntentToMap();
@@ -501,11 +531,15 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         return granted == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * If its marshmellow, request permissions
+     */
     @TargetApi(23)
     private void requestUserForPermission(){
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion < Build.VERSION_CODES.M){
-            // This OS version is lower then Android M, therefore we have old permission model and should not ask for permission
+            // This OS version is lower then Android M, therefore we have old permission model and
+            // should not ask for permission
             return;
         }
 
@@ -514,6 +548,14 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         requestPermissions(permissions, PERMISSION_REQUEST_CODE);
     }
 
+    /**
+     * Receives permissions result.
+     * If denied, uses a toast message to let the user know.
+     *
+     * @param requestCode int
+     * @param permissions String[]
+     * @param grantResults int[]
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode){
@@ -522,10 +564,9 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                     return; // no permissions were returned, nothing to process here
                 }
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    // contacts permission was granted! Lets now grab contacts or show them!
                     buildIntentToMap();
                 } else {
-                    // contacts permission was denied, lets warn the user that we need this permission!
+                    // location permission was denied, lets warn the user that we need this permission!
                     Toast.makeText(getApplicationContext(), R.string.grant_location_permission, Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -535,14 +576,21 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     }
     // endregion Permission Check
 
+
+    // region Options Menu
+
+    /**
+     * Create options menu
+     * @param menu Menu
+     * @return Boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         // the saved schools icon should change if list was refreshed
         this.mMenu = menu;
 
-        // Associate searchable configuration with the SearchView
+        // Associate searchable configuration with the SearchView,
         mSearchMenuItem = menu.findItem(R.id.search_menu_item_main);
         mFavoriteMenuItem = menu.findItem(R.id.favorites_menu_item_main);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -552,13 +600,14 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         return true;
     }
 
+    /**
+     * Handle menu option selections
+     * @param item MenuItem
+     * @return Boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         switch (id) {
             case R.id.favorites_menu_item_main:
                 swapListContents(item);
@@ -566,16 +615,20 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         }
         return super.onOptionsItemSelected(item);
     }
+    // endregion Options Menu
 
+
+    /**
+     * clears the search filter focus to prevent keyboard from popping up when returning from
+     * school details Activity. WIll also refresh the list with updated cursor contents
+     * if a saved school was removed from favorites
+     */
     @Override
     protected void onResume() {
         super.onResume();
-        // clears the search filter focus to prevent keyboard from popping up when returning from
-        // school details Activity.
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
-        // refresh list with updated cursor contents if a saved school was removed
         if (isViewingSavedSchools) {
             findSavedSchools(mFavoriteMenuItem);
         }
