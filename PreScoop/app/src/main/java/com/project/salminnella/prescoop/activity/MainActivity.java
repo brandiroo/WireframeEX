@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     //TODO use firebase UI for recycler view instead of the onchild overrides
     //TODO move the sort and search methods to Utilities
 
-    private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
-    private static final int PERMISSION_REQUEST_CODE = 12345;
-
+    // region Member Variables
     private boolean isViewingSavedSchools;
     private PreSchool mPreschool;
     private ArrayList<PreSchool> mSchoolsList;
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private MenuItem mFavoriteMenuItem;
-
+    // endregion Member Variables
 
     /**
      * Setup the activity.
@@ -138,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                 null, savedInstanceState);
         mBottomBar.noResizeGoodness();
         mBottomBar.noTabletGoodness();
+        mBottomBar.clearFocus();
         mBottomBar.setTextAppearance(R.style.CardView);
         mBottomBar.setItemsFromMenu(R.menu.menu_bottom_bar_main, new OnMenuTabClickListener() {
             @Override
@@ -224,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
 
     /**
-     * Performs the query to firebase, and receives all schools in the Facility root.
+     * Performs the query to firebase, and receives all schools in the root.
      * Populates the mSchoolsList, and mBackupList.  mBackupList is used to restore
      * the list after fitering searches, without the need to make another network
      * call to Firebase.
@@ -297,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
     /**
      * Recycler View list item click method, to go to SchoolDetailsActivity
-     *
      * @param preschool Preschool object sent to details activity to display all necessary info
      *                  without an additional network call to Firebase
      */
@@ -326,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
             mFilteredList = Utilities.filterSchoolsList(mSearchQuery, mBackupList);
             if (mFilteredList.size() > 0) {
-                mRecycleAdapter.swap(mFilteredList);
+                swapListContents(mFavoriteMenuItem);
             } else {
                 Toast.makeText(MainActivity.this, R.string.filter_search_no_matches, Toast.LENGTH_SHORT).show();
             }
@@ -389,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      *
      * @param item MenuItem
      */
-    private void swapListContents(MenuItem item) {
+    private void swapListContents(MenuItem item) { //TODO refactor
         if (isViewingSavedSchools) {
             mRecyclerView.setAdapter(mRecycleAdapter);
             if (mFilteredList != null && mFilteredList.size() > 0) {
@@ -422,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         HashMap<String, LatLng> markersHashMap = buildMapMarkers();
         Intent intentToMaps = new Intent(MainActivity.this, SchoolsMapFragment.class);
         intentToMaps.putExtra(Constants.ADDRESS_LIST_KEY, markersHashMap);
-        intentToMaps.putExtra(Constants.SCHOOLS_LIST_KEY, mSchoolsList); //TODO correct list?
+        intentToMaps.putExtra(Constants.SCHOOLS_LIST_KEY, mSchoolsList);
         startActivity(intentToMaps);
     }
 
@@ -436,9 +434,10 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         if (mSchoolsList == null && cursor == null) {
             return mapMarkersHashMap;
         }
+
         if (isViewingSavedSchools) {
             cursor.moveToFirst();
-            for (int i = 0; i < cursor.getCount(); i++){
+            for (int i = 0; i < cursor.getCount(); i++) {
                 String title = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME));
                 double latitude = cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LATITUDE));
                 double longitude = cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COL_LONGITUDE));
@@ -447,14 +446,12 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                 cursor.moveToNext();
             }
         } else {
-            if (mSchoolsList != null) {
-                for (int i = 0; i < mSchoolsList.size(); i++) {
-                    String title = mSchoolsList.get(i).getName();
-                    double latitude = mSchoolsList.get(i).getLatitude();
-                    double longitude = mSchoolsList.get(i).getLongitude();
-                    coordinates = new LatLng(latitude, longitude);
-                    mapMarkersHashMap.put(title, coordinates);
-                }
+            for (int i = 0; i < mSchoolsList.size(); i++) {
+                String title = mSchoolsList.get(i).getName();
+                double latitude = mSchoolsList.get(i).getLatitude();
+                double longitude = mSchoolsList.get(i).getLongitude();
+                coordinates = new LatLng(latitude, longitude);
+                mapMarkersHashMap.put(title, coordinates);
             }
         }
         return mapMarkersHashMap;
@@ -527,7 +524,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             return true;
         }
 
-        int granted = checkSelfPermission(LOCATION_PERMISSION);
+        int granted = checkSelfPermission(Constants.LOCATION_PERMISSION);
         return granted == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -545,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
         // request the location!
         String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
-        requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+        requestPermissions(permissions, Constants.PERMISSION_REQUEST_CODE);
     }
 
     /**
@@ -559,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode){
-            case PERMISSION_REQUEST_CODE:
+            case Constants.PERMISSION_REQUEST_CODE:
                 if (permissions.length < 0){
                     return; // no permissions were returned, nothing to process here
                 }
@@ -624,10 +621,11 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      * if a saved school was removed from favorites
      */
     @Override
-    protected void onResume() {
+    protected void onResume() { //TODO isn't clearing focus on the filter search on marshmellow
         super.onResume();
         if (mSearchView != null) {
             mSearchView.clearFocus();
+            // saved prefs for bottom bar selected item
         }
         if (isViewingSavedSchools) {
             findSavedSchools(mFavoriteMenuItem);

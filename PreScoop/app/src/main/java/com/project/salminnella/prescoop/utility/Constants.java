@@ -1,5 +1,7 @@
 package com.project.salminnella.prescoop.utility;
 
+import android.Manifest;
+
 /**
  * Created by anthony on 5/9/16.
  */
@@ -21,6 +23,8 @@ public final class Constants {
     public static final String SCHOOLS_WEBSITE_URL = "schoolUrl";
     public static final int WEB_REQUEST_CODE = 49;
 
+    public static final String LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
+    public static final int PERMISSION_REQUEST_CODE = 12345;
 
 
     //YelpAPIProvider yelpProvider;
