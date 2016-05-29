@@ -54,38 +54,45 @@ import java.util.HashMap;
 
 import static android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
+/**
+ * Application begins with the MainActivity.  Holds a recycler view populated from Firebase
+ * Contains a toolbar with search view for filtering the list on zip, neighborhood and price
+ * Also has a bottom bar for sorting this list by alphabetical, price rating, and viewing them
+ * in a map
+ */
+public class MainActivity extends AppCompatActivity implements OnRvItemClickListener {
 
-public class MainActivity extends AppCompatActivity implements OnRvItemClickListener{ //, DBCursorAdapter.OnItemClickListener
-    private static final String TAG = "MainActivity";
-
-    private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
-    private static final int PERMISSION_REQUEST_CODE = 12345;
     //TODO markers for maps can be turned into an object class
     //TODO use firebase UI for recycler view instead of the onchild overrides
     //TODO move the sort and search methods to Utilities
 
-    private ArrayList<PreSchool> mSchoolsList;
-    private Firebase mFirebasePreschoolRef;
+    private static final String LOCATION_PERMISSION = Manifest.permission.READ_CONTACTS;
+    private static final int PERMISSION_REQUEST_CODE = 12345;
+
+    private boolean isViewingSavedSchools;
     private PreSchool mPreschool;
-    private RecyclerView mRecyclerView;
-    private ListAdapter mRecycleAdapter;
-    private GridLayoutManager gridLayoutManager;
-    private BottomBar mBottomBar;
+    private ArrayList<PreSchool> mSchoolsList;
     private ArrayList<PreSchool> mBackupList;
-    private ProgressBar mProgressBar;
+    private ArrayList<PreSchool> mFilteredList;
     private DatabaseHelper dbHelper;
     private Cursor cursor;
-    private boolean isViewingSavedSchools;
-    private ArrayList<PreSchool> mFilteredList;
+    private Firebase mFirebasePreschoolRef;
+    private RecyclerView mRecyclerView;
+    private ListAdapter mRecycleAdapter;
+    private ProgressBar mProgressBar;
+    private BottomBar mBottomBar;
     private SwipeRefreshLayout mSwipeContainer;
+    private String mSearchQuery;
+    private Menu mMenu;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private MenuItem mFavoriteMenuItem;
-    private String mSearchQuery;
-    private Menu mMenu;
 
 
-
+    /**
+     * Setup the activity.
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,18 +112,27 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         initSwipeListener();
     }
 
+    /**
+     * initializes views for the activity
+     */
     private void initViews() {
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.rvSchools);
         mSwipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
     }
 
-
+    /**
+     * initialize and setup toolbar
+     */
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * initialize and setup bottom toolbar
+     * @param savedInstanceState - saves state on orientation change
+     */
     private void buildBottomBar(Bundle savedInstanceState) {
         mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.coordinator_Layout_main),
                 null, savedInstanceState);
@@ -136,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         });
 
         // Setting colors for different tabs when there's more than three of them.
-        // You can set colors for tabs in three different ways as shown below.
         mBottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
         mBottomBar.mapColorForTab(1, 0xFF5D4037);
         mBottomBar.mapColorForTab(2, "#7B1FA2");
@@ -144,6 +159,10 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
     }
 
+    /**
+     * handles click for each item in bottom toolbar
+     * @param menuItemId Integer - which menu item was pressed
+     */
     private void switchBottomBarTab(int menuItemId) {
         switch (menuItemId) {
             case R.id.abc_sort_bottom_bar:
@@ -161,21 +180,57 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
         }
     }
+    // region SortMethods
+    private void sortByPrice() {
+        Collections.sort(mSchoolsList, new PriceComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, R.string.price_sort, Toast.LENGTH_SHORT).show();
+    }
 
+    private void sortByRating() {
+        Collections.sort(mSchoolsList, new RatingComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, R.string.rating_sort, Toast.LENGTH_SHORT).show();
+    }
+
+    private void sortByName() {
+        Collections.sort(mSchoolsList, new NameComparator());
+        mRecycleAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(0);
+        Toast.makeText(MainActivity.this, R.string.abc_sort, Toast.LENGTH_SHORT).show();
+    }
+    // endregion SortMethods
+
+    /**
+     * restore the BottomBar's state, otherwise we would
+     * lose the current tab on orientation change.
+     * @param outState Bundle
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // restore the BottomBar's state, otherwise we would
-        // lose the current tab on orientation change.
         mBottomBar.onSaveInstanceState(outState);
     }
 
+    /**
+     * Initialize Firebase root and reference to its child
+     */
     private void initFirebase(){
         Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
         mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
     }
 
 
+    /**
+     * Performs the query to firebase, and receives all schools in the Facility root.
+     * Populates the mSchoolsList, and mBackupList.  mBackupList is used to restore
+     * the list after fitering searches, without the need to make another network
+     * call to Firebase.
+     *
+     * onDataChange runs after each child has been downloaded to remove the progress bar visibilty
+     */
     private void queryFirebase(){
         mSchoolsList = new ArrayList<>();
         mBackupList = new ArrayList<>();
@@ -217,11 +272,17 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         });
     }
 
+    /**
+     * Initialize and populate Recycler View with results from Firebase
+     * GridLayoutManager uses 1 colum for phones, 2 colums for tablets,
+     * and 3 colums for tablets in landscape mode.
+     */
     // region RecyclerView
     private void createRecycler() {
         mRecycleAdapter = new ListAdapter(mSchoolsList, this);
         mRecyclerView.setAdapter(mRecycleAdapter);
 
+        GridLayoutManager gridLayoutManager;
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
             gridLayoutManager = new GridLayoutManager(this, 1);
         } else if (getResources().getConfiguration().orientation == 1) {
@@ -234,6 +295,12 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         mRecyclerView.setHasFixedSize(true);
     }
 
+    /**
+     * Recycler View list item click method, to go to SchoolDetailsActivity
+     *
+     * @param preschool Preschool object sent to details activity to display all necessary info
+     *                  without an additional network call to Firebase
+     */
     @Override
     public void onListItemClick(PreSchool preschool) {
         Intent intentToDetails = new Intent(MainActivity.this, SchoolDetailsActivity.class);
@@ -247,6 +314,13 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         handleSearchFilterIntent(intent);
     }
 
+    /**
+     * Takes the query from the SearchView and passes the backup list
+     * to the filter method in Utilities. Passing the backup list so that
+     * subsequent filter searches are performed on the entire list, instead of
+     * the filter list that was returned.
+     * @param intent Intent
+     */
     private void handleSearchFilterIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
@@ -260,6 +334,12 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     }
     // endregion FilterSearch
 
+    /**
+     * Pull down to refresh list to the full set of Schools. Does not make an
+     * additional network call, just replaces the list with the backup list.
+     * Will clear the filtered list, collapse the SearchView in the toolbar,
+     * and resets the favorite icon.
+     */
     private void initSwipeListener() {
         // Setup refresh listener which triggers new data loading
         mSwipeContainer.setDistanceToTriggerSync(300);
@@ -284,39 +364,31 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                 android.R.color.holo_red_light);
     }
 
-    // region SortMethods
-    private void sortByPrice() {
-        Collections.sort(mSchoolsList, new PriceComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.price_sort, Toast.LENGTH_SHORT).show();
-    }
 
-    private void sortByRating() {
-        Collections.sort(mSchoolsList, new RatingComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.rating_sort, Toast.LENGTH_SHORT).show();
-    }
 
-    private void sortByName() {
-        Collections.sort(mSchoolsList, new NameComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.abc_sort, Toast.LENGTH_SHORT).show();
-    }
-    // endregion SortMethods
-
+    /**
+     * During initial loading of application and while receiving schools from Firebase
+     */
     private void showProgressBar() {
         if (mSchoolsList == null) {
             mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * Removes after the query to Firebase is finished, and all available schools are collected
+     */
     private void removeProgressBar() {
             mProgressBar.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * When the user wants to view their saved schools, this changes the adapter to the Cursor
+     * Adapter, and populates the list with those results.  When clicked again, it swaps the list
+     * with either the search results from the filter, or the backup list.
+     *
+     * @param item
+     */
     private void swapListContents(MenuItem item) {
         if (isViewingSavedSchools) {
             mRecyclerView.setAdapter(mRecycleAdapter);
