@@ -456,7 +456,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     }
 
     /**
-     * Listen for menu item selections
+     * Handle menu item selections
      * @param item MenuItem
      * @return Boolean
      */
