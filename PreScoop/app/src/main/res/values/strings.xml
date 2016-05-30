@@ -49,4 +49,6 @@
     <string name="contact_school_label_details">Contact School</string>
     <string name="implement_click_listener">must implement List Item Click Listener</string>
     <string name="not_available">N/A</string>
+    <string name="yelp_reviews_text">" Reviews"</string>
+    <string name="html_color_num_blue">#000099</string>
 </resources>
