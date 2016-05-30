@@ -11,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,21 +46,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SchoolDetailsActivity extends AppCompatActivity implements TabLayoutFragment.ListItemClickable {
-    private static final String TAG = "SchoolDetailsActivity";
-    private TextView mSchoolName;
-    private TextView mSchoolAddress;
-    private PreSchool mPreschool;
-    private TextView mYelpTitleText;
-    private TextView mYelpNumReviews;
-    private TextView mYelpSnippet;
-    private ImageView mYelpRating;
-    private ListView mYelpListView;
-    private ViewPager viewPager;
-    private YelpAdapter mYelpAdapter;
-    private boolean saveSchool;
-    private DatabaseHelper databaseHelper;
-    private Business mYelpSchoolMatch;
-    private FloatingActionButton mFab;
+
+    // region Member Variables
     private TextView mPhoneNumber;
     private TextView mFacilityNumber;
     private TextView mFacilityCapacity;
@@ -71,8 +57,22 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private TextView mSchoolPrice;
     private TextView mSchoolNeighborhood;
     private TextView mSchoolWebLink;
+    private TextView mSchoolName;
+    private TextView mSchoolAddress;
+    private TextView mYelpTitleText;
+    private TextView mYelpNumReviews;
+    private TextView mYelpSnippet;
+    private boolean saveSchool;
     private ImageView mSchoolRating;
-
+    private ImageView mYelpRating;
+    private ListView mYelpListView;
+    private YelpAdapter mYelpAdapter;
+    private Business mYelpSchoolMatch;
+    private PreSchool mPreschool;
+    private ViewPager viewPager;
+    private DatabaseHelper databaseHelper;
+    private FloatingActionButton mFab;
+    // endregion Member Variables
 
 
     @Override
@@ -84,17 +84,11 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         receiveIntent();
         initToolbar();
         initViews();
-        setFab();
         adjustFabIcon();
         populateSchoolDetails();
         callYelpProvider();
         initTabLayout();
         setClickListeners();
-    }
-
-
-    private void setFab() {
-
     }
 
     private void adjustFabIcon() {
@@ -194,19 +188,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         }
     }
 
-    private void removeFavoriteSchool() {
-        if (isBookmarkAlreadySaved()) {
-            databaseHelper.deleteSavedSchool(mPreschool.getName());
-        }
-    }
-
-    private void addFavoriteSchool() {
-        if (!isBookmarkAlreadySaved()) {
-            String reportsList = arrayListAsString(mPreschool);
-            databaseHelper.insertSavedSchool(mPreschool, reportsList);
-        }
-    }
-
     private void setYelpClickListener() {
         mYelpTitleText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +200,19 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     @Override
     public void listItemClicked(View view, String url) {
         startIntentToWebView(url, Constants.SCHOOL_REPORT_TITLE, mPreschool);
+    }
+
+    private void removeFavoriteSchool() {
+        if (isBookmarkAlreadySaved()) {
+            databaseHelper.deleteSavedSchool(mPreschool.getName());
+        }
+    }
+
+    private void addFavoriteSchool() {
+        if (!isBookmarkAlreadySaved()) {
+            String reportsList = arrayListAsString(mPreschool);
+            databaseHelper.insertSavedSchool(mPreschool, reportsList);
+        }
     }
 
     private void startIntentToWebView(String url, String title, PreSchool preschool) {
@@ -308,7 +302,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
             @Override
             public void onFailure(Call<SearchResponse> call, Throwable t) {
                 // HTTP error happened, do something to handle it.
-                Log.i(TAG, "on Yelp Failure: ");
             }
         };
 
@@ -323,7 +316,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         for (int i = 0; i < limit; i++) {
             int strContains = response.businesses().get(i).name().indexOf(mPreschool.getName());
             if (strContains != -1) {
-                Log.i(TAG, response.businesses().get(i).name() + " contains " + mPreschool.getName());
                 return response.businesses().get(i);
             }
         }
@@ -369,9 +361,8 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         if (preschool.getReports() != null) {
             Reports[] reportsArray = preschool.getReports();
             Gson gson = new Gson();
-            String inputString = gson.toJson(reportsArray);
 
-            return inputString;
+            return gson.toJson(reportsArray);
         } else {
             return null;
             //TODO check this return
@@ -379,25 +370,10 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     }
 
 
-
     private boolean isBookmarkAlreadySaved() {
         Cursor bookmarkCursor = databaseHelper.findSavedSchool(mPreschool.getName());
         return bookmarkCursor.getCount() != 0;
     }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (saveSchool) {
-//            if (!isBookmarkAlreadySaved()) {
-//                String reportsList = arrayListAsString(mPreschool);
-//                databaseHelper.insertSavedSchool(mPreschool, reportsList);
-//            }
-//        } else if (isBookmarkAlreadySaved()) {
-//            databaseHelper.deleteSavedSchool(mPreschool.getName());
-//        }
-//    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -409,9 +385,3 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         }
     }
 }
-
-
-
-
-
-
