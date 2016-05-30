@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by anthony on 5/24/16.
+ * Creating a generic splash screen on startup.
  */
 public class SplashActivity extends AppCompatActivity {
 

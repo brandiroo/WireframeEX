@@ -17,6 +17,7 @@ public final class Constants {
     public static final String SCHOOL_REPORT_TITLE = "School Report";
     public static final String WEB_URL_KEY = "webUrl";
     public static final String ARG_PAGE = "ARG_PAGE";
+
     public static final String YELP_CLICKED_ITEM_KEY = "yelpUrl";
     public static final String YELP_REVIEWS_TITLE = "Yelp Reviews";
     public static final String WEB_VIEW_TITLE_KEY = "yelpReviews";
@@ -32,8 +33,16 @@ public final class Constants {
     public static final String YELP_CONSUMER_SECRET = "XSD1VcfmQLSH5ZM_a3mzvRDr49E";
     public static final String YELP_TOKEN = "imPIqEPxV0hayvDlVLJzEZw2pYHbY6GY";
     public static final String YELP_TOKEN_SECRET = "vduvdOiuqUVxce3NIBpU8DZHDN8";
+    public static final String YELP_SEARCH_PARAM_TERMS = "term";
+    public static final String YELP_SEARCH_PARAM_LIMIT = "limit";
+    public static final String YELP_SEARCH_PARAM_CATEGORY = "category_filter";
+    public static final String YELP_SEARCH_PARAM_SORT = "sort";
+    public static final String YELP_SEARCH_PARAM_LOCATION = "San Francisco";
+    public static final String YELP_CATEGORY = "preschools";
+    public static final String YELP_SORT = "0";
     public static final String YELP_RESPONSE_LIMIT_STRING = "19";
     public static final int YELP_RESPONSE_LIMIT_INT = 19;
+
 
 
 

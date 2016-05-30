@@ -19,12 +19,11 @@ import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
 
 public class WebViewActivity extends AppCompatActivity {
-    private static final String TAG = "WebViewActivity";
     private WebView mWebview;
-    String mUrl;
-    String mTitle;
-    ProgressBar mProgressBar;
-    PreSchool mPreschoolHolder;
+    private String mUrl;
+    private String mTitle;
+    private ProgressBar mProgressBar;
+    private PreSchool mPreschoolHolder;
 
 
     @Override
@@ -93,11 +92,13 @@ public class WebViewActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     *  Handle action bar item clicks here.
+     * @param item MenuItem
+     * @return Boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);

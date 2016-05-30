@@ -176,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             case R.id.maps_bottom_bar:
                 checkPermissions();
                 break;
-
         }
     }
     // region SortMethods
@@ -387,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      *
      * @param item MenuItem
      */
-    private void swapListContents(MenuItem item) { //TODO refactor
+    private void swapListContents(MenuItem item) {
         if (isViewingSavedSchools) {
             mRecyclerView.setAdapter(mRecycleAdapter);
             if (mFilteredList != null && mFilteredList.size() > 0) {
