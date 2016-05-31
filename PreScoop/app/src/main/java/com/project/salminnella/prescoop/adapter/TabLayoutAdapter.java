@@ -1,6 +1,5 @@
 package com.project.salminnella.prescoop.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,18 +8,18 @@ import com.project.salminnella.prescoop.fragment.TabLayoutFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 
 /**
- * Created by anthony on 5/9/16.
+ * Fragment Tablayout Adapter. Uses an integer page count to generate the titles for each tab.
  */
 public class TabLayoutAdapter extends FragmentPagerAdapter {
-    private static final String TAG = "TabAdapter";
+    // region Member Variables
     final int PAGE_COUNT = 6;
     private String tabTitles[] = new String[] { "All Visits", "Citations", "Inspections", "Complaints", "Other Visits", "Reports" };
-    private Context context;
-    PreSchool preSchool;
+    private PreSchool preSchool;
+    // endregion Member Variables
 
-    public TabLayoutAdapter(FragmentManager fm, Context context, PreSchool preschool) {
+    // constructor
+    public TabLayoutAdapter(FragmentManager fm, PreSchool preschool) {
         super(fm);
-        this.context = context;
         this.preSchool = preschool;
     }
 
@@ -31,7 +30,6 @@ public class TabLayoutAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         return TabLayoutFragment.newInstance(position + 1, preSchool);
     }
 

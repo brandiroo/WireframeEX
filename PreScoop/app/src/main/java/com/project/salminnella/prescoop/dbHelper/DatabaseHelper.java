@@ -18,9 +18,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "PRESCOOP";
 
-    Cursor cursor;
-    SQLiteDatabase dbWrite = getWritableDatabase();
-    SQLiteDatabase dbRead = getReadableDatabase();
+    private Cursor cursor;
+    private SQLiteDatabase dbWrite = getWritableDatabase();
+    private SQLiteDatabase dbRead = getReadableDatabase();
 
     // makes sure there is only one instance of the database
     // if there isn't one, make it, otherwise return the one instance
@@ -80,9 +80,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_LICENSE_STATUS = "licenseStatus";
     public static final String COL_LICENSE_DATE = "licenseDate";
 
+    // SQL Statment constants
+
+
 
     // builds all columns in one array for queries later on
-    public static final String[] COLUMNS = {COL_ID, COL_NAME, COL_STREET_ADDRESS, COL_CITY, COL_STATE, COL_ZIPCODE, COL_REGION,
+    private static final String[] COLUMNS = {COL_ID, COL_NAME, COL_STREET_ADDRESS, COL_CITY, COL_STATE, COL_ZIPCODE, COL_REGION,
             COL_PHONE_NUM, COL_FACILITY_NUM, COL_CAPACITY, COL_PRICE, COL_TYPE, COL_WEBSITE_URL, COL_IMAGE_URL, COL_RANGE,
             COL_SCHOOL_DESCRIPTION, COL_RATING, COL_FAVORITE, COL_NUM_VISITS, COL_VISIT_DATES, COL_CITATION_TYPE_A,
             COL_CITATION_TYPE_B, COL_INSPECT_NUM, COL_INSPECT_DATES, COL_INSPECT_TYPE_A, COL_INSPECT_TYPE_B,
@@ -92,7 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_LATITUDE, COL_LONGITUDE, COL_LICENSE_STATUS, COL_LICENSE_DATE};
 
     // the actual sql statement to create the table
-    public static final String CREATE_PRESCHOOLS_TABLE = "CREATE TABLE IF NOT EXISTS " + PRESCHOOL_TABLE_NAME +
+    private static final String CREATE_PRESCHOOLS_TABLE = "CREATE TABLE IF NOT EXISTS " + PRESCHOOL_TABLE_NAME +
             " (" +
             COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
             COL_NAME + " TEXT, " +
@@ -139,7 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_LICENSE_DATE + " TEXT );";
 
     // database constructor
-    public DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

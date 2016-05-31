@@ -16,15 +16,12 @@ import com.project.salminnella.prescoop.model.PreSchool;
  *
  */
 public class ListViewHolder extends RecyclerView.ViewHolder {
-    // Your holder should contain a member variable
-    // for any view that will be set as you render a row
     public TextView schoolNameTextView;
     public ImageView schoolImageView;
     public TextView schoolPriceTextView;
     public ImageView schoolRatingImageView;
 
-    // Constructor that accepts the entire item row
-    // and does the view lookups to find each subview
+    // Constructor that accepts the entire item row and does the view lookups to find each subview
     public ListViewHolder(View itemView) {
         // Stores the itemView in a public final member variable that can be used
         // to access the context from any CursorViewHolder instance.

@@ -53,4 +53,5 @@
     <string name="html_color_num_blue">#000099</string>
     <string name="money_sign">$</string>
     <string name="per_month">" /mo"</string>
+    <string name="reviews">" Reviews"</string>
 </resources>

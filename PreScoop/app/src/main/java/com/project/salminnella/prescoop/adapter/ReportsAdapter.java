@@ -13,6 +13,8 @@ import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.Reports;
 
 /**
+ * The last fragment for the TabLayout in SchoolDetailsActivity, there is a list of inspection
+ * reports for the school.  This is the adapter that fills that list.
  * Created by anthony on 5/20/16.
  */
 public class ReportsAdapter extends ArrayAdapter<Reports> {
