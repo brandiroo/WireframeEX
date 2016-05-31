@@ -71,7 +71,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private TextView mYelpTitleText;
     private TextView mYelpNumReviews;
     private TextView mYelpSnippet;
-    private boolean saveSchool;
     private ImageView mSchoolRating;
     private ImageView mYelpRating;
     private ListView mYelpListView;
@@ -81,6 +80,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private ViewPager mViewPager;
     private DatabaseHelper databaseHelper;
     private FloatingActionButton mFab;
+    private boolean saveSchool;
     // endregion Member Variables
 
 
@@ -92,7 +92,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_details);
-
         databaseHelper = DatabaseHelper.getInstance(SchoolDetailsActivity.this);
         receiveIntent();
         setupToolbar();

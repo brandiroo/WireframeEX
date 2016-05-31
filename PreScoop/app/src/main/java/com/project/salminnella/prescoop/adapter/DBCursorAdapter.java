@@ -17,17 +17,16 @@ import com.project.salminnella.prescoop.utility.Utilities;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by anthony on 5/15/16.
+ * Used to fill recycler view with data received from the SQLite database in a cursor.
+ * The ViewHolder wraps the cursor adapter in order to fill the recycler view
  */
 public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implements View.OnClickListener{
 
-    // Because RecyclerView.Adapter in its current form doesn't natively
-    // support cursors, we wrap a Cursor Adapter that will do all the job
-    // for us.
-    private static final String TAG = "DBCursorAdapter";
-    CursorAdapter mCursorAdapter;
-    Context mContext;
-    OnRvItemClickListener onRvClickListener;
+    // region Member Variables
+    private CursorAdapter mCursorAdapter;
+    private Context mContext;
+    private OnRvItemClickListener onRvClickListener;
+    // endregion Member Variables
 
     public DBCursorAdapter(Context context, Cursor c, OnRvItemClickListener listener) {
 
@@ -62,12 +61,7 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
             }
         };
     }
-
-    public void setOnItemClickListener(final OnRvItemClickListener onRvItemClickListener)
-    {
-        this.onRvClickListener = onRvItemClickListener;
-    }
-
+    
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Passing the inflater job to the cursor-adapter
@@ -82,11 +76,21 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
         // Passing the binding operation to cursor loader
         mCursorAdapter.getCursor().moveToPosition(position);
         mCursorAdapter.bindView(holder.itemView, mContext, mCursorAdapter.getCursor());
-
-
     }
+
     /**
-     * View.OnClickListener
+     * Captures the list item click from the Recycler View
+     * @param onRvItemClickListener OnRvItemClickListener
+     */
+    public void setOnItemClickListener(final OnRvItemClickListener onRvItemClickListener)
+    {
+        this.onRvClickListener = onRvItemClickListener;
+    }
+
+    /**
+     * Captures the list item click from the Recycler View.
+     * Builds the preschool object from cursor data, to send to SchoolDetailsActivity
+     * @param view View
      */
     @Override
     public void onClick(final View view)
@@ -104,10 +108,12 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
         }
     }
 
+    /**
+     * Returns number of item in the list
+     * @return int
+     */
     @Override
     public int getItemCount() {
         return mCursorAdapter.getCount();
     }
-
-
 }
