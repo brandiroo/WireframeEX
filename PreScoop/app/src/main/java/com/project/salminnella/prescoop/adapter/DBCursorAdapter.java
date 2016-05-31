@@ -28,6 +28,7 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
     private OnRvItemClickListener onRvClickListener;
     // endregion Member Variables
 
+    //constructor creates the cursor adapter, and listener for item click in recycler view
     public DBCursorAdapter(Context context, Cursor c, OnRvItemClickListener listener) {
 
         mContext = context;
@@ -49,7 +50,7 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
 
 
                 schoolNameTextView.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME)));
-                String price = "$" + cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_PRICE)) + " /mo";
+                String price = context.getString(R.string.money_sign) + cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_PRICE)) + context.getString(R.string.per_month);
                 schoolPriceTextView.setText(price);
                 schoolRatingImageView.setImageResource(Utilities.getRatingImage(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_RATING))));
                 String url = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_IMAGE_URL));
@@ -61,7 +62,13 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
             }
         };
     }
-    
+
+    /**
+     * Creates a new ViewHolder, and initialize on click listener
+     * @param parent ViewGroup
+     * @param viewType int
+     * @return ListViewHolder
+     */
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Passing the inflater job to the cursor-adapter
@@ -71,6 +78,11 @@ public class DBCursorAdapter extends RecyclerView.Adapter<ListViewHolder> implem
         return new ListViewHolder(v);
     }
 
+    /**
+     * Uses the cursor adapter bindView to bind to the ListViewHolder group
+     * @param holder ListViewHolder
+     * @param position int
+     */
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
         // Passing the binding operation to cursor loader

@@ -51,4 +51,6 @@
     <string name="not_available">N/A</string>
     <string name="yelp_reviews_text">" Reviews"</string>
     <string name="html_color_num_blue">#000099</string>
+    <string name="money_sign">$</string>
+    <string name="per_month">" /mo"</string>
 </resources>
