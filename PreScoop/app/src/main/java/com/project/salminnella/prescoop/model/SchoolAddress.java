@@ -1,12 +1,13 @@
 package com.project.salminnella.prescoop.model;
 
 /**
- * Created by anthony on 5/11/16.
+ * To help reduce the number of fields in the PreSchool constructor, this class models fields related
+ * to the school address.
  */
-public class SchoolLocation {
+public class SchoolAddress {
     String name, streetAddress, city, state, zipCode, region;
 
-    public SchoolLocation(String name, String streetAddress, String city, String state, String zipCode, String region) {
+    public SchoolAddress(String name, String streetAddress, String city, String state, String zipCode, String region) {
         this.name = name;
         this.streetAddress = streetAddress;
         this.city = city;
@@ -27,32 +28,16 @@ public class SchoolLocation {
         return streetAddress;
     }
 
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
-    }
-
     public String getCity() {
         return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public String getState() {
         return state;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
     public String getZipCode() {
         return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
     }
 
     public String getRegion() {

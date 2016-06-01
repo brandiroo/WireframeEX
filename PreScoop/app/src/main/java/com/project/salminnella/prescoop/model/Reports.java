@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 
 /**
- * Created by anthony on 5/17/16.
+ * To help reduce the number of fields in the PreSchool constructor, this class models fields related
+ * to the school reports.  It is a nested object within each school in Firebase.
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,17 +15,8 @@ public class Reports implements Serializable {
     private String mReportUrl;
     private String mTitle;
 
-//    private SchoolsKey schools;
-//
-//    public Reports(String mDate, String mReportUrl, String mTitle, SchoolsKey schoolsKey) {
-//        this.mDate = mDate;
-//        this.mReportUrl = mReportUrl;
-//        this.mTitle = mTitle;
-//        this.schools = schoolsKey;
-//    }
-
+    // empty constructor for firebase
     public Reports() {
-
     }
 
     public Reports(String mDate, String mReportUrl, String mTitle) {
@@ -37,31 +29,11 @@ public class Reports implements Serializable {
         return mDate;
     }
 
-    public void setmDate(String mDate) {
-        this.mDate = mDate;
-    }
-
     public String getmReportUrl() {
         return mReportUrl;
-    }
-
-    public void setmReportUrl(String mReportUrl) {
-        this.mReportUrl = mReportUrl;
     }
 
     public String getmTitle() {
         return mTitle;
     }
-
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
-//    public SchoolsKey getSchools() {
-//        return schools;
-//    }
-//
-//    public void setSchools(SchoolsKey schools) {
-//        this.schools = schools;
-//    }
 }
