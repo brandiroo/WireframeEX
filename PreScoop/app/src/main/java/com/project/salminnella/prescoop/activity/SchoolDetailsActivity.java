@@ -195,7 +195,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Business clickedYelpBusiness = (Business) mYelpListView.getItemAtPosition(position);
-                startIntentToWebView(clickedYelpBusiness.mobileUrl(), Constants.YELP_REVIEWS_TITLE, mPreschool);
+                startIntentToWebView(clickedYelpBusiness.mobileUrl(), Constants.YELP_WEBVIEW_TITLE, mPreschool);
             }
         });
 
@@ -228,7 +228,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         mYelpTitleText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIntentToWebView(mYelpSchoolMatch.mobileUrl(), Constants.YELP_REVIEWS_TITLE, mPreschool);
+                startIntentToWebView(mYelpSchoolMatch.mobileUrl(), Constants.YELP_WEBVIEW_TITLE, mPreschool);
             }
         });
     }
@@ -304,7 +304,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     private void startIntentToWebView(String url, String title, PreSchool preschool) {
         Intent intentToWebView = new Intent(SchoolDetailsActivity.this, WebViewActivity.class);
         intentToWebView.putExtra(Constants.WEB_URL_KEY, url); // weburl
-        intentToWebView.putExtra(Constants.WEB_VIEW_TITLE_KEY, title); // review title
+        intentToWebView.putExtra(Constants.YELP_WEBVIEW_TITLE_KEY, title); // review title
         intentToWebView.putExtra(Constants.SCHOOL_OBJECT_KEY, preschool); // preschool object
         startActivityForResult(intentToWebView, Constants.WEB_REQUEST_CODE);
 
@@ -431,8 +431,7 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
      */
     private void initTabLayout() {
         // Set PagerAdapter so that it can display items
-        mViewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(),
-                SchoolDetailsActivity.this, mPreschool));
+        mViewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager(), mPreschool));
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);

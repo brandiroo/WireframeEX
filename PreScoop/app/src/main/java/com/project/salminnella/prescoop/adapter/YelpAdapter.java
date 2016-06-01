@@ -15,11 +15,11 @@ import com.yelp.clientlib.entities.Business;
 import java.util.List;
 
 /**
- * Created by anthony on 5/9/16.
+ * The yelp reviews section holds a list of related search results to the curently viewed school
+ * This list is populated when there are no exact matches for the school in the response from yelp.
  */
 public class YelpAdapter extends ArrayAdapter<Business> {
-    private static final String TAG = "YelpAdapter";
-    List<Business> mData;
+    private List<Business> mData;
     private Context context;
 
     public YelpAdapter(Context context, List<Business> objects) {
@@ -29,8 +29,8 @@ public class YelpAdapter extends ArrayAdapter<Business> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         View rowItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.yelp_list_items, parent, false);
+
         TextView yelpTitle = (TextView) rowItem.findViewById(R.id.yelp_list_title);
         TextView yelpNumReviews = (TextView) rowItem.findViewById(R.id.yelp_list_num_reviews);
         TextView yelpReviewSnippet = (TextView) rowItem.findViewById(R.id.yelp_list_snippet);
@@ -38,6 +38,7 @@ public class YelpAdapter extends ArrayAdapter<Business> {
         ImageView yelpImage = (ImageView) rowItem.findViewById(R.id.yelp_list_image);
 
         Business business = mData.get(position);
+
         yelpTitle.setText(business.name());
         String reviewText = String.valueOf(business.reviewCount()) + " Reviews";
         yelpNumReviews.setText(reviewText);
@@ -47,5 +48,4 @@ public class YelpAdapter extends ArrayAdapter<Business> {
 
         return rowItem;
     }
-
 }

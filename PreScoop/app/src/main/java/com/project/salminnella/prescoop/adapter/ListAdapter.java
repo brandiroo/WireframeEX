@@ -15,12 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by anthony on 5/2/16.
+ * Adapter to bind to recycler view list
  */
 public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
+
+    // region Member Variables
     private Context context;
     private List<PreSchool> mSchools;
     private OnRvItemClickListener listener;
+    // endregion Member Variables
 
     // constructor
     public ListAdapter(List<PreSchool> mSchools, OnRvItemClickListener listener) {
@@ -52,18 +55,21 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         schoolNameTextView.setText(preSchool.getName());
         holder.schoolRatingImageView.setImageResource(getRatingImage(preSchool.getRating()));
 
+        // checks the school price, the $999 value is default right now for an unknown price per month
         if (preSchool.getPrice() == 999) {
             schoolPriceTextView.setText(R.string.contact_school_price_label);
         } else {
-            String price = "$" + preSchool.getPrice() + " /mo";
+            String price = context.getString(R.string.money_sign) + preSchool.getPrice() + context.getString(R.string.per_month);
             schoolPriceTextView.setText(price);
         }
 
+        // checks if there is no image for the school, displays a default image if not.
         if (preSchool.getImageUrl().matches("")) {
             Picasso.with(context).load(R.drawable.no_image).into(holder.schoolImageView);
         } else {
             Picasso.with(context).load(preSchool.getImageUrl()).into(holder.schoolImageView);
         }
+
         holder.bind(mSchools.get(position), listener);
     }
 
@@ -72,12 +78,23 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         return mSchools.size();
     }
 
+
+    /**
+     * Changes the list set in the RecyclerView list. Helps manager the full list, the favorites list
+     * and the search filter results.
+     * @param schools ArrayList of PreSchool objects
+     */
     public void swap(ArrayList<PreSchool> schools){
         mSchools.clear();
         mSchools.addAll(schools);
         notifyDataSetChanged();
     }
 
+    /**
+     * Retrieves the matching image for the school rating on a range of 1-5
+     * @param rating int
+     * @return int -- drawable image id
+     */
     private int getRatingImage(int rating){
         switch(rating){
             case 1:

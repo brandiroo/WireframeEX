@@ -3,10 +3,11 @@ package com.project.salminnella.prescoop.utility;
 import android.Manifest;
 
 /**
- * Created by anthony on 5/9/16.
+ * Home for all application constants. The database helper class however, has its own constants
  */
 public final class Constants {
 
+    // region Application Constants
     public static final String ADDRESS_LIST_KEY = "addressList";
     public static final String SCHOOL_OBJECT_KEY = "schoolTitle";
     public static final String FIREBASE_ROOT_URL = "https://prescoop.firebaseio.com/";
@@ -17,18 +18,12 @@ public final class Constants {
     public static final String SCHOOL_REPORT_TITLE = "School Report";
     public static final String WEB_URL_KEY = "webUrl";
     public static final String ARG_PAGE = "ARG_PAGE";
-
-    public static final String YELP_CLICKED_ITEM_KEY = "yelpUrl";
-    public static final String YELP_REVIEWS_TITLE = "Yelp Reviews";
-    public static final String WEB_VIEW_TITLE_KEY = "yelpReviews";
-    public static final String SCHOOLS_WEBSITE_URL = "schoolUrl";
-    public static final int WEB_REQUEST_CODE = 49;
-
     public static final String LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final int PERMISSION_REQUEST_CODE = 12345;
+    public static final int WEB_REQUEST_CODE = 49;
+    // endregion Application Constants
 
-
-    //YelpAPIProvider yelpProvider;
+    // region Yelp Constants
     public static final String YELP_CONSUMER_KEY = "qjt368tSTOpOje3NIbdfyg";
     public static final String YELP_CONSUMER_SECRET = "XSD1VcfmQLSH5ZM_a3mzvRDr49E";
     public static final String YELP_TOKEN = "imPIqEPxV0hayvDlVLJzEZw2pYHbY6GY";
@@ -41,9 +36,8 @@ public final class Constants {
     public static final String YELP_CATEGORY = "preschools";
     public static final String YELP_SORT = "0";
     public static final String YELP_RESPONSE_LIMIT_STRING = "19";
+    public static final String YELP_WEBVIEW_TITLE = "Yelp Reviews";
+    public static final String YELP_WEBVIEW_TITLE_KEY = "yelpReviews";
     public static final int YELP_RESPONSE_LIMIT_INT = 19;
-
-
-
-
+    // endregion Yelp Constants
 }

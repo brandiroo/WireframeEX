@@ -11,21 +11,16 @@ import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
 
 /**
- * Provide a reference to the views for each data item
- * Complex data items may need more than one view per item, and
- * you provide access to all the views for a data item in a view holder
- *
+ * Provide a reference to the views for each data item.  Since i'm currently using 2 adapters for the
+ * RecyclerView, i moved this view holder class out so that both adapters can use it.
  */
 public class ListViewHolder extends RecyclerView.ViewHolder {
-    // Your holder should contain a member variable
-    // for any view that will be set as you render a row
     public TextView schoolNameTextView;
     public ImageView schoolImageView;
     public TextView schoolPriceTextView;
     public ImageView schoolRatingImageView;
 
-    // We also create a constructor that accepts the entire item row
-    // and does the view lookups to find each subview
+    // Constructor that accepts the entire item row and does the view lookups to find each subview
     public ListViewHolder(View itemView) {
         // Stores the itemView in a public final member variable that can be used
         // to access the context from any CursorViewHolder instance.
@@ -34,9 +29,9 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         schoolPriceTextView = (TextView) itemView.findViewById(R.id.school_price_items);
         schoolImageView = (ImageView) itemView.findViewById(R.id.school_image_items);
         schoolRatingImageView = (ImageView) itemView.findViewById(R.id.school_rating_items);
-
     }
 
+    // Binds the item click listener for the Recycler View.
     public void bind(final PreSchool preschool, final OnRvItemClickListener listener){
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

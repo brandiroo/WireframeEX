@@ -3,7 +3,8 @@ package com.project.salminnella.prescoop.adapter;
 import com.project.salminnella.prescoop.model.PreSchool;
 
 /**
- * Created by anthony on 5/19/16.
+ * Interface method for list item click in the Recycler View. Captures the selected PreSchool
+ * object.
  */
 public interface OnRvItemClickListener {
     void onListItemClick(PreSchool preschool);

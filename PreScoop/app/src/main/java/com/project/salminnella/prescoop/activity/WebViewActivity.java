@@ -72,7 +72,7 @@ public class WebViewActivity extends AppCompatActivity {
         Intent receiveIntent = getIntent();
         mUrl = receiveIntent.getStringExtra(Constants.WEB_URL_KEY);
         mPreschoolHolder = (PreSchool) receiveIntent.getSerializableExtra(Constants.SCHOOL_OBJECT_KEY);
-        mTitle = receiveIntent.getStringExtra(Constants.WEB_VIEW_TITLE_KEY);
+        mTitle = receiveIntent.getStringExtra(Constants.YELP_WEBVIEW_TITLE_KEY);
     }
 
     /**

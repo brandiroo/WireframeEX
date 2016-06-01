@@ -11,16 +11,27 @@ import com.project.salminnella.prescoop.model.PreSchool;
 /**
  *  The database Builder, and search helper. Creates The Prescoop Database
  *  and preschools table, and all its columns.
- *
  *  Also performs the search queries and returns either a cursor or PreSchool object
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+    // region Constants
     private static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "PRESCOOP";
-
-    Cursor cursor;
-    SQLiteDatabase dbWrite = getWritableDatabase();
-    SQLiteDatabase dbRead = getReadableDatabase();
+    private static final String DATABASE_NAME = "PRESCOOP";
+    private static final String SQL_CREAT_TABLE = "CREATE TABLE IF NOT EXISTS ";
+    private static final String SQL_PRIMARY_KEY = " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ";
+    private static final String SQL_OPEN_PARANETHESIS = " (";
+    private static final String SQL_TEXT_FIELD = " TEXT, ";
+    private static final String SQL_TEXT_FIELD_CLOSE = " TEXT );";
+    private static final String SQL_DROP_TABLE = "DROP TABLE IF EXISTS ";
+    private static final String SQL_PLACEHOLDER_AND = " = ? AND ";
+    private static final String SQL_EQUALS_ONE = "1";
+    private static final String EQUALS_TRUE = " = 1";
+    // endregion Constants
+    // region Member Variables
+    private Cursor cursor;
+    private SQLiteDatabase dbWrite = getWritableDatabase();
+    private SQLiteDatabase dbRead = getReadableDatabase();
+    // endregion Member Variables
 
     // makes sure there is only one instance of the database
     // if there isn't one, make it, otherwise return the one instance
@@ -30,8 +41,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (instance == null) {
             instance = new DatabaseHelper(context);
         }
-
         return instance;
+    }
+
+    // database constructor
+    private DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     // table and columns
@@ -80,9 +95,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_LICENSE_STATUS = "licenseStatus";
     public static final String COL_LICENSE_DATE = "licenseDate";
 
-
-    // builds all columns in one array for queries later on
-    public static final String[] COLUMNS = {COL_ID, COL_NAME, COL_STREET_ADDRESS, COL_CITY, COL_STATE, COL_ZIPCODE, COL_REGION,
+    // builds all columns in one array
+    private static final String[] COLUMNS = {COL_ID, COL_NAME, COL_STREET_ADDRESS, COL_CITY, COL_STATE, COL_ZIPCODE, COL_REGION,
             COL_PHONE_NUM, COL_FACILITY_NUM, COL_CAPACITY, COL_PRICE, COL_TYPE, COL_WEBSITE_URL, COL_IMAGE_URL, COL_RANGE,
             COL_SCHOOL_DESCRIPTION, COL_RATING, COL_FAVORITE, COL_NUM_VISITS, COL_VISIT_DATES, COL_CITATION_TYPE_A,
             COL_CITATION_TYPE_B, COL_INSPECT_NUM, COL_INSPECT_DATES, COL_INSPECT_TYPE_A, COL_INSPECT_TYPE_B,
@@ -92,68 +106,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_LATITUDE, COL_LONGITUDE, COL_LICENSE_STATUS, COL_LICENSE_DATE};
 
     // the actual sql statement to create the table
-    public static final String CREATE_PRESCHOOLS_TABLE = "CREATE TABLE IF NOT EXISTS " + PRESCHOOL_TABLE_NAME +
-            " (" +
-            COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-            COL_NAME + " TEXT, " +
-            COL_STREET_ADDRESS + " TEXT, " +
-            COL_CITY + " TEXT, " +
-            COL_STATE + " TEXT, " +
-            COL_ZIPCODE + " TEXT, " +
-            COL_REGION + " TEXT, " +
-            COL_PHONE_NUM + " TEXT, " +
-            COL_FACILITY_NUM + " TEXT, " +
-            COL_CAPACITY + " TEXT, " +
-            COL_PRICE + " TEXT, " +
-            COL_TYPE + " TEXT, " +
-            COL_WEBSITE_URL + " TEXT, " +
-            COL_IMAGE_URL + " TEXT, " +
-            COL_RANGE + " TEXT, " +
-            COL_SCHOOL_DESCRIPTION + " TEXT, " +
-            COL_RATING + " TEXT, " +
-            COL_FAVORITE + " TEXT, " +
-            COL_NUM_VISITS + " TEXT, " +
-            COL_VISIT_DATES + " TEXT, " +
-            COL_CITATION_TYPE_A + " TEXT, " +
-            COL_CITATION_TYPE_B + " TEXT, " +
-            COL_INSPECT_NUM + " TEXT, " +
-            COL_INSPECT_DATES + " TEXT, " +
-            COL_INSPECT_TYPE_A + " TEXT, " +
-            COL_INSPECT_TYPE_B + " TEXT, " +
-            COL_COMPLAINT_TOTAL + " TEXT, " +
-            COL_COMPLAINT_ALLEG_SUB + " TEXT, " +
-            COL_COMPLAINT_ALLEG_INCON + " TEXT, " +
-            COL_TOTAL_COMPLAINT_TYPE_A_CITATION + " TEXT, " +
-            COL_TOTAL_COMPLAINT_TYPE_B_CITATION + " TEXT, " +
-            COL_TOTAL_COMPLAINT_VISITS + " TEXT, " +
-            COL_COMPLAINT_DETAILS + " TEXT, " +
-            COL_OTHER_VISITS + " TEXT, " +
-            COL_OTHER_VISIT_DATES + " TEXT, " +
-            COL_VISIT_TYPE_A_CITATION + " TEXT, " +
-            COL_VISIT_TYPE_B_CITATION + " TEXT, " +
-            COL_REPORTS_LIST + " TEXT, " +
-            COL_TOTAL_REPORTS + " TEXT, " +
-            COL_LATITUDE + " TEXT, " +
-            COL_LONGITUDE + " TEXT, " +
-            COL_LICENSE_STATUS + " TEXT, " +
-            COL_LICENSE_DATE + " TEXT );";
+    private static final String CREATE_PRESCHOOLS_TABLE = SQL_CREAT_TABLE + PRESCHOOL_TABLE_NAME +
+            SQL_OPEN_PARANETHESIS +
+            COL_ID + SQL_PRIMARY_KEY +
+            COL_NAME + SQL_TEXT_FIELD +
+            COL_STREET_ADDRESS + SQL_TEXT_FIELD +
+            COL_CITY + SQL_TEXT_FIELD +
+            COL_STATE + SQL_TEXT_FIELD +
+            COL_ZIPCODE + SQL_TEXT_FIELD +
+            COL_REGION + SQL_TEXT_FIELD +
+            COL_PHONE_NUM + SQL_TEXT_FIELD +
+            COL_FACILITY_NUM + SQL_TEXT_FIELD +
+            COL_CAPACITY + SQL_TEXT_FIELD +
+            COL_PRICE + SQL_TEXT_FIELD +
+            COL_TYPE + SQL_TEXT_FIELD +
+            COL_WEBSITE_URL + SQL_TEXT_FIELD +
+            COL_IMAGE_URL + SQL_TEXT_FIELD +
+            COL_RANGE + SQL_TEXT_FIELD +
+            COL_SCHOOL_DESCRIPTION + SQL_TEXT_FIELD +
+            COL_RATING + SQL_TEXT_FIELD +
+            COL_FAVORITE + SQL_TEXT_FIELD +
+            COL_NUM_VISITS + SQL_TEXT_FIELD +
+            COL_VISIT_DATES + SQL_TEXT_FIELD +
+            COL_CITATION_TYPE_A + SQL_TEXT_FIELD +
+            COL_CITATION_TYPE_B + SQL_TEXT_FIELD +
+            COL_INSPECT_NUM + SQL_TEXT_FIELD +
+            COL_INSPECT_DATES + SQL_TEXT_FIELD +
+            COL_INSPECT_TYPE_A + SQL_TEXT_FIELD +
+            COL_INSPECT_TYPE_B + SQL_TEXT_FIELD +
+            COL_COMPLAINT_TOTAL + SQL_TEXT_FIELD +
+            COL_COMPLAINT_ALLEG_SUB + SQL_TEXT_FIELD +
+            COL_COMPLAINT_ALLEG_INCON + SQL_TEXT_FIELD +
+            COL_TOTAL_COMPLAINT_TYPE_A_CITATION + SQL_TEXT_FIELD +
+            COL_TOTAL_COMPLAINT_TYPE_B_CITATION + SQL_TEXT_FIELD +
+            COL_TOTAL_COMPLAINT_VISITS + SQL_TEXT_FIELD +
+            COL_COMPLAINT_DETAILS + SQL_TEXT_FIELD +
+            COL_OTHER_VISITS + SQL_TEXT_FIELD +
+            COL_OTHER_VISIT_DATES + SQL_TEXT_FIELD +
+            COL_VISIT_TYPE_A_CITATION + SQL_TEXT_FIELD +
+            COL_VISIT_TYPE_B_CITATION + SQL_TEXT_FIELD +
+            COL_REPORTS_LIST + SQL_TEXT_FIELD +
+            COL_TOTAL_REPORTS + SQL_TEXT_FIELD +
+            COL_LATITUDE + SQL_TEXT_FIELD +
+            COL_LONGITUDE + SQL_TEXT_FIELD +
+            COL_LICENSE_STATUS + SQL_TEXT_FIELD +
+            COL_LICENSE_DATE + SQL_TEXT_FIELD_CLOSE;
 
-    // database constructor
-    public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
 
+    /**
+     * Create Database
+     * @param db SQLiteDatabase
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_PRESCHOOLS_TABLE);
     }
 
+    /**
+     * If database version is newer, drop table and create a new one.
+     * @param db SQLiteDatabase
+     * @param oldVersion int
+     * @param newVersion int
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + PRESCHOOL_TABLE_NAME);
+        db.execSQL(SQL_DROP_TABLE + PRESCHOOL_TABLE_NAME);
         this.onCreate(db);
     }
 
+    /**
+     * Saves the PreSchool object to the database.  Stores a 1 in the Favorites column, and a GSON
+     * generated string to represent an array list.
+     * @param school PreSchool
+     * @param reportsList String
+     */
     public void insertSavedSchool(PreSchool school, String reportsList) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -174,7 +200,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_RANGE, school.getRange());
         values.put(COL_SCHOOL_DESCRIPTION, school.getSchoolDescription());
         values.put(COL_RATING, school.getRating());
-        values.put(COL_FAVORITE, "1");
+        values.put(COL_FAVORITE, SQL_EQUALS_ONE);
         values.put(COL_NUM_VISITS, school.getNumVisits());
         values.put(COL_VISIT_DATES, school.getVisitDates());
         values.put(COL_CITATION_TYPE_A, school.getCitationTypeA());
@@ -204,9 +230,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(PRESCHOOL_TABLE_NAME, null, values);
     }
 
+    /**
+     * Performs a find on the school name, and the favorites column for a value of 1.
+     * Used to check if a school has already been saved as a favorite.
+     * @param schoolName String
+     * @return Cursor
+     */
     public Cursor findSavedSchool(String schoolName) {
         cursor = dbRead.query(PRESCHOOL_TABLE_NAME, COLUMNS,
-                COL_NAME + " = ? AND " + COL_FAVORITE + " = 1",
+                COL_NAME + SQL_PLACEHOLDER_AND + COL_FAVORITE + EQUALS_TRUE,
                 new String[]{schoolName},
                 null,
                 null,
@@ -219,15 +251,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    /**
+     * Deletes the school from the database, that matches the schoolName and favorites column
+     * @param schoolName String
+     */
     public void deleteSavedSchool(String schoolName) {
         dbWrite.delete(PRESCHOOL_TABLE_NAME,
-                COL_NAME + " = ? AND " + COL_FAVORITE + " = 1",
+                COL_NAME + SQL_PLACEHOLDER_AND + COL_FAVORITE + EQUALS_TRUE,
                 new String[]{schoolName});
     }
 
+    /**
+     * Retrieves all saved schools from the database. Performs a find on the school name, and the
+     * favorites column of a value of 1.
+     * @return Cursor
+     */
     public Cursor findAllSavedSchools() {
         cursor = dbRead.query(PRESCHOOL_TABLE_NAME, COLUMNS,
-                COL_FAVORITE + " = 1",
+                COL_FAVORITE + EQUALS_TRUE,
                 null,
                 null,
                 null,
