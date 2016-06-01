@@ -1,16 +1,21 @@
 package com.project.salminnella.prescoop.utility;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.project.salminnella.prescoop.R;
+import com.project.salminnella.prescoop.adapter.ListAdapter;
 import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.model.Reports;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,8 +32,7 @@ public final class Utilities {
      * @return String format of the complete school address
      */
     public static String buildAddressString(String streetAddress, String city, String state, String zipcode) {
-        String strAddress = streetAddress + ", " + city + ", " + state + " " + zipcode;
-        return strAddress;
+        return streetAddress + ", " + city + ", " + state + " " + zipcode;
     }
 
     /**
@@ -62,11 +66,12 @@ public final class Utilities {
      */
     private static ArrayList<PreSchool> searchByZipCode(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListZipcode = new ArrayList<>();
-        for (int i = 0; i < schoolsList.size(); i++) {
-            if (schoolsList.get(i).getZipCode().equals(query)) {
-                filteredListZipcode.add(schoolsList.get(i));
+        for (PreSchool school : schoolsList) {
+            if (school.getZipCode().equals(query)) {
+                filteredListZipcode.add(school);
             }
         }
+
         return filteredListZipcode;
     }
 
@@ -79,10 +84,10 @@ public final class Utilities {
     private static ArrayList<PreSchool> searchByNeighborhood(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListHood = new ArrayList<>();
         String queryLowerCase = query.toLowerCase();
-        for (int i = 0; i < schoolsList.size(); i++) {
-            String regionLowerCase = schoolsList.get(i).getRegion().toLowerCase();
+        for (PreSchool school : schoolsList) {
+            String regionLowerCase = school.getRegion().toLowerCase();
             if (regionLowerCase.contains(queryLowerCase)) {
-                filteredListHood.add(schoolsList.get(i));
+                filteredListHood.add(school);
             }
         }
         return filteredListHood;
@@ -98,23 +103,53 @@ public final class Utilities {
         ArrayList<PreSchool> filteredListPrice = new ArrayList<>();
         int min = 0;
         int max = 0;
-        if (query.equals("$")) {
-            min = 0;
-            max = 1000;
-        } else if (query.equals("$$")) {
-            min = 1001;
-            max = 2000;
-        } else if (query.equals("$$$")) {
-            min = 2001;
-            max = 5000;
+        switch (query) {
+            case "$":
+                min = 0;
+                max = 1000;
+                break;
+            case "$$":
+                min = 1001;
+                max = 2000;
+                break;
+            case "$$$":
+                min = 2001;
+                max = 5000;
+                break;
         }
 
-        for (int i = 0; i < schoolsList.size(); i++) {
-            if (schoolsList.get(i).getPrice() >= min && schoolsList.get(i).getPrice() <= max) {
-                filteredListPrice.add(schoolsList.get(i));
+        for (PreSchool school : schoolsList) {
+            if (school.getPrice() >= min && school.getPrice() <= max) {
+                filteredListPrice.add(school);
             }
         }
         return filteredListPrice;
+    }
+
+
+    public static void sortByPrice(List<PreSchool> schoolsList, ListAdapter recyclerAdapter,
+                                   RecyclerView recyclerView, Context context) {
+        Collections.sort(schoolsList, new PriceComparator());
+        recyclerAdapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(0);
+        Toast.makeText(context, R.string.price_sort, Toast.LENGTH_SHORT).show();
+    }
+
+
+    public static void sortByRating(List<PreSchool> schoolsList, ListAdapter recyclerAdapter,
+                              RecyclerView recyclerView, Context context) {
+        Collections.sort(schoolsList, new RatingComparator());
+        recyclerAdapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(0);
+        Toast.makeText(context, R.string.rating_sort, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void sortByName(List<PreSchool> schoolsList, ListAdapter recyclerAdapter,
+                            RecyclerView recyclerView, Context context) {
+        Collections.sort(schoolsList, new NameComparator());
+        recyclerAdapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(0);
+        Toast.makeText(context, R.string.abc_sort, Toast.LENGTH_SHORT).show();
     }
 
     /**
