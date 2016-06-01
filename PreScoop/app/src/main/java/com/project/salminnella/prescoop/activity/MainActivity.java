@@ -432,7 +432,8 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         if (mSchoolsList == null && cursor == null) {
             return mapMarkersHashMap;
         }
-
+        // either the cursor or the mSchoolsList will fill the markers, depending on which list
+        // the user is currently viewing
         if (isViewingSavedSchools) {
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getCount(); i++) {
