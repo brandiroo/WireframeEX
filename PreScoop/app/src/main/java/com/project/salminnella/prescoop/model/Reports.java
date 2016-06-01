@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * To help reduce the number of fields in the PreSchool constructor, this class models fields related
- * to the school reports.  It is a nested object within each school in Firebase.  
+ * to the school reports.  It is a nested object within each school in Firebase.
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)

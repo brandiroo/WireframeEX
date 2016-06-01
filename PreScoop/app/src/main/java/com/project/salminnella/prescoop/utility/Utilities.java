@@ -14,23 +14,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by anthony on 5/7/16.
- * Holds methods that are used through out the application
+ * Holds common methods that are used through out the application.
  */
 public final class Utilities {
 
+    /**
+     * Creates a string for the complete address of the school.
+     * @param streetAddress String
+     * @param city String
+     * @param state String
+     * @param zipcode String
+     * @return String format of the complete school address
+     */
     public static String buildAddressString(String streetAddress, String city, String state, String zipcode) {
         String strAddress = streetAddress + ", " + city + ", " + state + " " + zipcode;
         return strAddress;
     }
 
+    /**
+     * This first checks the first character of the search query.  Depending on that character,
+     * a different search filter will occur
+     * @param query String
+     * @param schoolsList List of PreSchool objects
+     * @return ArrayList of PreSchool objects
+     */
     public static ArrayList<PreSchool> filterSchoolsList(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredList = new ArrayList<>();
         if (!query.equals("")) {
-            char first = query.charAt(0);
-            if (first >= '0' && first <= '9') {
+            char firstChar = query.charAt(0);
+            if (firstChar >= '0' && firstChar <= '9') {
                 filteredList = searchByZipCode(query, schoolsList);
-            } else if (Character.isLetter(first)) {
+            } else if (Character.isLetter(firstChar)) {
                 filteredList = searchByNeighborhood(query, schoolsList);
             } else {
                 filteredList = searchByPriceRange(query, schoolsList);
@@ -40,6 +54,12 @@ public final class Utilities {
         return filteredList;
     }
 
+    /**
+     * Filters the array list of PreSchool objects by zipcode.
+     * @param query String
+     * @param schoolsList List of PreSchool objects
+     * @return ArrayList of PreSchool objects
+     */
     private static ArrayList<PreSchool> searchByZipCode(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListZipcode = new ArrayList<>();
         for (int i = 0; i < schoolsList.size(); i++) {
@@ -50,6 +70,12 @@ public final class Utilities {
         return filteredListZipcode;
     }
 
+    /**
+     * Filters the array list of PreSchool objects by neighborhood.
+     * @param query String
+     * @param schoolsList List of PreSchool objects
+     * @return ArrayList of PreSchool objects
+     */
     private static ArrayList<PreSchool> searchByNeighborhood(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListHood = new ArrayList<>();
         String queryLowerCase = query.toLowerCase();
@@ -62,6 +88,12 @@ public final class Utilities {
         return filteredListHood;
     }
 
+    /**
+     * Filters the array list of PreSchool objects by price range.
+     * @param query String
+     * @param schoolsList List of PreSchool objects
+     * @return ArrayList of PreSchool objects
+     */
     private static ArrayList<PreSchool> searchByPriceRange(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListPrice = new ArrayList<>();
         int min = 0;
@@ -85,6 +117,12 @@ public final class Utilities {
         return filteredListPrice;
     }
 
+    /**
+     * From a list item click in the Recycler View, this builds the preschool object
+     * from cursor data, to send to SchoolDetailsActivity
+     * @param cursor Cursor
+     * @return PreSchool object
+     */
     public static PreSchool buildPreschoolObject(Cursor cursor) {
         PreSchool preschool = new PreSchool();
         preschool.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME)));
@@ -128,7 +166,7 @@ public final class Utilities {
         preschool.setLicenseStatus(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_LICENSE_STATUS)));
         preschool.setLicenseDate(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_LICENSE_DATE)));
 
-        // get json object from string in the database
+        // get gson object from string in the database
         String outputString = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_REPORTS_LIST));
         Reports[] reportsList = getReportsArrayList(outputString);
 
@@ -137,16 +175,23 @@ public final class Utilities {
         return preschool;
     }
 
-
+    /**
+     * Receives the String element from the database, and converts it to array using Gson
+     * @param outputList String
+     * @return Reports array
+     */
     private static Reports[] getReportsArrayList(String outputList) {
         Gson gson = new Gson();
         Type type = new TypeToken<Reports[]>() {}.getType();
 
-        Reports[] finalOutputList = gson.fromJson(outputList, type);
-
-        return finalOutputList;
+        return gson.fromJson(outputList, type);
     }
 
+    /**
+     * Retrieves the matching image for the school rating on a range of 1-5
+     * @param rating int
+     * @return int -- drawable image id
+     */
     public static int getRatingImage(int rating){
         switch(rating){
             case 1:

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.model.PreSchool;
+import com.project.salminnella.prescoop.utility.Utilities;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         TextView schoolNameTextView = holder.schoolNameTextView;
         TextView schoolPriceTextView = holder.schoolPriceTextView;
         schoolNameTextView.setText(preSchool.getName());
-        holder.schoolRatingImageView.setImageResource(getRatingImage(preSchool.getRating()));
+        holder.schoolRatingImageView.setImageResource(Utilities.getRatingImage(preSchool.getRating()));
 
         // checks the school price, the $999 value is default right now for an unknown price per month
         if (preSchool.getPrice() == 999) {
@@ -88,27 +89,5 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {
         mSchools.clear();
         mSchools.addAll(schools);
         notifyDataSetChanged();
-    }
-
-    /**
-     * Retrieves the matching image for the school rating on a range of 1-5
-     * @param rating int
-     * @return int -- drawable image id
-     */
-    private int getRatingImage(int rating){
-        switch(rating){
-            case 1:
-                return R.drawable.one_star;
-            case 2:
-                return R.drawable.two_stars;
-            case 3:
-                return R.drawable.three_stars;
-            case 4:
-                return R.drawable.four_stars;
-            case 5:
-                return R.drawable.five_stars;
-            default:
-                return 0;
-        }
     }
 }
