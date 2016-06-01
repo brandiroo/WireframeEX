@@ -41,15 +41,11 @@ import com.project.salminnella.prescoop.dbHelper.DatabaseHelper;
 import com.project.salminnella.prescoop.fragment.SchoolsMapFragment;
 import com.project.salminnella.prescoop.model.PreSchool;
 import com.project.salminnella.prescoop.utility.Constants;
-import com.project.salminnella.prescoop.utility.NameComparator;
-import com.project.salminnella.prescoop.utility.PriceComparator;
-import com.project.salminnella.prescoop.utility.RatingComparator;
 import com.project.salminnella.prescoop.utility.Utilities;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import static android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -164,41 +160,19 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     private void switchBottomBarTab(int menuItemId) {
         switch (menuItemId) {
             case R.id.abc_sort_bottom_bar:
-                sortByName();
+                Utilities.sortByName(mSchoolsList, mRecycleAdapter, mRecyclerView, MainActivity.this);
                 break;
             case R.id.rating_sort_bottom_bar:
-                sortByRating();
+                Utilities.sortByRating(mSchoolsList, mRecycleAdapter, mRecyclerView, MainActivity.this);
                 break;
             case R.id.price_sort_bottom_bar:
-                sortByPrice();
+                Utilities.sortByPrice(mSchoolsList, mRecycleAdapter, mRecyclerView, MainActivity.this);
                 break;
             case R.id.maps_bottom_bar:
                 checkPermissions();
                 break;
         }
     }
-    // region SortMethods
-    private void sortByPrice() {
-        Collections.sort(mSchoolsList, new PriceComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.price_sort, Toast.LENGTH_SHORT).show();
-    }
-
-    private void sortByRating() {
-        Collections.sort(mSchoolsList, new RatingComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.rating_sort, Toast.LENGTH_SHORT).show();
-    }
-
-    private void sortByName() {
-        Collections.sort(mSchoolsList, new NameComparator());
-        mRecycleAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(0);
-        Toast.makeText(MainActivity.this, R.string.abc_sort, Toast.LENGTH_SHORT).show();
-    }
-    // endregion SortMethods
 
     /**
      * restore the BottomBar's state, otherwise we would
