@@ -81,7 +81,7 @@ public class SchoolsMapFragment extends FragmentActivity implements OnMapReadyCa
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        
+
         LatLng latLng;
         // place markers on the map
         // mSchoolsList will be null if coming from the SchoolDetailsActivity, so it uses the PreSchool Object
