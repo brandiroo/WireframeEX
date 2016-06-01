@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 
 /**
- * Created by anthony on 5/17/16.
+ * To help reduce the number of fields in the PreSchool constructor, this class models fields related
+ * to the school reports.  It is a nested object within each school in Firebase.  
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
