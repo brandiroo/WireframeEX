@@ -6,46 +6,49 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 
 /**
- * Created by anthony on 5/5/16.
+ * Models the Preschool object that receives each school from Firebase
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PreSchool implements Serializable {
 
-    private int capacity;
-    private int price;
-    private int range;
-    private int rating;
-    private int favorite;
+
+    // Modeled in SchoolInspection
+    private int inspectionNum, inspectionTypeA, inspectionTypeB, citationTypeA, citationTypeB;
+    private String inspectionDates;
+
+    // Modeled in SchoolComplaints
+    private int complaintTotal, totalComplaintAllegSub, totalComplaintAllegIncon, totalComplaintTypeACitation,
+            totalComplaintTypeBCitation, totalComplaintVisits;
+    private String complaintDetails;
+
+    // Modeled in SchoolVisits
     private int numVisits;
-    private int citationTypeA;
-    private int citationTypeB;
-    private int inspectionNum;
-    private int inspectionTypeA;
-    private int inspectionTypeB;
-    private int complaintTotal;
-    private int totalComplaintAllegSub;
-    private int totalComplaintAllegIncon;
-    private int totalComplaintTypeACitation;
-    private int totalComplaintTypeBCitation;
-    private int totalComplaintVisits;
     private int otherVisits;
     private int visitTypeACitation;
     private int visitTypeBCitation;
     private int totalReports;
-    private int[] images;
-    private long facilityNumber;
-    private double latitude, longitude;
-    private String name, streetAddress, city, state, zipCode, region, phoneNumber;
-    private String type, websiteUrl, imageUrl;
-    private String schoolDescription;
     private String visitDates;
-    private String inspectionDates;
-    private String complaintDetails;
     private String otherVisitDates;
+
+    // Modeled in SchoolLocation
+    private String name, streetAddress, city, state, zipCode, region; //TODO latlng
+
+    // Modeled in SchoolDetails
+    private String type, websiteUrl, imageUrl, phoneNumber;
+    private double latitude, longitude;
+    private int price;
+
+
+    // Modeled In SchoolLicense
     private String licenseStatus;
     private String licenseDate;
-    private String[] imageDescription;
+    private int capacity;
+    private int rating;
+    private long facilityNumber;
+
+    private String schoolDescription;
     private Reports[] reports;
+    private int range;
 
 
     // empty constructor for firebase
@@ -225,30 +228,6 @@ public class PreSchool implements Serializable {
 
     public void setRating(int rating) {
         this.rating = rating;
-    }
-
-    public int getFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(int favorite) {
-        this.favorite = favorite;
-    }
-
-    public int[] getImages() {
-        return images;
-    }
-
-    public void setImages(int[] images) {
-        this.images = images;
-    }
-
-    public String[] getImageDescription() {
-        return imageDescription;
-    }
-
-    public void setImageDescription(String[] imageDescription) {
-        this.imageDescription = imageDescription;
     }
 
     public int getNumVisits() {

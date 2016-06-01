@@ -14,15 +14,6 @@ public class Reports implements Serializable {
     private String mReportUrl;
     private String mTitle;
 
-//    private SchoolsKey schools;
-//
-//    public Reports(String mDate, String mReportUrl, String mTitle, SchoolsKey schoolsKey) {
-//        this.mDate = mDate;
-//        this.mReportUrl = mReportUrl;
-//        this.mTitle = mTitle;
-//        this.schools = schoolsKey;
-//    }
-
     public Reports() {
 
     }
@@ -57,11 +48,4 @@ public class Reports implements Serializable {
         this.mTitle = mTitle;
     }
 
-//    public SchoolsKey getSchools() {
-//        return schools;
-//    }
-//
-//    public void setSchools(SchoolsKey schools) {
-//        this.schools = schools;
-//    }
 }

@@ -17,14 +17,18 @@ import com.project.salminnella.prescoop.model.Reports;
 import com.project.salminnella.prescoop.utility.Constants;
 
 /**
- * Created by anthony on 5/9/16.
+ * Builds the layout fragments for each tab in the SchoolDetailsActivity. Contains all the licensing
+ * and citation information
  */
 public class TabLayoutFragment extends Fragment {
 
+    // region Member Variables
     private int mPage;
-    static PreSchool preschool;
-    ListItemClickable listener;
+    static PreSchool mPreschool;
+    private ListItemClickable listener;
+    // endregion Member Variables
 
+    // the reports tab has a list of reports, that are clickable to go to the WebViewActivity
     public interface ListItemClickable {
         void listItemClicked(View view, String url);
     }
@@ -34,10 +38,14 @@ public class TabLayoutFragment extends Fragment {
         args.putInt(Constants.ARG_PAGE, page);
         TabLayoutFragment fragment = new TabLayoutFragment();
         fragment.setArguments(args);
-        preschool = schoolData;
+        mPreschool = schoolData;
         return fragment;
     }
 
+    /**
+     * Attaches click listener to fragment
+     * @param context Context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -48,12 +56,23 @@ public class TabLayoutFragment extends Fragment {
         }
     }
 
+    /**
+     * Gets the bundle arguments for the which tab to setup
+     * @param savedInstanceState Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(Constants.ARG_PAGE);
     }
 
+    /**
+     * Switches on the mPage to determine which tab to inflate
+     * @param inflater LayoutInflater
+     * @param container ViewGroup
+     * @param savedInstanceState Bundle
+     * @return View group containing school details
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -93,44 +112,65 @@ public class TabLayoutFragment extends Fragment {
         return null;
     }
 
+    /**
+     * Initializes and sets views for number of inspections and inspection dates
+     * @param viewAllVisits View
+     * @return View
+     */
     private View inflateAllVisits(View viewAllVisits) {
         TextView numVisits = (TextView) viewAllVisits.findViewById(R.id.num_visits_text_frag);
-        numVisits.setText(String.valueOf(preschool.getNumVisits()));
         TextView visitDates = (TextView) viewAllVisits.findViewById(R.id.visit_dates_text_frag);
-        visitDates.setText(preschool.getVisitDates());
+
+        numVisits.setText(String.valueOf(mPreschool.getNumVisits()));
+        visitDates.setText(mPreschool.getVisitDates());
 
         return viewAllVisits;
     }
 
+    /**
+     * Initializes and sets views for number of citations
+     * @param citations View
+     * @return View
+     */
     private View inflateCitations(View citations) {
 
         TextView citationA = (TextView) citations.findViewById(R.id.citations_type_a_text_frag);
         TextView citationB = (TextView) citations.findViewById(R.id.citations_type_b_text_frag);
 
-        citationA.setText(String.valueOf(preschool.getCitationTypeA()));
-        citationB.setText(String.valueOf(preschool.getCitationTypeA()));
+        citationA.setText(String.valueOf(mPreschool.getCitationTypeA()));
+        citationB.setText(String.valueOf(mPreschool.getCitationTypeA()));
 
         return citations;
     }
 
+    /**
+     * Initializes and sets views for inspection types and dates
+     * @param inspections View
+     * @return View
+     */
     private View inflateInspections(View inspections) {
         TextView numInspections = (TextView) inspections.findViewById(R.id.num_inspections_text_frag);
         TextView inspectionDates = (TextView) inspections.findViewById(R.id.inspection_dates_text_frag);
         TextView citationA = (TextView) inspections.findViewById(R.id.inspection_citation_a_text_frag);
         TextView citationB = (TextView) inspections.findViewById(R.id.inspection_citation_b_text_frag);
 
-        numInspections.setText(String.valueOf(preschool.getInspectionNum()));
-        citationA.setText(String.valueOf(preschool.getInspectionTypeA()));
-        citationB.setText(String.valueOf(preschool.getInspectionTypeB()));
-        if (preschool.getInspectionDates() == null) {
+        numInspections.setText(String.valueOf(mPreschool.getInspectionNum()));
+        citationA.setText(String.valueOf(mPreschool.getInspectionTypeA()));
+        citationB.setText(String.valueOf(mPreschool.getInspectionTypeB()));
+        if (mPreschool.getInspectionDates() == null) {
             inspectionDates.setText(R.string.not_available);
         } else {
-            inspectionDates.setText(preschool.getInspectionDates());
+            inspectionDates.setText(mPreschool.getInspectionDates());
         }
 
         return inspections;
     }
 
+    /**
+     * Initializes and sets views for total complaint types
+     * @param complaints View
+     * @return View
+     */
     private View inflateComplaints(View complaints) {
         TextView totalComplaints = (TextView) complaints.findViewById(R.id.total_complaint_text_frag);
         TextView totalComplaintAllegSub = (TextView) complaints.findViewById(R.id.total_alleg_sub_text_frag);
@@ -139,48 +179,59 @@ public class TabLayoutFragment extends Fragment {
         TextView totalComplaintTypeBCitation = (TextView) complaints.findViewById(R.id.total_type_b_citation_text_frag);
         TextView totalComplaintVisits = (TextView) complaints.findViewById(R.id.total_complaint_visits_text_frag);
 
-        totalComplaints.setText(String.valueOf(preschool.getComplaintTotal()));
-        totalComplaintAllegSub.setText(String.valueOf(preschool.getTotalComplaintAllegSub()));
-        totalComplaintAllegIncon.setText(String.valueOf(preschool.getTotalComplaintAllegIncon()));
-        totalComplaintTypeACitation.setText(String.valueOf(preschool.getTotalComplaintTypeACitation()));
-        totalComplaintTypeBCitation.setText(String.valueOf(preschool.getTotalComplaintTypeBCitation()));
-        totalComplaintVisits.setText(String.valueOf(preschool.getTotalComplaintVisits()));
+        totalComplaints.setText(String.valueOf(mPreschool.getComplaintTotal()));
+        totalComplaintAllegSub.setText(String.valueOf(mPreschool.getTotalComplaintAllegSub()));
+        totalComplaintAllegIncon.setText(String.valueOf(mPreschool.getTotalComplaintAllegIncon()));
+        totalComplaintTypeACitation.setText(String.valueOf(mPreschool.getTotalComplaintTypeACitation()));
+        totalComplaintTypeBCitation.setText(String.valueOf(mPreschool.getTotalComplaintTypeBCitation()));
+        totalComplaintVisits.setText(String.valueOf(mPreschool.getTotalComplaintVisits()));
 
         return complaints;
     }
 
+    /**
+     * Initializes and sets views for inspection citation
+     * @param otherVisits View
+     * @return View
+     */
     private View inflateOtherVisits(View otherVisits) {
         TextView numVisitInspection = (TextView) otherVisits.findViewById(R.id.num_other_visits_text_frag);
         TextView inspectionDates = (TextView) otherVisits.findViewById(R.id.other_visit_dates_text_frag);
         TextView visitCitationA = (TextView) otherVisits.findViewById(R.id.other_visits_citation_a_text_frag);
         TextView visitCitationB = (TextView) otherVisits.findViewById(R.id.other_visits_citation_b_text_frag);
 
-        numVisitInspection.setText(String.valueOf(preschool.getInspectionNum()));
-        visitCitationA.setText(String.valueOf(preschool.getVisitTypeACitation()));
-        visitCitationB.setText(String.valueOf(preschool.getVisitTypeBCitation()));
-        if (preschool.getInspectionDates() == null) {
+        numVisitInspection.setText(String.valueOf(mPreschool.getInspectionNum()));
+        visitCitationA.setText(String.valueOf(mPreschool.getVisitTypeACitation()));
+        visitCitationB.setText(String.valueOf(mPreschool.getVisitTypeBCitation()));
+        if (mPreschool.getInspectionDates() == null) {
             inspectionDates.setText(R.string.not_available);
         } else {
-            inspectionDates.setText(preschool.getInspectionDates());
+            inspectionDates.setText(mPreschool.getInspectionDates());
         }
 
         return otherVisits;
     }
 
+    /**
+     * Initializes and sets views for total reports, and the list holding the web links to view them
+     * sets onItemClick listener for each item in the list
+     * @param reports View
+     * @return View
+     */
     private View inflateReports(final View reports) {
 
         TextView totalReports = (TextView) reports.findViewById(R.id.total_reports_text_frag);
         ListView reportsListView = (ListView) reports.findViewById(R.id.reports_list_view_frag);
 
-        totalReports.setText(String.valueOf(preschool.getTotalReports()));
-        Reports[] reportsList = preschool.getReports();
+        totalReports.setText(String.valueOf(mPreschool.getTotalReports()));
+        Reports[] reportsList = mPreschool.getReports();
         if (reportsList != null) {
             ReportsAdapter reportsAdapter = new ReportsAdapter(getActivity(), reportsList);
             reportsListView.setAdapter(reportsAdapter);
             reportsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    listener.listItemClicked(reports, preschool.getReports()[position].getmReportUrl());
+                    listener.listItemClicked(reports, mPreschool.getReports()[position].getmReportUrl());
                 }
             });
         }
