@@ -13,7 +13,6 @@ import com.project.salminnella.prescoop.model.PreSchool;
 /**
  * Provide a reference to the views for each data item.  Since i'm currently using 2 adapters for the
  * RecyclerView, i moved this view holder class out so that both adapters can use it.
- *
  */
 public class ListViewHolder extends RecyclerView.ViewHolder {
     public TextView schoolNameTextView;
