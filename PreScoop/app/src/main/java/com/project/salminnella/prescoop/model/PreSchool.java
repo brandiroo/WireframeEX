@@ -6,11 +6,29 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 
 /**
- * Models the Preschool object that receives each school from Firebase
+ * Models the Preschool object that receives each school from Firebase.
+ * To reduce the fields in the PreSchool constructor, related fields have
+ * been broken down into separate models.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PreSchool implements Serializable {
 
+    // Modeled in SchoolAddress
+    private String name, streetAddress, city, state, zipCode, region;
+
+    // Modeled in SchoolDetails
+    private String type, websiteUrl, imageUrl, phoneNumber;
+    private double latitude, longitude;
+    private int price;
+
+    // Modeled in SchoolVisits
+    private int numVisits, otherVisits, visitTypeACitation, visitTypeBCitation, totalReports;
+    private String visitDates, otherVisitDates;
+
+    // Modeled In SchoolLicense
+    private String licenseStatus, licenseDate;
+    private int capacity, rating;
+    private long facilityNumber;
 
     // Modeled in SchoolInspection
     private int inspectionNum, inspectionTypeA, inspectionTypeB, citationTypeA, citationTypeB;
@@ -18,36 +36,13 @@ public class PreSchool implements Serializable {
 
     // Modeled in SchoolComplaints
     private int complaintTotal, totalComplaintAllegSub, totalComplaintAllegIncon, totalComplaintTypeACitation,
-            totalComplaintTypeBCitation, totalComplaintVisits;
+                totalComplaintTypeBCitation, totalComplaintVisits;
     private String complaintDetails;
 
-    // Modeled in SchoolVisits
-    private int numVisits;
-    private int otherVisits;
-    private int visitTypeACitation;
-    private int visitTypeBCitation;
-    private int totalReports;
-    private String visitDates;
-    private String otherVisitDates;
-
-    // Modeled in SchoolLocation
-    private String name, streetAddress, city, state, zipCode, region; //TODO latlng
-
-    // Modeled in SchoolDetails
-    private String type, websiteUrl, imageUrl, phoneNumber;
-    private double latitude, longitude;
-    private int price;
-
-
-    // Modeled In SchoolLicense
-    private String licenseStatus;
-    private String licenseDate;
-    private int capacity;
-    private int rating;
-    private long facilityNumber;
+    // Modeled in Reports
+    private Reports[] reports;
 
     private String schoolDescription;
-    private Reports[] reports;
     private int range;
 
 
@@ -55,16 +50,16 @@ public class PreSchool implements Serializable {
     public PreSchool() {
     }
 
-    public PreSchool(SchoolLocation schoolLocation, SchoolVisits schoolVisits, SchoolDetails schoolDetails,
+    public PreSchool(SchoolAddress schoolAddress, SchoolDetails schoolDetails, SchoolVisits schoolVisits,
                      SchoolLicense schoolLicense, SchoolInspection schoolInspection, SchoolComplaint schoolComplaint,
                      Reports[] reports) {
 
-        this.name = schoolLocation.getName();
-        this.streetAddress = schoolLocation.getStreetAddress();
-        this.city = schoolLocation.getCity();
-        this.state = schoolLocation.getState();
-        this.zipCode = schoolLocation.getZipCode();
-        this.region = schoolLocation.getRegion();
+        this.name = schoolAddress.getName();
+        this.streetAddress = schoolAddress.getStreetAddress();
+        this.city = schoolAddress.getCity();
+        this.state = schoolAddress.getState();
+        this.zipCode = schoolAddress.getZipCode();
+        this.region = schoolAddress.getRegion();
         this.phoneNumber = schoolDetails.getPhoneNumber();
         this.facilityNumber = schoolLicense.getFacilityNumber();
         this.capacity = schoolLicense.getCapacity();

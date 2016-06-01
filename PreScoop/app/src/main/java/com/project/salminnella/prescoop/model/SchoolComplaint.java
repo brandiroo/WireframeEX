@@ -5,7 +5,7 @@ package com.project.salminnella.prescoop.model;
  */
 public class SchoolComplaint {
     private int complaintTotal, totalComplaintAllegSub, totalComplaintAllegIncon, totalComplaintTypeACitation,
-    totalComplaintTypeBCitation,  totalComplaintVisits;
+                totalComplaintTypeBCitation,  totalComplaintVisits;
     private String complaintDetails;
 
     public SchoolComplaint(int complaintTotal, int totalComplaintAllegSub, int totalComplaintAllegIncon, int totalComplaintTypeACitation, int totalComplaintTypeBCitation, int totalComplaintVisits, String complaintDetails) {

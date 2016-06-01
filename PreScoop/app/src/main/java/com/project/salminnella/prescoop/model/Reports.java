@@ -14,8 +14,8 @@ public class Reports implements Serializable {
     private String mReportUrl;
     private String mTitle;
 
+    // empty constructor for firebase
     public Reports() {
-
     }
 
     public Reports(String mDate, String mReportUrl, String mTitle) {
@@ -28,24 +28,11 @@ public class Reports implements Serializable {
         return mDate;
     }
 
-    public void setmDate(String mDate) {
-        this.mDate = mDate;
-    }
-
     public String getmReportUrl() {
         return mReportUrl;
-    }
-
-    public void setmReportUrl(String mReportUrl) {
-        this.mReportUrl = mReportUrl;
     }
 
     public String getmTitle() {
         return mTitle;
     }
-
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
 }
