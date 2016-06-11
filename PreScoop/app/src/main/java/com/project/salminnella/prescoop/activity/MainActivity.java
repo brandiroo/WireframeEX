@@ -187,8 +187,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
         mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
     }
-
-
+    
     /**
      * Performs the query to firebase, and receives all schools in the root.
      * Populates the mSchoolsList, and mBackupList.  mBackupList is used to restore
@@ -256,7 +255,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         } else {
             gridLayoutManager = new GridLayoutManager(this, 3);
         }
-
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
     }
@@ -328,8 +326,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
     }
-
-
 
     /**
      * During initial loading of application and while receiving schools from Firebase
@@ -466,7 +462,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
     }
 
     // region Permission Check
-
     /**
      * Begins checking if permissions have been allowed. Checked when user clicks on the map icon
      * from the bottom bar.
@@ -543,7 +538,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
 
 
     // region Options Menu
-
     /**
      * Create options menu
      * @param menu Menu
@@ -581,7 +575,6 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         return super.onOptionsItemSelected(item);
     }
     // endregion Options Menu
-
 
     /**
      * clears the search filter focus to prevent keyboard from popping up when returning from
