@@ -2,17 +2,11 @@ package com.project.salminnella.prescoop;
 
 import android.test.ApplicationTestCase;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.project.salminnella.prescoop.activity.MainActivity;
 import com.project.salminnella.prescoop.firebase.FireBasePrescoop;
 import com.project.salminnella.prescoop.model.PreSchool;
-import com.project.salminnella.prescoop.utility.Constants;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -30,6 +24,14 @@ public class MainActivityTest extends ApplicationTestCase<FireBasePrescoop> {
 
     public MainActivityTest() {
         super(FireBasePrescoop.class);
+    }
+
+    @Test
+    public void testQueryFirebase() {
+
+        PreSchool preschool = new PreSchool();
+        MainActivity mainActivity = new MainActivity();
+        mainActivity.queryFirebase();
     }
 
 //    @Override
@@ -168,61 +170,61 @@ public class MainActivityTest extends ApplicationTestCase<FireBasePrescoop> {
 //    }
 
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+//    @Override
+//    protected void setUp() throws Exception {
+//        super.setUp();
+//
+//        application = (FireBasePrescoop) getApplication().getApplicationContext();
+//        mContext = application;
+//        Firebase.setAndroidContext(application);
+////        Firebase.setAndroidContext(getApplication().getApplicationContext());
+//        //isInitialized = true;
+//            Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
+//            mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
+//    }
 
-        application = (FireBasePrescoop) getApplication().getApplicationContext();
-        mContext = application;
-        Firebase.setAndroidContext(application);
-//        Firebase.setAndroidContext(getApplication().getApplicationContext());
-        //isInitialized = true;
-            Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
-            mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
-    }
-
-    @Before
-
-
-
-    @Test
-    public void testReceiveSchools(){
-        mSchoolsList = new ArrayList<>();
-        mBackupList = new ArrayList<>();
-        Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
-        mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
-        Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot dataSnapshot) {
-            }
-            public void onCancelled(FirebaseError firebaseError) { }
-        });
-        queryRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                mPreschool = snapshot.getValue(PreSchool.class);
-                mSchoolsList.add(mPreschool);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
+//    @Before
+//
+//
+//
+//    @Test
+//    public void testReceiveSchools(){
+//        mSchoolsList = new ArrayList<>();
+//        mBackupList = new ArrayList<>();
+//        Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
+//        mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
+//        Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
+//        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//            }
+//            public void onCancelled(FirebaseError firebaseError) { }
+//        });
+//        queryRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
+//                mPreschool = snapshot.getValue(PreSchool.class);
+//                mSchoolsList.add(mPreschool);
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        });
+//    }
 }
