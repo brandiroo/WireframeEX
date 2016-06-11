@@ -24,11 +24,6 @@ public final class Constants {
     // endregion Application Constants
 
     // region Yelp Constants
-//    public static final String YELP_CONSUMER_KEY = "qjt368tSTOpOje3NIbdfyg";
-//    public static final String YELP_CONSUMER_SECRET = "XSD1VcfmQLSH5ZM_a3mzvRDr49E";
-//    public static final String YELP_TOKEN = "imPIqEPxV0hayvDlVLJzEZw2pYHbY6GY";
-//    public static final String YELP_TOKEN_SECRET = "vduvdOiuqUVxce3NIBpU8DZHDN8";
-
     public static final String YELP_SEARCH_PARAM_TERMS = "term";
     public static final String YELP_SEARCH_PARAM_LIMIT = "limit";
     public static final String YELP_SEARCH_PARAM_CATEGORY = "category_filter";

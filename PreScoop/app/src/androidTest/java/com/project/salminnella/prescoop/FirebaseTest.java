@@ -20,6 +20,8 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * Created by anthony on 6/10/16.
  */
@@ -32,44 +34,44 @@ public class FirebaseTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
-//    @Test
-//    public void testFirebase() {
-//
-//        final FirebaseOperationIdlingResource pushIdlingResource = new FirebaseOperationIdlingResource();
-//        Espresso.registerIdlingResources(pushIdlingResource);
-//
-//        final String item = "Hello World";
-//
-//        firebase.push().setValue(item, new Firebase.CompletionListener() {
-//            @Override
-//            public void onComplete(FirebaseError firebaseError, Firebase itemRef) {
-//                itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        pushIdlingResource.onOperationEnded();
-//                        assertEquals(item, dataSnapshot.getValue(String.class));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(FirebaseError firebaseError) {
-//                        firebaseError.toException().printStackTrace();
-//                        pushIdlingResource.onOperationEnded();
-//                    }
-//                });
-//            }
-//
-//        });
-//        pushIdlingResource.onOperationStarted();
-//
-//        Espresso.unregisterIdlingResources(pushIdlingResource);
-//    }
+    @Test
+    public void testFirebase() {
+
+        final FirebaseOperationIdlingResource pushIdlingResource = new FirebaseOperationIdlingResource();
+        Espresso.registerIdlingResources(pushIdlingResource);
+
+        final String item = "Hello World";
+
+        firebase.push().setValue(item, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase itemRef) {
+                itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pushIdlingResource.onOperationEnded();
+                        assertEquals(item, dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                        firebaseError.toException().printStackTrace();
+                        pushIdlingResource.onOperationEnded();
+                    }
+                });
+            }
+
+        });
+        pushIdlingResource.onOperationStarted();
+
+        Espresso.unregisterIdlingResources(pushIdlingResource);
+    }
 
     @Test
     public void testReceiveSchools() {
         final FirebaseOperationIdlingResource receiveIdlingResource = new FirebaseOperationIdlingResource();
         Espresso.registerIdlingResources(receiveIdlingResource);
 
-        //final ArrayList<PreSchool> schoolsList = new ArrayList<>();
+        final ArrayList<PreSchool> schoolsList = new ArrayList<>();
 
         Query queryRef = firebase.orderByChild(Constants.ORDER_BY_NAME);
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -78,9 +80,6 @@ public class FirebaseTest {
                 receiveIdlingResource.onOperationEnded();
                 mPreschool = dataSnapshot.getValue(PreSchool.class);
                 System.out.println("onDataChange: mPreschool " + mPreschool.getName());
-//                System.out.println("onDataChange: name is " + schoolsList.get(0).getName());
-//                System.out.println("onDataChange: snapshot is " + dataSnapshot.getValue());
-                //testPrintSchoolName(schoolsList);
             }
 
             @Override
@@ -93,12 +92,7 @@ public class FirebaseTest {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 mPreschool = dataSnapshot.getValue(PreSchool.class);
-                ArrayList<PreSchool> schoolsList = new ArrayList<>();
                 schoolsList.add(mPreschool);
-                System.out.println("onChildAdded: snapshot is " + dataSnapshot.getValue());
-                System.out.println("onChildAdded: mPreschool name is " + mPreschool.getName());
-                System.out.println("onChildAdded: schoolList " + schoolsList.size());
-                System.out.println("onChildAdded: schoolList " + schoolsList.get(0).getName());
             }
 
             @Override
@@ -124,16 +118,5 @@ public class FirebaseTest {
 
         receiveIdlingResource.onOperationStarted();
         Espresso.unregisterIdlingResources(receiveIdlingResource);
-    }
-
-    @Test
-    public void testSort() {
-
-    }
-
-    public void testPrintSchoolName(ArrayList<PreSchool> data) {
-        for (int i = 0; i < data.size(); i++) {
-            System.out.println("from test print - name is: " + data.get(0).getName());
-        }
     }
 }

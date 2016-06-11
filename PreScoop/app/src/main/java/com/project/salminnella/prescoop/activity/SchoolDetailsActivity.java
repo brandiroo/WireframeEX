@@ -348,7 +348,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     /**
      * Calls Yelp API
      */
-    // TODO obfuscate api keys
     private void callYelpProvider() {
         YelpAPIFactory apiFactory = new YelpAPIFactory(
                 BuildConfig.YELP_CONSUMER_KEY,

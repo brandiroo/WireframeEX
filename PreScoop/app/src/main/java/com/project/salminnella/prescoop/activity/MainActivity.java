@@ -56,11 +56,8 @@ import static android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
  * in a map
  */
 public class MainActivity extends AppCompatActivity implements OnRvItemClickListener {
-
     //TODO markers for maps can be turned into an object class
     //TODO use firebase UI for recycler view instead of the onchild overrides
-    //TODO move the sort and search methods to Utilities
-
     // region Member Variables
     private boolean isViewingSavedSchools;
     private PreSchool mPreschool;
@@ -200,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      *
      * onDataChange runs after each child has been downloaded to remove the progress bar visibilty
      */
-    public void queryFirebase(){
+    private void queryFirebase(){
         mSchoolsList = new ArrayList<>();
         mBackupList = new ArrayList<>();
         Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
@@ -596,7 +593,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         super.onResume();
         if (mSearchView != null) {
             mSearchView.clearFocus();
-            // saved prefs for bottom bar selected item
+            // TODO saved prefs for bottom bar selected item
         }
         if (isViewingSavedSchools) {
             findSavedSchools(mFavoriteMenuItem);
