@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
         Firebase mFireBaseRoot = new Firebase(Constants.FIREBASE_ROOT_URL);
         mFirebasePreschoolRef = mFireBaseRoot.child(Constants.FIREBASE_ROOT_CHILD);
     }
-    
+
     /**
      * Performs the query to firebase, and receives all schools in the root.
      * Populates the mSchoolsList, and mBackupList.  mBackupList is used to restore
