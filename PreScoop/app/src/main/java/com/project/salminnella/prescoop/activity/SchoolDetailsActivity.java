@@ -356,7 +356,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
                 BuildConfig.YELP_TOKEN_SECRET);
 
         YelpAPI yelpAPI = apiFactory.createAPI();
-
         Map<String, String> params = new HashMap<>();
 
         // general params
@@ -366,7 +365,6 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
         params.put(Constants.YELP_SEARCH_PARAM_SORT, Constants.YELP_SORT);
 
         Call<SearchResponse> call = yelpAPI.search(Constants.YELP_SEARCH_PARAM_LOCATION, params);
-
         Callback<SearchResponse> callback = new Callback<SearchResponse>() {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
