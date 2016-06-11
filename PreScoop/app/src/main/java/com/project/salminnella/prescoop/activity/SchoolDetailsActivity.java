@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.project.salminnella.prescoop.BuildConfig;
 import com.project.salminnella.prescoop.R;
 import com.project.salminnella.prescoop.adapter.TabLayoutAdapter;
 import com.project.salminnella.prescoop.adapter.YelpAdapter;
@@ -350,10 +351,10 @@ public class SchoolDetailsActivity extends AppCompatActivity implements TabLayou
     // TODO obfuscate api keys
     private void callYelpProvider() {
         YelpAPIFactory apiFactory = new YelpAPIFactory(
-                Constants.YELP_CONSUMER_KEY,
-                Constants.YELP_CONSUMER_SECRET,
-                Constants.YELP_TOKEN,
-                Constants.YELP_TOKEN_SECRET);
+                BuildConfig.YELP_CONSUMER_KEY,
+                BuildConfig.YELP_CONSUMER_SECRET,
+                BuildConfig.YELP_TOKEN,
+                BuildConfig.YELP_TOKEN_SECRET);
 
         YelpAPI yelpAPI = apiFactory.createAPI();
 

@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -127,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      * @param savedInstanceState - saves state on orientation change
      */
     private void buildBottomBar(Bundle savedInstanceState) {
-        mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.coordinator_Layout_main),
-                null, savedInstanceState);
+        mBottomBar = BottomBar.attach(MainActivity.this, savedInstanceState);
         mBottomBar.noResizeGoodness();
         mBottomBar.noTabletGoodness();
         mBottomBar.clearFocus();
@@ -202,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
      *
      * onDataChange runs after each child has been downloaded to remove the progress bar visibilty
      */
-    private void queryFirebase(){
+    public void queryFirebase(){
         mSchoolsList = new ArrayList<>();
         mBackupList = new ArrayList<>();
         Query queryRef = mFirebasePreschoolRef.orderByChild(Constants.ORDER_BY_NAME);
