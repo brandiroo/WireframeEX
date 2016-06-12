@@ -45,24 +45,24 @@ User stories – who are your users, what do they want, and why?
 <b>Feature Prioritization</b><br>
 <img src="https://github.com/salminnella/PreScoop/blob/master/images/FeaturePrioritization.jpg" />
 <br><br>
-1.) Search For Schools<br>
-2.) Sort Schools by: price, range, rating<br>
-3.) View Schools in map<br>
-4.) Click a marker to see school details<br>
-5.) Bookmark schools<br>
-6.) View Reviews for each school<br>
-7.) Allow parents to leave reviews<br>
-8.) Advanced Search - address, type, radius, name, rating<br>
-9.) Add personal notes about each school<br>
-10.) Add reminder dates for application deadlines to calendar<br>
-11.) Can start the application process directly from the app<br>
-12.) School photos<br>
-13.) Teacher / Staff bio’s<br>
-14.) Number of Students<br>
-15.) Teacher / Student Ratio<br>
-16.) Private vs Public<br>
-17.) Description of daily activities<br>
-18.) School comparisons<br>
+  1.) Search For Schools<br>
+  2.) Sort Schools by: price, range, rating<br>
+  3.) View Schools in map<br>
+  4.) Click a marker to see school details<br>
+  5.) Bookmark schools<br>
+  6.) View Reviews for each school<br>
+  7.) Allow parents to leave reviews<br>
+  8.) Advanced Search - address, type, radius, name, rating<br>
+  9.) Add personal notes about each school<br>
+  10.) Add reminder dates for application deadlines to calendar<br>
+  11.) Can start the application process directly from the app<br>
+  12.) School photos<br>
+  13.) Teacher / Staff bio’s<br>
+  14.) Number of Students<br>
+  15.) Teacher / Student Ratio<br>
+  16.) Private vs Public<br>
+  17.) Description of daily activities<br>
+  18.) School comparisons<br>
 <br><br>
 Screenshots of your wireframes – sketches of major views / interfaces in your application
 
