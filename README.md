@@ -45,6 +45,8 @@ Problem Statement
 <a target="blank" href=https://docs.google.com/document/d/1ntsqWdS79uoOWZr59Q5gU0yFBW2w4QNRe7l7fATkCR8/edit?usp=sharing>Google Docs - Problem Statement</a>
 
 A list of your prioritized features to match your user user goals
+<br><br>
+<img src="https://github.com/salminnella/PreScoop/blob/master/images/FeaturePrioritization.jpg" />
 
 Screenshots of your wireframes – sketches of major views / interfaces in your application
 
