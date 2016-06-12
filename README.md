@@ -26,6 +26,10 @@ https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
   <img src="https://github.com/salminnella/PreScoop/blob/master/images/prescoop_yelp_webview_screen.png" />
 </section>
 
+A couple paragraphs about the general approach you took in your design process that point to your research.md file
+If necessary, any special instructions on how to build the app in Android Studio
+Descriptions of any unsolved problems or major hurdles you had to overcome
+<br><br>
 
 # Research Plan<br>
 <a target="blank" href=https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing>Google Docs - Research Plan Document</a>
