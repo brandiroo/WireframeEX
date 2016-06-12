@@ -17,9 +17,12 @@ https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
   to the users.
   
   
-<img src="https://github.com/salminnella/PreScoop/blob/master/images/prescoop_main_screen.png" />
-
-<img src="https://github.com/salminnella/PreScoop/blob/master/images/prescoop_details_screen.png" />
+<div style="float: left;">
+  <img src="https://github.com/salminnella/PreScoop/blob/master/images/prescoop_main_screen.png" />
+</div>
+<div style="float: right;">
+  <img src="https://github.com/salminnella/PreScoop/blob/master/images/prescoop_details_screen.png" />
+</div>
 <br><br>
 
 A screenshot of at least one screen of the working application
