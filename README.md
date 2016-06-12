@@ -34,20 +34,17 @@ Descriptions of any unsolved problems or major hurdles you had to overcome
 # Research Plan<br>
 <a target="blank" href=https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing>Google Docs - Research Plan Document</a>
 
-Summary of user research including personas
+User research including personas
 
-Your user stories – who are your users, what do they want, and why?
+User stories – who are your users, what do they want, and why?
 
-Competitive Analysis Spreadsheet<br>
 <a target="blank" href=https://docs.google.com/spreadsheets/d/1aZrJd5ExxoLYNeqR8eRYOrmz9xsdQMrlARZViJ0FwL0/edit?usp=sharing>Google Sheets - Competitive Analysis</a>
 
-Problem Statement
 <a target="blank" href=https://docs.google.com/document/d/1ntsqWdS79uoOWZr59Q5gU0yFBW2w4QNRe7l7fATkCR8/edit?usp=sharing>Google Docs - Problem Statement</a>
 
-A list of your prioritized features to match your user user goals
-<br><br>
-<img src="https://github.com/salminnella/PreScoop/blob/master/images/FeaturePrioritization.jpg" />
 <b>Feature Prioritization</b><br>
+<img src="https://github.com/salminnella/PreScoop/blob/master/images/FeaturePrioritization.jpg" />
+<br>br>
   1.) Search For Schools<br>
   2.) Sort Schools by: price, range, rating<br>
   3.) View Schools in map<br>
