@@ -44,7 +44,7 @@ User stories – who are your users, what do they want, and why?
 
 <b>Feature Prioritization</b><br>
 <img src="https://github.com/salminnella/PreScoop/blob/master/images/FeaturePrioritization.jpg" />
-<br>br>
+<br><br>
   1.) Search For Schools<br>
   2.) Sort Schools by: price, range, rating<br>
   3.) View Schools in map<br>
