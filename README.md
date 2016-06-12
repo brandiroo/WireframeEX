@@ -17,6 +17,9 @@ https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
   to the users.
   
   
+Main Activity<br>
+<img src="https://github.com/salminnella/PreScoop/blob/master/images/200/prescoop_main_screen.png" />
+<br><br>
   
 A screenshot of at least one screen of the working application
 A description of what the app does, and how it is useful
