@@ -64,7 +64,7 @@ User stories – who are your users, what do they want, and why?
   17.) Description of daily activities<br>
   18.) School comparisons<br>
 <br><br>
-<b>Wireframes</b>
+<b>Wireframes</b><br><br>
 <img src="https://github.com/salminnella/PreScoop/blob/master/images/WireFrames.png" />
 
 
