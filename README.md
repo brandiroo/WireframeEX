@@ -44,18 +44,9 @@ Competitive Analysis Spreadsheet<br>
 Problem Statement
 <a target="blank" href=https://docs.google.com/document/d/1ntsqWdS79uoOWZr59Q5gU0yFBW2w4QNRe7l7fATkCR8/edit?usp=sharing>Google Docs - Problem Statement</a>
 
-
 A list of your prioritized features to match your user user goals
 
-
 Screenshots of your wireframes – sketches of major views / interfaces in your application
-
-
-A couple paragraphs about the general approach you took in your design process that point to your research.md file
-If necessary, any special instructions on how to build the app in Android Studio
-Descriptions of any unsolved problems or major hurdles you had to overcome
-
-
 
 # Proposal
 
