@@ -1,4 +1,4 @@
-#PreScoop - Final Project  
+#PreScoop
 [ 3 days research/proposal, 14 days for implementation ] <br>
 https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
 
@@ -24,7 +24,6 @@ https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
 <section>
   <img src="https://github.com/salminnella/PreScoop/blob/master/images/prescoop_maps_screen.png" />
   <img src="https://github.com/salminnella/PreScoop/blob/master/images/prescoop_yelp_webview_screen.png" />
->>>>>>> 25b08ef7a154a97df0265f562b9da2c5935d61a0
 </section>
 
 
@@ -51,3 +50,9 @@ Screenshots of your wireframes – sketches of major views / interfaces in your 
 A couple paragraphs about the general approach you took in your design process that point to your research.md file
 If necessary, any special instructions on how to build the app in Android Studio
 Descriptions of any unsolved problems or major hurdles you had to overcome
+
+
+
+# Proposal
+
+<a href=https://docs.google.com/presentation/d/1R4ocKcAEOTe85FziP8jbmKSRxBv0l-MijKgYLByGGM8/edit?usp=sharing>Google Slides - Proposal Document</a>
