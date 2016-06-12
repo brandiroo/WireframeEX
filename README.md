@@ -1,5 +1,5 @@
 #PreScoop - Final Project  
-[ 3 days research/proposal, 10 days for implementation ] 
+[ 3 days research/proposal, 10 days for implementation ] <br>
 https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
 
   A discovery app for San Francisco area preschools.  Firebase driven for search and filter
@@ -20,8 +20,9 @@ https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
 Main Activity<br>
 <img src="https://github.com/salminnella/PreScoop/blob/master/images/200/prescoop_main_screen.png" />
 <br><br>
-  
+
 A screenshot of at least one screen of the working application
+
 A description of what the app does, and how it is useful
 Explanations of the technologies used
 A couple paragraphs about the general approach you took in your design process that point to your research.md file
