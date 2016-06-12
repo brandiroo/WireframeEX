@@ -47,26 +47,26 @@ Problem Statement
 A list of your prioritized features to match your user user goals
 <br><br>
 <img src="https://github.com/salminnella/PreScoop/blob/master/images/FeaturePrioritization.jpg" />
-<b>Feature Prioritization</b>
-  Search For Schools
-  Sort Schools by: price, range, rating
-  View Schools in map
-  Click a marker to see school details
-  Bookmark schools
-  View Reviews for each school
-  Allow parents to leave reviews
-  Advanced Search - address, type, radius, name, rating
-  Add personal notes about each school
-  Add reminder dates for application deadlines to calendar
-  Can start the application process directly from the app
-  School photos
-  Teacher / Staff bio’s
-  Number of Students
-  Teacher / Student Ratio
-  Private vs Public
-  Description of daily activities
-  School comparisons
-
+<b>Feature Prioritization</b><br>
+  Search For Schools<br>
+  Sort Schools by: price, range, rating<br>
+  View Schools in map<br>
+  Click a marker to see school details<br>
+  Bookmark schools<br>
+  View Reviews for each school<br>
+  Allow parents to leave reviews<br>
+  Advanced Search - address, type, radius, name, rating<br>
+  Add personal notes about each school<br>
+  Add reminder dates for application deadlines to calendar<br>
+  Can start the application process directly from the app<br>
+  School photos<br>
+  Teacher / Staff bio’s<br>
+  Number of Students<br>
+  Teacher / Student Ratio<br>
+  Private vs Public<br>
+  Description of daily activities<br>
+  School comparisons<br>
+<br><br>
 Screenshots of your wireframes – sketches of major views / interfaces in your application
 
 # Proposal
