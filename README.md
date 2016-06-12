@@ -34,20 +34,36 @@ Descriptions of any unsolved problems or major hurdles you had to overcome
 # Research Plan<br>
 <a target="blank" href=https://docs.google.com/document/d/1tLCYZqlyAGL9vsnobFoW8eAG9by7S0Qlvvk8bEQ0-Dw/edit?usp=sharing>Google Docs - Research Plan Document</a>
 
-Summary of user research including personas
+User research including personas
 
-Your user stories – who are your users, what do they want, and why?
+User stories – who are your users, what do they want, and why?
 
-Competitive Analysis Spreadsheet<br>
 <a target="blank" href=https://docs.google.com/spreadsheets/d/1aZrJd5ExxoLYNeqR8eRYOrmz9xsdQMrlARZViJ0FwL0/edit?usp=sharing>Google Sheets - Competitive Analysis</a>
 
-Problem Statement
 <a target="blank" href=https://docs.google.com/document/d/1ntsqWdS79uoOWZr59Q5gU0yFBW2w4QNRe7l7fATkCR8/edit?usp=sharing>Google Docs - Problem Statement</a>
 
-A list of your prioritized features to match your user user goals
-<br><br>
+<b>Feature Prioritization</b><br>
 <img src="https://github.com/salminnella/PreScoop/blob/master/images/FeaturePrioritization.jpg" />
-
+<br><br>
+1.) Search For Schools<br>
+2.) Sort Schools by: price, range, rating<br>
+3.) View Schools in map<br>
+4.) Click a marker to see school details<br>
+5.) Bookmark schools<br>
+6.) View Reviews for each school<br>
+7.) Allow parents to leave reviews<br>
+8.) Advanced Search - address, type, radius, name, rating<br>
+9.) Add personal notes about each school<br>
+10.) Add reminder dates for application deadlines to calendar<br>
+11.) Can start the application process directly from the app<br>
+12.) School photos<br>
+13.) Teacher / Staff bio’s<br>
+14.) Number of Students<br>
+15.) Teacher / Student Ratio<br>
+16.) Private vs Public<br>
+17.) Description of daily activities<br>
+18.) School comparisons<br>
+<br><br>
 Screenshots of your wireframes – sketches of major views / interfaces in your application
 
 # Proposal
