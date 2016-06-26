@@ -49,7 +49,10 @@ public final class Utilities {
             if (firstChar >= '0' && firstChar <= '9') {
                 filteredList = searchByZipCode(query, schoolsList);
             } else if (Character.isLetter(firstChar)) {
-                filteredList = searchByNeighborhood(query, schoolsList);
+                filteredList = searchByDistrict(query, schoolsList);
+                if (filteredList == null) {
+                    filteredList = searchByName(query, schoolsList);
+                }
             } else {
                 filteredList = searchByPriceRange(query, schoolsList);
             }
@@ -81,7 +84,7 @@ public final class Utilities {
      * @param schoolsList List of PreSchool objects
      * @return ArrayList of PreSchool objects
      */
-    private static ArrayList<PreSchool> searchByNeighborhood(String query, List<PreSchool> schoolsList) {
+    private static ArrayList<PreSchool> searchByDistrict(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListHood = new ArrayList<>();
         String queryLowerCase = query.toLowerCase();
         for (PreSchool school : schoolsList) {
@@ -91,6 +94,19 @@ public final class Utilities {
             }
         }
         return filteredListHood;
+    }
+
+    private static ArrayList<PreSchool> searchByName(String query, List<PreSchool> schoolsList) {
+        ArrayList<PreSchool> filteredListName = new ArrayList<>();
+        String queryLowerCase = query.toLowerCase();
+        for (PreSchool school : schoolsList) {
+            String nameLowerCase = school.getName().toLowerCase();
+            if (nameLowerCase.contains(queryLowerCase)){
+                filteredListName.add(school);
+            }
+        }
+
+        return filteredListName;
     }
 
     /**
