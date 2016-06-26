@@ -57,15 +57,6 @@ public final class Utilities {
         } else {
             filteredList = searchByPriceRange(query, schoolsList);
         }
-//
-//        if (firstChar >= '0' && firstChar <= '9') {
-//            filteredList = searchByZipCode(query, schoolsList);
-//        } else if (Character.isLetter(firstChar)) {
-//            filteredList = searchByDistrict(query, schoolsList);
-//        } else {
-//            filteredList = searchByPriceRange(query, schoolsList);
-//        }
-
 
         if (filteredList.size() == 0) {
             filteredList = searchByName(query, schoolsList);
@@ -109,6 +100,12 @@ public final class Utilities {
         return filteredListHood;
     }
 
+    /**
+     * Filters the list of PreSchool objects by school name
+     * @param query String
+     * @param schoolsList List of PreSchool objects
+     * @return ArrayList of PreSchool objects
+     */
     private static ArrayList<PreSchool> searchByName(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListName = new ArrayList<>();
         String queryLowerCase = query.toLowerCase();
