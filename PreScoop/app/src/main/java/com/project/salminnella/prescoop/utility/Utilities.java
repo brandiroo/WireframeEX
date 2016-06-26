@@ -50,7 +50,7 @@ public final class Utilities {
                 filteredList = searchByZipCode(query, schoolsList);
             } else if (Character.isLetter(firstChar)) {
                 filteredList = searchByDistrict(query, schoolsList);
-                if (filteredList == null) {
+                if (filteredList.size() == 0) {
                     filteredList = searchByName(query, schoolsList);
                 }
             } else {
