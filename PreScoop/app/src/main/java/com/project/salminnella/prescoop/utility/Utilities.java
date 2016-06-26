@@ -44,18 +44,31 @@ public final class Utilities {
      */
     public static ArrayList<PreSchool> filterSchoolsList(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredList = new ArrayList<>();
-        if (!query.equals("")) {
-            char firstChar = query.charAt(0);
-            if (firstChar >= '0' && firstChar <= '9') {
-                filteredList = searchByZipCode(query, schoolsList);
-            } else if (Character.isLetter(firstChar)) {
-                filteredList = searchByDistrict(query, schoolsList);
-                if (filteredList.size() == 0) {
-                    filteredList = searchByName(query, schoolsList);
-                }
-            } else {
-                filteredList = searchByPriceRange(query, schoolsList);
-            }
+        char firstChar = query.charAt(0);
+
+        if (query.equals("")) {
+            return filteredList;
+        }
+
+        if (Character.isLetter(firstChar)) {
+            filteredList = searchByDistrict(query, schoolsList);
+        } else if (firstChar >= '0' && firstChar <= '9') {
+            filteredList = searchByZipCode(query, schoolsList);
+        } else {
+            filteredList = searchByPriceRange(query, schoolsList);
+        }
+//
+//        if (firstChar >= '0' && firstChar <= '9') {
+//            filteredList = searchByZipCode(query, schoolsList);
+//        } else if (Character.isLetter(firstChar)) {
+//            filteredList = searchByDistrict(query, schoolsList);
+//        } else {
+//            filteredList = searchByPriceRange(query, schoolsList);
+//        }
+
+
+        if (filteredList.size() == 0) {
+            filteredList = searchByName(query, schoolsList);
         }
 
         return filteredList;
