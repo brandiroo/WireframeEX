@@ -44,15 +44,22 @@ public final class Utilities {
      */
     public static ArrayList<PreSchool> filterSchoolsList(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredList = new ArrayList<>();
-        if (!query.equals("")) {
-            char firstChar = query.charAt(0);
-            if (firstChar >= '0' && firstChar <= '9') {
-                filteredList = searchByZipCode(query, schoolsList);
-            } else if (Character.isLetter(firstChar)) {
-                filteredList = searchByNeighborhood(query, schoolsList);
-            } else {
-                filteredList = searchByPriceRange(query, schoolsList);
-            }
+        char firstChar = query.charAt(0);
+
+        if (query.equals("")) {
+            return filteredList;
+        }
+
+        if (Character.isLetter(firstChar)) {
+            filteredList = searchByDistrict(query, schoolsList);
+        } else if (firstChar >= '0' && firstChar <= '9') {
+            filteredList = searchByZipCode(query, schoolsList);
+        } else {
+            filteredList = searchByPriceRange(query, schoolsList);
+        }
+
+        if (filteredList.size() == 0) {
+            filteredList = searchByName(query, schoolsList);
         }
 
         return filteredList;
@@ -81,7 +88,7 @@ public final class Utilities {
      * @param schoolsList List of PreSchool objects
      * @return ArrayList of PreSchool objects
      */
-    private static ArrayList<PreSchool> searchByNeighborhood(String query, List<PreSchool> schoolsList) {
+    private static ArrayList<PreSchool> searchByDistrict(String query, List<PreSchool> schoolsList) {
         ArrayList<PreSchool> filteredListHood = new ArrayList<>();
         String queryLowerCase = query.toLowerCase();
         for (PreSchool school : schoolsList) {
@@ -91,6 +98,25 @@ public final class Utilities {
             }
         }
         return filteredListHood;
+    }
+
+    /**
+     * Filters the list of PreSchool objects by school name
+     * @param query String
+     * @param schoolsList List of PreSchool objects
+     * @return ArrayList of PreSchool objects
+     */
+    private static ArrayList<PreSchool> searchByName(String query, List<PreSchool> schoolsList) {
+        ArrayList<PreSchool> filteredListName = new ArrayList<>();
+        String queryLowerCase = query.toLowerCase();
+        for (PreSchool school : schoolsList) {
+            String nameLowerCase = school.getName().toLowerCase();
+            if (nameLowerCase.contains(queryLowerCase)){
+                filteredListName.add(school);
+            }
+        }
+
+        return filteredListName;
     }
 
     /**

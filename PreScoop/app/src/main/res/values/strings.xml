@@ -5,7 +5,7 @@
     <string name="title_activity_school_details">SchoolDetails</string>
     <string name="collapsing_toolbar_image">school image for collapsing toolbar</string>
     <string name="title_activity_schools_map">Map</string>
-    <string name="search_hint">zip, neighborhood, $, $$, $$$</string>
+    <string name="search_hint">zip, district, name, $, $$, $$$</string>
     <string name="number_of_visits">Number of Visits</string>
     <string name="visit_dates">Visit Dates</string>
     <string name="tot_complaint_invest_comp">Complaint Investigations Completed:</string>

@@ -289,7 +289,8 @@ public class MainActivity extends AppCompatActivity implements OnRvItemClickList
             mSearchQuery = intent.getStringExtra(SearchManager.QUERY);
             mFilteredList = Utilities.filterSchoolsList(mSearchQuery, mBackupList);
             if (mFilteredList.size() > 0) {
-                swapListContents(mFavoriteMenuItem);
+                //swapListContents(mFavoriteMenuItem);
+                mRecycleAdapter.swap(mFilteredList);
             } else {
                 Toast.makeText(MainActivity.this, R.string.filter_search_no_matches, Toast.LENGTH_SHORT).show();
             }
