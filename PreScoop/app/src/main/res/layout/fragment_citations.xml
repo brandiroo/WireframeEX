@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:id="@+id/citations_label_layout"
         android:layout_width="wrap_content"
@@ -39,7 +38,6 @@
             android:textSize="12sp"
             android:layout_marginStart="5dp"/>
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/citations_text_layout"
         android:layout_width="wrap_content"
@@ -48,7 +46,6 @@
         android:layout_alignTop="@+id/citations_label_layout"
         android:layout_toEndOf="@+id/citations_label_layout"
         android:layout_marginStart="38dp">
-
         <TextView
             android:id="@+id/citations_type_a_text_frag"
             android:layout_width="wrap_content"
@@ -76,5 +73,4 @@
             android:gravity="center"
             android:textStyle="bold"/>
     </LinearLayout>
-
 </RelativeLayout>

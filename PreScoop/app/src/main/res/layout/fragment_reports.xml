@@ -2,14 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:id="@+id/total_reports_layout_frag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="30dp">
-
         <TextView
             android:id="@+id/total_reports_label_frag"
             android:layout_width="wrap_content"
@@ -17,16 +15,13 @@
             android:text="@string/total_reports"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_marginLeft="30dp"/>
-
+            android:layout_marginStart="30dp"/>
         <TextView
             android:id="@+id/total_reports_text_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"/>
-
+            android:layout_marginStart="30dp"/>
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/total_reports_label_layout_frag"
         android:layout_width="match_parent"
@@ -34,7 +29,6 @@
         android:orientation="horizontal"
         android:layout_marginTop="40dp"
         android:layout_below="@+id/total_reports_layout_frag">
-
         <TextView
             android:id="@+id/reports_date_label_frag"
             android:layout_width="wrap_content"
@@ -43,7 +37,6 @@
             android:textStyle="bold"
             android:text="@string/report_date_label"
             android:layout_marginStart="30dp"/>
-
         <TextView
             android:id="@+id/reports_title_label_frag"
             android:layout_width="wrap_content"
@@ -52,9 +45,7 @@
             android:textStyle="bold"
             android:text="@string/report_title_label"
             android:layout_marginStart="80dp"/>
-
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/total_reports_text_layout_frag"
         android:layout_width="match_parent"
@@ -67,7 +58,5 @@
             android:layout_height="wrap_content"
             android:divider="@null"
             android:dividerHeight="0dp"></ListView>
-
     </LinearLayout>
-
 </RelativeLayout>

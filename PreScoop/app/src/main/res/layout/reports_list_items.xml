@@ -3,17 +3,14 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="30dp">
-
     <TextView
         android:id="@+id/report_date_list_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"/>
-
+        android:layout_marginStart="30dp"/>
     <TextView
         android:id="@+id/report_title_list_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="43dp"/>
-
+        android:layout_marginStart="43dp"/>
 </LinearLayout>

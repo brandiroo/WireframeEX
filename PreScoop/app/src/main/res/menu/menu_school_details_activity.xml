@@ -6,8 +6,7 @@
     <item
         android:id="@+id/maps_menu_item_details"
         android:orderInCategory="100"
-        android:title="Go To Maps"
+        android:title="@string/go_to_maps_details"
         app:showAsAction="ifRoom|collapseActionView"
         android:icon="@android:drawable/ic_dialog_map" />
-
 </menu>

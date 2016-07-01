@@ -3,20 +3,17 @@
     <item
         android:id="@+id/abc_sort_bottom_bar"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
-        android:title="abc" />
-
+        android:title="@string/abc" />
     <item
         android:id="@+id/rating_sort_bottom_bar"
         android:icon="@drawable/ic_star"
-        android:title="Rating" />
+        android:title="@string/rating" />
     <item
         android:id="@+id/price_sort_bottom_bar"
         android:icon="@drawable/ic_money_sign"
-        android:title="Price" />
-
+        android:title="@string/price" />
     <item
         android:id="@+id/maps_bottom_bar"
-        android:title="Go To Maps"
+        android:title="@string/go_to_maps"
         android:icon="@android:drawable/ic_dialog_map" />
-
 </menu>
