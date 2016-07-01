@@ -54,4 +54,13 @@
     <string name="money_sign">$</string>
     <string name="per_month">" /mo"</string>
     <string name="reviews">" Reviews"</string>
+    <string name="yelp_rating">Yelp Rating</string>
+    <string name="yelp_icon_text">Yelp Icon</string>
+    <string name="abc">abc</string>
+    <string name="rating">Rating</string>
+    <string name="price">Price</string>
+    <string name="go_to_maps">Go To Maps</string>
+    <string name="search_menu_main">Search</string>
+    <string name="saved_schools_menu_main">Saved Schools</string>
+    <string name="go_to_maps_details">Go To Maps</string>
 </resources>

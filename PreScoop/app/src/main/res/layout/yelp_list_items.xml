@@ -4,14 +4,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="7dp">
-
     <ImageView
         android:id="@+id/yelp_list_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/yelp_icon"
-        android:layout_marginTop="8dp"/>
-
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/yelp_icon_text"/>
     <TextView
         android:id="@+id/yelp_list_title"
         android:layout_width="wrap_content"
@@ -21,8 +20,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:layout_marginTop="3dp"
         android:layout_marginStart="5dp"/>
-
-
     <ImageView
         android:id="@+id/yelp_list_rating"
         android:layout_width="wrap_content"
@@ -30,8 +27,8 @@
         android:layout_toEndOf="@id/yelp_list_image"
         android:layout_below="@id/yelp_list_title"
         android:layout_marginTop="6dp"
-        android:layout_marginStart="5dp"/>
-
+        android:layout_marginStart="5dp"
+        android:contentDescription="@string/yelp_rating"/>
     <TextView
         android:id="@+id/yelp_list_num_reviews"
         android:layout_width="wrap_content"
@@ -40,7 +37,6 @@
         android:layout_below="@id/yelp_list_title"
         android:layout_marginStart="8dp"
         android:textStyle="bold"/>
-
     <TextView
         android:id="@+id/yelp_list_snippet"
         android:layout_width="wrap_content"
@@ -50,7 +46,6 @@
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         android:layout_alignStart="@id/yelp_list_rating"/>
-
 </RelativeLayout>
 
 

@@ -11,7 +11,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.project.salminnella.prescoop.activity.WebViewActivity"
     tools:showIn="@layout/activity_web_view">
-
     <ProgressBar
         android:id="@+id/progress_bar_web_viewer"
         android:layout_width="wrap_content"
@@ -19,11 +18,9 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:visibility="visible"/>
-
     <WebView
         android:id="@+id/web_viewer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/progress_bar_web_viewer"></WebView>
-
 </RelativeLayout>
