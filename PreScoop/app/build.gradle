@@ -8,8 +8,8 @@ android {
         applicationId "com.project.salminnella.prescoop"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 5
-        versionName "1.1.4"
+        versionCode 9
+        versionName "1.1.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
