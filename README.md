@@ -2,7 +2,7 @@
 [ 3 days research/proposal, 14 days for implementation ] <br>
 https://play.google.com/store/apps/details?id=com.project.salminnella.prescoop
 
-A discovery app for San Francisco area preschools.  The school information is collected from the State of California's webiste, in the department of Social Services.  The information is curated and hosted in Firebase, where it is downloaded to the app when it launches. From the MainActivity there are search and filter features to find local preschools. Also included in the MainActivity are options for sorting, viewing schools in google maps, and bookmarking schools.
+A discovery app for San Francisco area preschools.  The school information is collected from the State of California's website, in the department of Social Services.  The information is curated and hosted in Firebase, where it is downloaded to the app when it launches. From the MainActivity there are search and filter features to find local preschools. Also included in the MainActivity are options for sorting, viewing schools in google maps, and bookmarking schools.
 Technologies used for Retrofit for Yelp's API, SQLite, CursorAdapter, ASync Tasks, RecyclerView, and Collapsing Toolbar.  
 Utilized picasso, google maps play services, gson, and bottom bar libraries.
 
